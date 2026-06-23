@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23111'/><path d='M22.7 9.3A9.3 9.3 0 1 0 25.3 16h-6.7' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round'/></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AIG — AI Interaction Governance | SKT Genui</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --skt-purple: #111111;
+      --skt-purple-light: #EFEFEF;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg-page: #F5F6F8;
+      --bg-card: #FFFFFF;
+      --do-color: #059669; --do-bg: #ECFDF5; --do-border: #A7F3D0;
+      --dont-color: #DC2626; --dont-bg: #FEF2F2; --dont-border: #FECACA;
+      --copy-bg: #F7F7F7; --copy-border: #E5E5E5;
+      --sidebar-w: 240px; --header-h: 45px;
+      --ai-blue: #555; --ai-blue-light: #EFEFEF;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; font-size: 14px; color: var(--text-primary); background: var(--bg-page); line-height: 1.6; }
+
+    .top-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: #fff; border-bottom: 1px solid #E8E8E8; display: flex; align-items: center; padding: 0 20px; gap: 10px; z-index: 100; }
+    .top-bar .brand { font-size: 13px; font-weight: 600; color: #111; white-space: nowrap; }
+    .top-bar .divider { color: #D0D0D0; }
+    .top-bar .doc-title { font-size: 13px; color: #888; white-space: nowrap; }
+    .top-bar .version-tag { font-size: 11px; color: #AAA; background: #F5F5F5; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+    .view-toggle { display: flex; align-items: center; background: #F3F4F6; border-radius: 8px; padding: 2px; flex-shrink: 0; margin-left: auto; }
+    .vt-btn { display: flex; align-items: center; padding: 4px 12px; font-size: 12px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; background: transparent; color: #888; white-space: nowrap; }
+    .vt-btn.active { background: #111; color: #fff; }
+    .export-icon-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; background: transparent; border: none; cursor: pointer; border-radius: 6px; color: #666; transition: background .12s; flex-shrink: 0; }
+    .export-icon-btn:hover { background: #F5F5F5; }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]::after { content: attr(data-tooltip); position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; font-size: 10px; font-weight: 500; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.12s; z-index: 200; }
+    [data-tooltip]:hover::after { opacity: 1; }
+
+    .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--border); overflow-y: auto; padding: 0 0 40px; z-index: 90; }
+    .sidebar-group-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; padding: 12px 20px 8px; display: block; }
+    .sidebar a { display: flex; align-items: center; gap: 10px; padding: 8px 20px; font-size: 13px; font-weight: 500; color: var(--text-secondary); text-decoration: none; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar a:hover { color: var(--skt-purple); background: var(--skt-purple-light); }
+    .sidebar a.active { color: var(--skt-purple); border-left-color: var(--skt-purple); background: var(--skt-purple-light); font-weight: 600; }
+    .nav-code { font-size: 10px; font-weight: 700; background: #F3F4F6; color: var(--text-muted); padding: 1px 6px; border-radius: 3px; }
+    .sidebar a.active .nav-code { background: #C0C0C0; color: #111; }
+
+    .main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 56px 80px; }
+    .section { margin-bottom: 80px; scroll-margin-top: calc(var(--header-h) + 24px); }
+
+    .section-header { background: #1A1A1A; border-radius: 8px; padding: 32px 36px; margin-bottom: 32px; color: #fff; }
+    .section-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .section-code-badge { font-size: 11px; font-weight: 700; letter-spacing: .08em; background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); padding: 3px 10px; border-radius: 4px; }
+    .section-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .section-desc { font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.7; margin-bottom: 16px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.8); background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 3px 10px; border-radius: 20px; }
+
+    .pattern-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+    .pattern-card-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+    .pattern-id-badge { font-size: 11px; font-weight: 700; color: var(--skt-purple); background: var(--skt-purple-light); padding: 3px 10px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .pattern-meta { flex: 1; }
+    .pattern-name { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+    .pattern-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+    .status-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .status-fundamental { color: #444; background: #EBEBEB; }
+    .status-recommend   { color: #666; background: #E3E3E3; }
+    .status-new         { color: #555; background: #E0E0E0; }
+    .status-refine      { color: #4B5563; background: #F3F4F6; }
+
+    .pattern-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .rule-label { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .rule-row { display: flex; gap: 8px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); }
+    .rule-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rule-num { font-size: 10px; font-weight: 700; color: var(--skt-purple); background: var(--skt-purple-light); padding: 2px 6px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+
+    .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .do-block, .dont-block { border-radius: 8px; padding: 14px 16px; }
+    .do-block { background: var(--do-bg); border: 1px solid var(--do-border); }
+    .dont-block { background: var(--dont-bg); border: 1px solid var(--dont-border); }
+    .do-tag, .dont-tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .1em; margin-bottom: 6px; }
+    .do-tag { color: var(--do-color); } .dont-tag { color: var(--dont-color); }
+    .do-block p { font-size: 12px; line-height: 1.6; color: #065F46; }
+    .dont-block p { font-size: 12px; line-height: 1.6; color: #991B1B; }
+
+    .scenario-wrap { overflow-x: auto; }
+    .scenario-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .scenario-table th { background: #F9FAFB; font-weight: 600; color: var(--text-secondary); padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
+    .scenario-table td { padding: 8px 12px; border: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+    .scenario-table tr:hover td { background: #FAFAFA; }
+    .scenario-table td:first-child { font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+
+    .copy-block { background: var(--copy-bg); border: 1px solid var(--copy-border); border-radius: 8px; padding: 14px 16px; }
+    .copy-block .rule-label { margin-bottom: 10px; }
+    .copy-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+    .copy-item:last-child { margin-bottom: 0; }
+    .copy-key { font-size: 10px; font-weight: 700; color: #333; background: rgba(0,0,0,.06); padding: 2px 7px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .copy-val { font-size: 12px; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 60px 0; }
+    .doc-intro { margin-bottom: 48px; }
+    .doc-intro h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 10px; }
+    .doc-intro p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .doc-meta { display: flex; gap: 32px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .doc-meta-item { font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 5px; }
+    .doc-meta-item strong { font-size: 10px; font-weight: 600; color: #ABABAB; letter-spacing: .06em; text-transform: uppercase; }
+
+    /* ── T Agent 페르소나 카드 ── */
+    .persona-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .persona-card { border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; background: #fff; }
+    .persona-label { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .persona-value { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+    .persona-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+
+    /* ── 역할 가능/불가 그리드 ── */
+    .ability-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ability-block { border-radius: 10px; padding: 16px 18px; }
+    .ability-can { background: var(--do-bg); border: 1px solid var(--do-border); }
+    .ability-cant { background: var(--dont-bg); border: 1px solid var(--dont-border); }
+    .ability-title { font-size: 11px; font-weight: 800; letter-spacing: .08em; margin-bottom: 10px; }
+    .ability-can .ability-title { color: var(--do-color); }
+    .ability-cant .ability-title { color: var(--dont-color); }
+    .ability-item { font-size: 12px; line-height: 1.7; padding: 3px 0; border-bottom: 1px solid rgba(0,0,0,.06); }
+    .ability-item:last-child { border-bottom: none; }
+    .ability-can .ability-item { color: #065F46; }
+    .ability-cant .ability-item { color: #991B1B; }
+
+    /* ── KUC 케이스 헤더 ── */
+    .kuc-sub-header { background: var(--skt-purple-light); border-left: 4px solid var(--skt-purple); border-radius: 0 8px 8px 0; padding: 12px 16px; margin-bottom: 16px; }
+    .kuc-sub-title { font-size: 13px; font-weight: 700; color: var(--skt-purple); }
+    .kuc-sub-desc { font-size: 12px; color: var(--text-secondary); margin-top: 3px; }
+
+    /* ── 채팅 버블 프리뷰 ── */
+    .chat-preview { background: #F3F4F6; border-radius: 12px; padding: 20px 24px; display: flex; flex-direction: column; gap: 10px; }
+    .bubble-ai { align-self: flex-start; background: #fff; border: 1px solid var(--border); border-radius: 4px 16px 16px 16px; padding: 10px 14px; max-width: 75%; }
+    .bubble-ai .bubble-label { font-size: 10px; font-weight: 700; color: var(--skt-purple); margin-bottom: 4px; }
+    .bubble-ai p { font-size: 12px; color: var(--text-primary); line-height: 1.6; }
+    .bubble-user { align-self: flex-end; background: var(--skt-purple); border-radius: 16px 4px 16px 16px; padding: 10px 14px; max-width: 65%; }
+    .bubble-user p { font-size: 12px; color: #fff; line-height: 1.6; }
+    .bubble-action { align-self: flex-start; display: flex; gap: 8px; flex-wrap: wrap; margin-top: 2px; }
+    .bubble-cta { font-size: 11px; font-weight: 600; color: var(--skt-purple); background: var(--skt-purple-light); border: 1px solid rgba(0,0,0,.15); border-radius: 20px; padding: 5px 12px; }
+
+    /* ── VIC 애니메이션 스펙 ── */
+    .anim-spec { background: #F8F5FF; border: 1px solid var(--copy-border); border-radius: 8px; padding: 12px 16px; }
+    .anim-spec-row { display: flex; gap: 16px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid rgba(209,207,245,.5); font-size: 12px; }
+    .anim-spec-row:last-child { border-bottom: none; }
+    .anim-key { font-weight: 700; color: var(--skt-purple); width: 100px; flex-shrink: 0; }
+    .anim-val { color: var(--text-secondary); }
+    .home-g-btn { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; text-decoration: none; flex-shrink: 0; }
+    .top-bar-sep { width: 1px; height: 18px; background: #E0E0E0; flex-shrink: 0; margin: 0 2px; }
+    .doc-nav-tabs { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; align-items: stretch; justify-content: center; pointer-events: none; gap: 0; }
+    .doc-nav-tab { pointer-events: auto; display: flex; align-items: center; justify-content: center; width: 88px; height: 100%; font-size: 12px; font-weight: 600; color: #999; text-decoration: none; transition: color 0.2s; white-space: nowrap; }
+    .doc-nav-tab:hover { color: #444; }
+    .doc-nav-tab.current { color: #111; }
+
+    /* ── Search ── */
+    /* Search */
+    .search-wrap { display: flex; align-items: center; }
+    .search-expand { display: flex; align-items: center; gap: 4px; overflow: hidden; width: 0; opacity: 0; flex-shrink: 0; transition: width .3s cubic-bezier(.4,0,.2,1), opacity .2s; }
+    .search-wrap.open .search-expand { width: 205px; opacity: 1; }
+    .search-field { border: none; border-bottom: 1.5px solid #D8D8D8; outline: none; font-size: 13px; font-family: inherit; background: transparent; color: #111; flex: 1; min-width: 0; padding: 2px 0; }
+    .search-field::placeholder { color: #C8C8C8; }
+    .search-counter { font-size: 11px; color: #ABABAB; white-space: nowrap; min-width: 26px; text-align: right; flex-shrink: 0; }
+    .search-nav-btns { display: flex; gap: 1px; flex-shrink: 0; }
+    .search-nav-btn { background: none; border: none; cursor: pointer; color: #ABABAB; font-size: 9px; padding: 2px 4px; line-height: 1; }
+    .search-nav-btn:hover { color: #555; }
+    .search-x-btn { background: none; border: none; cursor: pointer; color: #BDBDBD; font-size: 18px; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+    .search-x-btn:hover { color: #555; }
+    .search-icon-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; background: transparent; border: none; cursor: pointer; border-radius: 6px; color: #888; transition: background .12s; flex-shrink: 0; }
+    .search-icon-btn:hover { background: #F5F5F5; }
+    ::highlight(search-mark) { background: #FFF3B0; color: inherit; }
+    ::highlight(search-mark-cur) { background: #FFD700; color: inherit; }
+    /* ── CV Panel ── */
+    .cv-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); pointer-events: none; z-index: 400; transition: background .25s; }
+    .cv-overlay.open { background: rgba(0,0,0,.35); pointer-events: all; }
+    .cv-panel { position: fixed; top: 0; right: -440px; bottom: 0; width: 420px; background: #fff; box-shadow: -4px 0 40px rgba(0,0,0,.12); z-index: 401; transition: right .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: row; }
+    .cv-panel.open { right: 0; }
+    .cv-panel-inner { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow-y: auto; }
+    .cv-panel-head { position: sticky; top: 0; z-index: 2; background: #fff; border-bottom: 1px solid #EBEBEB; padding: 14px 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-shrink: 0; }
+    .cv-panel-body { padding: 20px 20px 48px; }
+    .cv-panel-close { width: 28px; height: 28px; background: #F0F0F0; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; color: #555; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .cv-panel-close:hover { background: #E0E0E0; }
+    .cv-pcode { font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #ABABAB; margin-bottom: 3px; }
+    .cv-pname { font-size: 17px; font-weight: 700; color: #111; letter-spacing: -.3px; line-height: 1.2; }
+    .cv-driver-badge { font-size: 10px; font-weight: 600; color: #555; background: #F0F0F0; padding: 2px 8px; border-radius: 3px; white-space: nowrap; margin-top: 5px; display: inline-block; }
+    .cv-def-box { font-size: 13px; line-height: 1.75; color: #444; padding: 14px 16px; background: #F9F9F9; border-radius: 8px; border: 1px solid #EBEBEB; margin-bottom: 20px; }
+    .cv-ko-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #ABABAB; margin-bottom: 10px; }
+    .cv-outcome { border: 1px solid #E8E8E8; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+    .cv-outcome-num { font-size: 10px; font-weight: 700; color: #ABABAB; margin-bottom: 3px; letter-spacing: .04em; }
+    .cv-outcome-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 5px; }
+    .cv-outcome-desc { font-size: 12px; color: #555; line-height: 1.65; }
+    .cv-tag { cursor: pointer; }
+    .cv-tag:hover { background: #DEDEDE !important; }
+  </style>
+</head>
+<body>
+
+<header class="top-bar">
+  <a href="../index.html" class="home-g-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"><path d="M17 7A7 7 0 1 0 19 12h-5"/></svg></a>
+  <span class="doc-title">AI Governance</span>
+  <nav class="doc-nav-tabs">
+    <a href="../UXP/UXP_governance.html" class="doc-nav-tab" data-tooltip="UX원칙">UXP</a>
+    <a href="../UXPT/UXPT_governance.html" class="doc-nav-tab" data-tooltip="UX패턴">UXPT</a>
+    <a href="../VOT/VOT_governance.html" class="doc-nav-tab" data-tooltip="보이스톤">VOT</a>
+    <a href="../AIG/AIG_governance.html" class="doc-nav-tab current" data-tooltip="AI">AIG</a>
+  </nav>
+  <div class="view-toggle">
+    <button class="vt-btn active">거버넌스</button>
+    <button class="vt-btn" onclick="location.href='../CV/CV_governance.html'">핵심가치</button>
+  </div>
+  <button class="export-icon-btn" onclick="exportMarkdown()" data-tooltip="MD 내려받기"><svg width="14" height="14" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v7M4 6.5l2.5 2.5 2.5-2.5M2 11h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="search-wrap" id="searchWrap"><div class="search-expand" id="searchExpand"><input id="searchField" class="search-field" placeholder="검색..." autocomplete="off"><span id="searchCounter" class="search-counter"></span><div class="search-nav-btns"><button id="searchPrev" class="search-nav-btn" title="이전">&#9650;</button><button id="searchNext" class="search-nav-btn" title="다음">&#9660;</button></div><button id="searchXBtn" class="search-x-btn" title="닫기">&times;</button></div><button class="search-icon-btn" id="searchBtn" title="검색" aria-label="검색"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></div>
+</header>
+
+<nav class="sidebar" aria-label="AIG 섹션 네비게이션">
+  <span class="sidebar-group-label">Foundation</span>
+  <a href="#def" class="active"><span class="nav-code">DEF</span> T Agent 정의</a>
+  <span class="sidebar-group-label">Application</span>
+  <a href="#kuc"><span class="nav-code">KUC</span> AI Key Use Case</a>
+  <a href="#vic"><span class="nav-code">VIC</span> AI 비주얼 커뮤니케이션</a>
+</nav>
+
+<main class="main">
+
+  <div class="doc-intro">
+    <h1>AI Interaction Governance</h1>
+    <p>SKT Next Platform의 AI 에이전트 인터랙션 정책서입니다.<br>T Agent의 정의·역할·등장 조건부터 핵심 유스케이스별 AI 개입 방식, 시각 커뮤니케이션 규칙까지 정의합니다.<br>UXPT의 AIA·MTK·ISR 섹션과 함께 참조해주세요.</p>
+    <div class="doc-meta">
+      <div class="doc-meta-item"><strong>문서 코드</strong> AIG</div>
+      <div class="doc-meta-item"><strong>버전</strong> 1.1</div>
+      <div class="doc-meta-item"><strong>업데이트</strong> 2026.06.17</div>
+      <div class="doc-meta-item"><strong>연관 문서</strong> UXPT_governance.html (AIA · MTK · ISR) · VOT_governance.html (SIT)</div>
+    </div>
+  </div>
+
+  <!-- ═══ DEF ═══ -->
+  <section class="section" id="def" data-section="DEF">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">AIG · DEF</span></div>
+      <div class="section-title">1. T Agent 정의</div>
+      <div class="section-desc">SKT Next Platform의 AI 에이전트 "T"의 페르소나·역할 범위·등장 조건·한계 안내 방식을 정의합니다. T Agent는 BSS(C360+CVM)가 읽은 고객 맥락을 바탕으로 행동하며, 언제나 고객의 노력을 줄이는 방향으로만 개입합니다.</div>
+      <div class="tag-row"><span class="tag">T Agent</span><span class="tag">페르소나</span><span class="tag">역할 범위</span><span class="tag">등장 조건</span><span class="tag">한계 안내</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="AIG_DEF_1" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_DEF_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">T Agent 페르소나</div>
+          <div class="pattern-desc">고객이 T Agent를 어떤 존재로 인식해야 하는지, 그 성격·역할·말투의 기준을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="persona-grid">
+          <div class="persona-card">
+            <div class="persona-label">명칭</div>
+            <div class="persona-value">T</div>
+            <div class="persona-desc">SKT의 브랜드 심볼을 그대로 계승. "AI 어시스턴트"나 "챗봇" 같은 기능 중심 명칭을 사용하지 않습니다.</div>
+          </div>
+          <div class="persona-card">
+            <div class="persona-label">역할</div>
+            <div class="persona-value">개인화 길잡이</div>
+            <div class="persona-desc">고객의 상황을 먼저 읽고, 필요한 행동을 선제적으로 안내합니다. 고객이 묻기 전에 먼저 말하는 존재.</div>
+          </div>
+          <div class="persona-card">
+            <div class="persona-label">성격</div>
+            <div class="persona-value">잘 아는 전문가</div>
+            <div class="persona-desc">친근하지만 가볍지 않습니다. 고객의 상황을 정확히 알고, 부담 없이 전달하고, 끝까지 책임지는 톤. (VOT_DEF_1 연동)</div>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>T Agent는 단일 인격을 유지합니다. 화면마다 다른 톤·말투를 사용하지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>T Agent는 스스로를 "AI", "챗봇", "어시스턴트"로 소개하지 않습니다. 기능이 아닌 관계로 인식되어야 합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>고객이 T의 정체를 직접 물어볼 때만 "SKT의 AI예요"라고 응답합니다. 먼저 AI임을 강조하지 않습니다.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_DEF_2" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_DEF_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">T Agent 역할 범위</div>
+          <div class="pattern-desc">T가 할 수 있는 것과 할 수 없는 것의 경계를 명확히 정의합니다. 범위 밖의 요청은 거절이 아닌 연결로 처리합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="ability-grid">
+          <div class="ability-block ability-can">
+            <div class="ability-title">CAN — T Agent가 할 수 있는 것</div>
+            <div class="ability-item">고객 상태 기반 Micro Task 제안 및 실행 유도</div>
+            <div class="ability-item">요금제·부가서비스 비교 안내 및 추천</div>
+            <div class="ability-item">현재 페이지 맥락 읽고 후속 안내 제공</div>
+            <div class="ability-item">이탈 시도 시 마찰 해소 어드바이스 제공</div>
+            <div class="ability-item">데이터 선물·요금 조회 등 셀프 태스크 실행 유도</div>
+            <div class="ability-item">오류·실패 상황에서 복구 경로 안내</div>
+            <div class="ability-item">가족 결합 기회 제안 및 초대 흐름 안내</div>
+            <div class="ability-item">고객 상담원 연결 (에스컬레이션)</div>
+          </div>
+          <div class="ability-block ability-cant">
+            <div class="ability-title">CANNOT — T Agent가 하지 않는 것</div>
+            <div class="ability-item">고객 동의 없이 요금제·서비스를 직접 변경</div>
+            <div class="ability-item">법적 분쟁, 환불, 소송 관련 판단 및 처리</div>
+            <div class="ability-item">BSS에 없는 정보에 대해 추측으로 답변</div>
+            <div class="ability-item">타 통신사 비교·비판 발언</div>
+            <div class="ability-item">고객의 개인 결정을 대신 내림</div>
+            <div class="ability-item">할 수 없는 것을 "할 수 있다"고 응답</div>
+            <div class="ability-item">고객을 압박하거나 반복 노출로 유도</div>
+          </div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>범위 밖 질문 시: "그 부분은 제가 직접 도움드리기 어려워요. 상담원과 연결해 드릴까요?" — 거절 없이 에스컬레이션으로 연결.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"그런 질문에는 답변드리기 어렵습니다." — 고객을 막는 느낌. 항상 대안 경로를 제시합니다.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_DEF_3" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_DEF_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">T Agent 등장 조건</div>
+          <div class="pattern-desc">T Agent가 어떤 상황에서, 어떤 형태로 나타나는지 정의합니다. 등장 방식은 UXPT AIA·MTK 섹션과 연동됩니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">등장 형태 3종</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>형태</th><th>설명</th><th>등장 위치</th><th>연동 패턴</th></tr></thead>
+              <tbody>
+                <tr><td>Micro Task 카드</td><td>BSS가 산출한 긴급도 높은 단일 행동을 카드로 제시. 고객이 먼저 입력하지 않아도 표시됨</td><td>홈 화면 상단 hero 슬롯</td><td>UXPT MTK</td></tr>
+                <tr><td>AIA Advice</td><td>고객이 탐색·비교·결정 과정에서 막히는 지점에 하단 오버레이로 선제 제안</td><td>2depth↑ 화면 하단 CTA 위</td><td>UXPT AIA</td></tr>
+                <tr><td>대화형 채팅</td><td>고객이 GNB 에이전트 버튼 호출 또는 상단 입력창 진입 시 전환. 페이지 맥락을 이어 자연어 대화로 처리</td><td>홈 상단 입력창 / GNB 에이전트 버튼</td><td>UXPT SDUI 태스크형</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">Rules — 등장 우선순위</div>
+          <div class="rule-row"><span class="rule-num">R1</span>동일 화면에 Micro Task 카드와 AIA Advice가 동시에 등장하지 않습니다. Micro Task가 있으면 AIA는 suppressed됩니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>대화형 채팅 진입 시 현재 화면의 컨텍스트(상품명, 현재 단계, 직전 행동)를 T Agent가 자동 인식하여 첫 발화에 반영합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>고객이 T Agent를 명시적으로 닫거나 거절한 경우, 동일 세션 내 동일 맥락에서 재등장하지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>AIA Advice 형태의 AI 개입은 2뎁스 이후 화면에서만 가능하다. 홈(1뎁스)에서 미완료 태스크 신호가 있는 경우에는 AIA Advice가 아닌 Micro Task 카드(MTK) 형태로 노출한다. (UXPT_AIA_1 R1 준용)</div>
+          <div class="rule-row"><span class="rule-num">R5</span>T Agent의 모든 AI 개입은 UXPT_AIA_4에 정의된 8가지 비개입 조건을 준수한다. 조건: (1)결제·인증 플로우 진행 중 (2)고속 스크롤(콘텐츠 소비 집중) 중 (3)텍스트 입력 필드 포커스 상태 (4)동일 세션·맥락에서 이미 거절한 어드바이스 (5)법적 동의·약관 화면 (6)전화 통화 연결 중 (7)오류 복구 플로우 1단계 진행 중 (8)고객이 AIA를 수동 비활성화한 상태</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_DEF_4" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_DEF_4</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">T Agent 한계 안내 방식</div>
+          <div class="pattern-desc">T가 답변하지 못하거나 처리할 수 없는 상황을 고객이 부정적으로 느끼지 않도록 처리하는 방식을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>정보 부재 시 "모른다"가 아닌 "지금 확인이 어렵다"로 표현하고, 확인 경로를 즉시 제시합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>처리 권한 밖의 요청은 에스컬레이션 경로(상담원 연결 / 지점 안내 / 공식 문서 링크) 중 가장 빠른 경로로 연결합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>에스컬레이션 전환 시 지금까지의 대화 맥락을 상담원에게 전달한다는 것을 고객에게 미리 안내합니다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>T Agent가 틀린 안내를 했을 경우를 대비해 "이 내용이 맞지 않다면 알려주세요" 옵션을 제공합니다.</div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 한계 상황별</div>
+          <div class="copy-item"><span class="copy-key">정보 부재</span><span class="copy-val">지금 바로 확인이 어려워요. 고객센터(114)에서 정확하게 안내드릴 수 있어요. 연결해 드릴까요?</span></div>
+          <div class="copy-item"><span class="copy-key">처리 권한 외</span><span class="copy-val">이 부분은 제가 직접 처리하기 어려워요. 상담원과 연결해 드릴게요. 지금까지 나눈 내용을 함께 전달할게요.</span></div>
+          <div class="copy-item"><span class="copy-key">오답 인정</span><span class="copy-val">다시 확인하고 안내드릴게요. 잠깐만요.</span></div>
+          <div class="copy-item"><span class="copy-key">에스컬레이션</span><span class="copy-val">상담원을 연결할게요. 지금 대화 내용을 상담원에게 미리 공유해서 처음부터 다시 설명하지 않아도 돼요.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_DEF_5" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_DEF_5</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">AI 라벨링·공개 규칙</div>
+          <div class="pattern-desc">T Agent가 생성한 콘텐츠의 시각 레이블과 언어적 AI 정체 공개 방식을 정의합니다. 시각 레이어(AIG_VIC)와 언어 레이어(VOT_RUL_6)를 조합하여 일관된 AI 신뢰 경험을 제공합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">연계 CV · 패턴</div>
+          <div class="rule-row"><span class="rule-num">CV</span>CV02 Intent-Based · CV03 Frictionless</div>
+          <div class="rule-row"><span class="rule-num">연계</span>UXPT_CCC_2 R5 (AI 영역 시각 구분) · VOT_RUL_6 (AI 언어 라벨) · AIG_VIC_1/2/3</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>시각 레이블(Glow 인디케이터·AI 전용 색상 토큰)은 T Agent가 생성하거나 추천한 모든 콘텐츠에 상시 표시한다. (AIG_VIC_1/3 연동)</div>
+          <div class="rule-row"><span class="rule-num">R2</span>언어적 AI 정체 선언("저는 T예요")은 고객이 직접 질문한 경우에만 응답한다. 모든 응답 앞에 자동으로 붙이지 않는다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>AI 추천 카드에는 "T 추천" 뱃지를 상시 노출한다. (VOT_RUL_6 R2 연동)</div>
+          <div class="rule-row"><span class="rule-num">R4</span>면책 고지 문구는 추천 카드 하단 서브텍스트(11pt 이하)로 상시 노출한다. (VOT_RUL_6 R4 연동)</div>
+          <div class="rule-row"><span class="rule-num">R5</span>UXPT_CCC_2 R5의 "AI 영역 상시 시각 구분" 원칙을 AIG 모든 패턴에서 준수한다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>Glow 인디케이터 + "T 추천" 뱃지 상시 노출</p>
+            <p>면책 서브텍스트 카드 하단 고정</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>고객 질문 없이 "저는 AI예요"를 자동 선언</p>
+            <p>AI 영역과 일반 UI 영역을 시각적으로 구분하지 않음</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_DEF_7" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_DEF_7</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">AI 추천 신뢰도·불확실도 표시 정책</div>
+          <div class="pattern-desc">C360 데이터 완결성과 세그먼트 매칭률을 기반으로 T Agent 추천의 신뢰도를 3단계로 구분하고, 각 단계에 맞는 표현 방식과 UI를 정의합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">연계 CV · 패턴</div>
+          <div class="rule-row"><span class="rule-num">CV</span>CV02 Intent-Based · CV03 Frictionless</div>
+          <div class="rule-row"><span class="rule-num">연계</span>VOT_RUL_6 R5 (신뢰도별 표현) · UXPT_SDUI_6 R1 (의도 신뢰도 임계값) · UXPT_ISR_1 (Intent Signal 계층)</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>High 신뢰도 (C360 데이터 완결, 세그먼트 매칭률 ≥85%): 단정형 추천 표현을 허용한다. 추천 카드에 "최적 추천" 레이블 표시 가능.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>Medium 신뢰도 (일부 데이터 부재, 매칭률 50~84%): 조건부 표현과 근거 명시를 의무화한다. 추천 카드에 "참고 추천" 레이블 표시.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>Low 신뢰도 (데이터 불충분, 매칭률 &lt;50%): 추천 미제공, 탐색 유도 CTA만 표시한다. 카드 형태 아닌 텍스트 안내로 대체.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>신뢰도는 고객에게 수치로 표시하지 않는다. 언어·레이블·카드 유형으로만 표현한다.</div>
+        </div>
+        <div>
+          <div class="rule-label">Scenario</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>조건</th><th>T Agent 동작</th></tr></thead>
+              <tbody>
+                <tr><td>confidence &gt;= 0.85</td><td>OptimalRecommendCard("최적 추천") + 단정형 헤드라인</td></tr>
+                <tr><td>0.5 &lt;= confidence &lt; 0.85</td><td>ReferenceRecommendCard("참고 추천") + 조건부+근거 헤드라인</td></tr>
+                <tr><td>confidence &lt; 0.5</td><td>카드 미노출 + ExplorePrompt(탐색 유도 텍스트) + 검색/탐색 CTA</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 신뢰도별 (VOT_RUL_6 R5 준용)</div>
+          <div class="copy-item"><span class="copy-key">confidence_high</span><span class="copy-val">분석 결과 {plan_name}이 가장 합리적이에요.</span></div>
+          <div class="copy-item"><span class="copy-key">confidence_mid</span><span class="copy-val">{name}님 패턴에 가까운 요금제를 찾았어요.</span></div>
+          <div class="copy-item"><span class="copy-key">confidence_low</span><span class="copy-val">지금 확인된 정보를 바탕으로 안내드려요. 더 자세히 살펴볼까요?</span></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ═══ KUC ═══ -->
+  <section class="section" id="kuc" data-section="KUC">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">AIG · KUC</span></div>
+      <div class="section-title">2. AI Key Use Case</div>
+      <div class="section-desc">T Agent가 고객 여정에서 실제로 개입하는 핵심 유스케이스를 정의합니다. 각 케이스별로 T Agent의 트리거 조건·개입 형태·발화 구조·Fallback을 명세합니다. 모든 KUC의 트리거 신호는 UXPT_ISR_1에서 정의한 Real-time·Session·Profile 3계층 Intent Signal을 기반으로 한다.</div>
+      <div class="tag-row"><span class="tag">홈 진입</span><span class="tag">요금제 추천</span><span class="tag">데이터 관리</span><span class="tag">번호이동</span><span class="tag">오류 개입</span><span class="tag">상담 연계</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="AIG_KUC_1" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_KUC_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">홈 진입 — 맥락 기반 선제 제안</div>
+          <div class="pattern-desc">고객이 앱을 열었을 때 T Agent가 BSS 상태를 읽고 홈 최상단에 Micro Task 또는 인사 메시지를 제공하는 방식을 정의합니다. 홈 진입 선제 제안은 Zone A(LLM 입력창)와 Zone B(Micro Task 카드) 두 표면으로 구분됩니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="kuc-sub-header">
+          <div class="kuc-sub-title">트리거 조건</div>
+          <div class="kuc-sub-desc">앱 진입 시 매 세션 1회. BSS C360 상태 조회 후 Micro Task 우선 렌더링. 없으면 세그먼트 기반 인사 메시지.</div>
+        </div>
+        <div>
+          <div class="rule-label">케이스별 T Agent 개입 방식</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>C360 상태</th><th>T Agent 형태</th><th>발화 구조</th></tr></thead>
+              <tbody>
+                <tr><td>데이터 잔량 ≤ 20%</td><td>Micro Task 카드 (High)</td><td>"데이터가 {N}MB 남았어요." + CTA "1GB 추가하기"</td></tr>
+                <tr><td>포인트 소멸 D-7 이하</td><td>Micro Task 카드 (High)</td><td>"{N}P가 {D-day}에 사라져요." + CTA "지금 쓰기"</td></tr>
+                <tr><td>약정 만료 D-30 이내</td><td>Micro Task 카드 (Medium)</td><td>"약정이 {N}일 후 끝나요. 미리 확인해 볼까요?" + CTA "요금제 보기"</td></tr>
+                <tr><td>이전 세션 미완료 태스크</td><td>AIA Advice</td><td>"저번에 보던 {요금제명} 다시 볼까요?" + CTA "이어서 보기"</td></tr>
+                <tr><td>긴급 상태 없음</td><td>세그먼트 인사 (텍스트)</td><td>"안녕하세요, {이름}님. 오늘도 도와드릴게요."</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">Rules — Zone A/B 선제 제안</div>
+          <div class="rule-row"><span class="rule-num">R1</span>Zone A 진입 선제 제안 — LLM 입력창에 intent를 암시하는 프리필 프롬프트 텍스트를 제안 형태로 표시한다. (예: "요금제 절약 방법 알아보기 →") 고객이 탭하면 해당 의도로 LLM 대화가 시작된다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>Zone B 진입 선제 제안 — Micro Task 카드를 긴급도·시간적 희소성·금전 임팩트 순으로 우선순위를 정해 노출한다. 우선순위 기준은 UXP_ETR_1 R5 준용.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>Zone A/B 동시에 신호가 있는 경우, Zone A 프리필 제안을 우선하되 Zone B Micro Task 카드를 병행 노출한다.</div>
+        </div>
+        <div>
+          <div class="rule-label">Scenario — Zone 분기</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>Zone</th><th>조건</th><th>T Agent 동작</th></tr></thead>
+              <tbody>
+                <tr><td>Zone A</td><td>zone == 'A'</td><td>LLM 입력창 프리필 프롬프트 텍스트 표시 (예: "요금제 절약 방법 알아보기")</td></tr>
+                <tr><td>Zone B</td><td>zone == 'B'</td><td>Micro Task 카드 노출 (긴급도·희소성·금전 임팩트 순 우선순위)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>Micro Task가 있으면 카드가 인사 메시지를 대체합니다. 동시에 두 가지를 노출하지 않습니다.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"오늘도 T world에 오신 걸 환영합니다!" 같은 맥락 없는 일반 인사를 Micro Task와 함께 중복 노출하지 않습니다.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_KUC_2" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_KUC_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">요금제 추천 — 비교 어드바이스</div>
+          <div class="pattern-desc">고객이 요금제 비교 화면에서 머물거나 이탈 시도 시 T Agent가 핵심 차이를 요약하고 결정을 도와주는 방식을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="kuc-sub-header">
+          <div class="kuc-sub-title">트리거 조건</div>
+          <div class="kuc-sub-desc">동일 카테고리 요금제 3회 이상 탐색 / 비교 페이지 체류 60초↑ / 이탈 시도(뒤로가기)</div>
+        </div>
+        <div>
+          <div class="rule-label">발화 구조</div>
+          <div class="rule-row"><span class="rule-num">1단계</span>고객 상태 요약 — "고객님은 지금 {현재 요금제}를 쓰고 계세요."</div>
+          <div class="rule-row"><span class="rule-num">2단계</span>핵심 차이 1가지 강조 — "추천 요금제와 가장 큰 차이는 {차이점}이에요."</div>
+          <div class="rule-row"><span class="rule-num">3단계</span>절감 금액 + 근거 — "바꾸면 월 {N}원 절약됩니다. {분석 근거 1줄}."</div>
+          <div class="rule-row"><span class="rule-num">4단계</span>단일 CTA — "지금 변경할까요?" + 닫기 "나중에"</div>
+        </div>
+        <div class="chat-preview">
+          <div class="bubble-ai">
+            <div class="bubble-label">T</div>
+            <p>고객님은 지금 5GX 스탠다드를 쓰고 계세요. 추천 요금제와 가장 큰 차이는 데이터 10GB 추가예요. 바꾸면 월 8,800원 절약됩니다.</p>
+          </div>
+          <div class="bubble-action">
+            <span class="bubble-cta">지금 변경할게요</span>
+            <span class="bubble-cta">더 비교해볼게요</span>
+            <span class="bubble-cta">나중에</span>
+          </div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>FRL 비교 유형(VOT_RUL)과 연동하여, 핵심 차이 1가지만 강조합니다. 항목 나열이 아닌 판단 지원.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"A 요금제는 데이터 100GB, B는 110GB, A는 통화 무제한, B는 부가서비스 포함..." — 정보 나열은 오히려 결정 마찰을 높입니다.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_KUC_3" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_KUC_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">데이터 관리 — 선물·충전 선제 안내</div>
+          <div class="pattern-desc">데이터 잔량 부족, 가족 데이터 선물 요청 수신 등 데이터 관련 긴급 신호에 T Agent가 개입하는 방식을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="kuc-sub-header">
+          <div class="kuc-sub-title">트리거 조건</div>
+          <div class="kuc-sub-desc">데이터 잔량 ≤ 20% / 가족 데이터 선물 요청 수신 / 데이터 완전 소진 후 앱 재진입</div>
+        </div>
+        <div>
+          <div class="rule-label">케이스별 개입</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>상황</th><th>T Agent 형태</th><th>발화</th><th>CTA</th></tr></thead>
+              <tbody>
+                <tr><td>데이터 ≤ 20%</td><td>Micro Task 카드 (High)</td><td>"데이터가 {N}MB 남았어요. 지금 충전하면 끊김 없이 쓸 수 있어요."</td><td>1GB 충전하기</td></tr>
+                <tr><td>데이터 완전 소진</td><td>AIA Advice (전면)</td><td>"데이터를 모두 썼어요. 지금 바로 충전할까요?"</td><td>지금 충전 / 요금제 변경</td></tr>
+                <tr><td>선물 요청 수신</td><td>Micro Task 카드 (High)</td><td>"{이름}님이 데이터 1GB를 요청했어요."</td><td>1GB 보내기 / 나중에</td></tr>
+                <tr><td>선물 완료</td><td>토스트 + AIA</td><td>"1GB를 {이름}님께 전송했어요."</td><td>—</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_KUC_4" data-status="recommend">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_KUC_4</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">번호이동 — 단계별 어드바이스</div>
+          <div class="pattern-desc">번호이동처럼 단계가 많고 고객이 중도 이탈하기 쉬운 태스크에서 T Agent가 각 단계에서 선제 안내하는 방식을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-recommend">Recommend</span>
+      </div>
+      <div class="pattern-body">
+        <div class="kuc-sub-header">
+          <div class="kuc-sub-title">트리거 조건</div>
+          <div class="kuc-sub-desc">번호이동 태스크 진입 / 각 단계에서 30초↑ 체류 / 이탈 시도(FRL 복잡 유형)</div>
+        </div>
+        <div>
+          <div class="rule-label">단계별 T Agent 개입</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>단계</th><th>T Agent 발화</th><th>FRL 연동</th></tr></thead>
+              <tbody>
+                <tr><td>진입 (1단계)</td><td>"번호이동은 총 4단계예요. 고객님 정보로 미리 채워드릴게요."</td><td>복잡 유형 — 단계 수 선안내</td></tr>
+                <tr><td>위약금 확인 (2단계)</td><td>"위약금은 발생하지 않아요. 안심하고 진행하셔도 됩니다."</td><td>불안 유형 — 확정형 안심</td></tr>
+                <tr><td>요금제 선택 (3단계)</td><td>"지금 쓰시는 패턴에는 {추천 요금제}가 가장 잘 맞아요."</td><td>비교 유형 — 핵심 차이 1가지</td></tr>
+                <tr><td>이탈 시도</td><td>"이미 3단계까지 왔어요. 마지막 한 단계만 남았어요."</td><td>복잡 유형 — 진행 위치 재안내</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_KUC_5" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_KUC_5</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">오류 &amp; 실패 — T Agent 복구 개입</div>
+          <div class="pattern-desc">고객이 오류를 만났을 때 T Agent가 원인 안내와 복구 경로를 즉시 제공하는 방식을 정의합니다. ERR·RCV 패턴과 연동됩니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="kuc-sub-header">
+          <div class="kuc-sub-title">트리거 조건</div>
+          <div class="kuc-sub-desc">태스크 처리 실패 / 네트워크 오류 / 3회 이상 연속 오류</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>오류 발생 즉시 AIA Advice로 개입합니다. 고객이 오류 메시지를 읽고 다음 행동을 찾아야 하는 부담을 없앱니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>T Agent 발화는 원인(1문장) + 대안(1개 CTA) 구조를 유지합니다. VOT SIT_1 오류 톤 규칙을 따릅니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>3회 이상 연속 오류 시 자동으로 상담원 연결 옵션을 첫 번째 CTA로 승격합니다.</div>
+        </div>
+        <div class="chat-preview">
+          <div class="bubble-ai">
+            <div class="bubble-label">T</div>
+            <p>요청을 처리하지 못했어요. 다시 시도해도 안 되면 상담원과 연결해 드릴게요.</p>
+          </div>
+          <div class="bubble-action">
+            <span class="bubble-cta">다시 시도하기</span>
+            <span class="bubble-cta">상담원 연결</span>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_KUC_6" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_KUC_6</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">고객 상담 연계 — 에스컬레이션</div>
+          <div class="pattern-desc">T Agent가 처리할 수 없는 범위의 요청이 들어왔을 때, 고객의 맥락을 상담원에게 이어주는 에스컬레이션 흐름을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>에스컬레이션 전환 전, T Agent는 지금까지의 대화 요약을 고객에게 보여주고 "이 내용을 상담원에게 전달할게요"를 명시합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>상담원 연결 대기 중에는 예상 대기 시간을 안내합니다. 대기 시간이 3분↑인 경우 콜백 예약 옵션을 제공합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>상담원 연결 후 T Agent는 화면에서 사라지고 고객과 상담원의 대화 환경으로 전환됩니다. T Agent가 상담 중에 끼어들지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>상담사에게 전달하는 컨텍스트 패키지에는 다음을 포함한다: (1) 세션 내 T Agent 대화 요약 (2) 고객이 선택한 옵션 (3) 현재 진행 단계 (4) 오류 코드(있는 경우). UXPT_CCC_1 R2 "과업 컨텍스트 자동 전달" 원칙 준용.</div>
+          <div class="rule-row"><span class="rule-num">R5</span>에스컬레이션 시 고객에게 "상담사에게 지금까지 내용을 전달했어요. 처음부터 다시 설명하지 않으셔도 돼요"를 선행 안내한다.</div>
+        </div>
+        <div class="chat-preview">
+          <div class="bubble-ai">
+            <div class="bubble-label">T</div>
+            <p>이 부분은 상담원이 더 정확하게 도와드릴 수 있어요. 지금까지 나눈 내용을 상담원에게 미리 전달할게요. 처음부터 다시 설명하지 않아도 돼요.</p>
+          </div>
+          <div class="bubble-action">
+            <span class="bubble-cta">상담원 연결하기</span>
+            <span class="bubble-cta">콜백 예약</span>
+            <span class="bubble-cta">괜찮아요</span>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 에스컬레이션</div>
+          <div class="copy-item"><span class="copy-key">전환 안내</span><span class="copy-val">이 부분은 상담원이 직접 도와드릴 수 있어요. 지금까지 나눈 내용을 함께 전달할게요.</span></div>
+          <div class="copy-item"><span class="copy-key">대기 안내</span><span class="copy-val">상담원 연결까지 약 {N}분 기다려야 해요. 콜백을 예약할까요?</span></div>
+          <div class="copy-item"><span class="copy-key">연결 완료</span><span class="copy-val">상담원과 연결됐어요. 잘 해결되길 바라요!</span></div>
+          <div class="copy-item"><span class="copy-key">escalation_context_sent</span><span class="copy-val">상담사에게 지금까지 내용을 전달했어요. 처음부터 다시 설명하지 않으셔도 돼요.</span></div>
+          <div class="copy-item"><span class="copy-key">escalation_wait</span><span class="copy-val">상담사를 연결하고 있어요. 잠깐만요.</span></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ═══ VIC ═══ -->
+  <section class="section" id="vic" data-section="VIC">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">AIG · VIC</span></div>
+      <div class="section-title">3. AI 비주얼 커뮤니케이션</div>
+      <div class="section-desc">AI 비주얼 커뮤니케이션 가이드는 Next Platform 디자인 시스템과 공존하도록 설계되었으며, SKT 디자인 언어의 고유 원칙을 따르면서도 AI 테마임을 분명히 드러내는 고유한 시각적 특징을 갖습니다.</div>
+      <div class="tag-row"><span class="tag">시각적 패턴</span><span class="tag">AI 채팅</span><span class="tag">애니메이션</span><span class="tag">색상</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="AIG_VIC_1" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_VIC_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">시각적 패턴 — T Agent 존재감 표현</div>
+          <div class="pattern-desc">일관된 시각 요소가 없으면 사용자는 AI 환경을 빠르고 부담 없이 체감하기 어렵습니다. T Agent가 화면에 나타나고 사라지는 방식과 시각 언어를 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">AIG_VIC_1_1 — 페이드인/아웃 애니메이션</div>
+          <div class="rule-row"><span class="rule-num">R1</span>T Agent 컴포넌트(Micro Task 카드·AIA Advice·채팅 버블)는 즉각 팝업이 아닌 부드러운 Fade-in(200ms)으로 등장합니다. 사용자의 시선을 방해하지 않기 위함입니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>고객이 닫거나 태스크 완료 시 Fade-out(150ms) + Slide-up으로 제거합니다. 즉각 사라짐은 불안감을 줄 수 있습니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>AIA Advice가 그라디언트 배경으로 로딩 중임을 표현할 때는 회색 계열 모노톤 Shimmer 애니메이션을 사용합니다.</div>
+        </div>
+        <div>
+          <div class="rule-label">애니메이션 스펙</div>
+          <div class="anim-spec">
+            <div class="anim-spec-row"><span class="anim-key">Fade-in</span><span class="anim-val">200ms · ease-out · opacity 0 → 1 + translateY 8px → 0</span></div>
+            <div class="anim-spec-row"><span class="anim-key">Fade-out</span><span class="anim-val">150ms · ease-in · opacity 1 → 0 + translateY 0 → -8px</span></div>
+            <div class="anim-spec-row"><span class="anim-key">Shimmer</span><span class="anim-val">1200ms · linear · infinite · #F0F0F0 → #E0E0E0 → #F0F0F0 모노톤 sweep</span></div>
+            <div class="anim-spec-row"><span class="anim-key">Typing indicator</span><span class="anim-val">dot × 3 · 400ms interval · bounce · T Agent 발화 전 표시</span></div>
+            <div class="anim-spec-row"><span class="anim-key">Task complete</span><span class="anim-val">200ms · scale 1 → 0.96 → 1 + opacity fade → slide-up 제거</span></div>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">AIG_VIC_1_2 — AI 글로우 인디케이터</div>
+          <div class="rule-row"><span class="rule-num">R1</span>T Agent가 현재 상태를 인식 중임을 보여줄 때, 컴포넌트 테두리에 SKT 퍼플(#5135C8) 계열의 Glow 효과를 적용합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>Glow는 정보를 불러오는 동안(Skeleton 상태)과 T Agent가 발화를 생성하는 동안에만 표시합니다. 상시 사용하면 주목도가 희석됩니다.</div>
+        </div>
+        <div>
+          <div class="rule-label">AIG_VIC_1_3 — AI 컨텍스트 카드 인식 표시</div>
+          <div class="rule-row"><span class="rule-num">R1</span>대화형 채팅 진입 시 현재 페이지 맥락을 T Agent가 인식했음을 나타내기 위해 페이지 스냅샷 미리보기 칩(컨텍스트 카드)을 채팅창 상단에 표시합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>컨텍스트 카드는 "지금 보고 있는 {페이지명}" 형식으로 1줄 표기하며, 고객이 닫을 수 있습니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>T Agent 등장 시 항상 Fade-in. 고객이 시선을 빼앗기지 않고 자연스럽게 인식할 수 있는 속도(200ms).</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>팝업처럼 즉각 나타나거나, 화면 전환 없이 기존 콘텐츠 위에 덮어씌우는 방식을 사용하지 않습니다.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_VIC_2" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_VIC_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">AI 채팅 UI 규칙</div>
+          <div class="pattern-desc">채팅 환경에서 T Agent가 사용자를 목표로 빠르게 안내하고, 사용자가 목표를 달성할 수 있도록 하고 직관적인 UI로 구성합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>사용자가 입력창을 비워둔 채로 진입하면, T Agent가 현재 맥락을 읽고 먼저 말을 겁니다. 빈 채팅창을 보여주지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>T Agent 발화 후 제안 버튼(Quick Reply Chip)을 2~3개 함께 제공합니다. 고객이 타이핑 없이도 다음 행동으로 이어질 수 있어야 합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>지속적으로 현재 진행 중인 내용(콘텍스트)을 파악하고, 대화 내에서 발생한 태스크 흐름의 단계를 파악하고 다음 행동을 제안합니다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>시작 맥락에 맞는 어드바이스와 CTA를 꺼내어, AI에 대한 거부감을 낮추고 서비스에 대한 신뢰도를 높입니다.</div>
+        </div>
+        <div>
+          <div class="rule-label">채팅 UI 컴포넌트 구성</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>컴포넌트</th><th>역할</th><th>표현 규칙</th></tr></thead>
+              <tbody>
+                <tr><td>T Agent 버블</td><td>AI 발화</td><td>흰 배경 + 퍼플 테두리 · 좌측 정렬 · 좌상단 곡선 없음</td></tr>
+                <tr><td>고객 버블</td><td>고객 발화</td><td>퍼플(#5135C8) 배경 · 우측 정렬 · 우상단 곡선 없음 · 흰 텍스트</td></tr>
+                <tr><td>Quick Reply Chip</td><td>제안 선택지</td><td>퍼플 라이트 배경 · 퍼플 텍스트 · pill 형태 · 최대 3개</td></tr>
+                <tr><td>태스크 카드 인라인</td><td>채팅 내 태스크 직접 실행</td><td>일반 카드 컴포넌트 인라인 삽입 · CTA 1개</td></tr>
+                <tr><td>컨텍스트 칩</td><td>현재 페이지 맥락 표시</td><td>채팅창 상단 고정 · "지금 보고 있는 {페이지명}" · 닫기 가능</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">채팅 진입 시 T Agent 첫 발화 구조</div>
+          <div class="rule-row"><span class="rule-num">맥락 있음</span>현재 페이지 컨텍스트 카드 표시 → "지금 {페이지명}을 보고 계시네요. {맥락 기반 선제 질문 or 제안}"</div>
+          <div class="rule-row"><span class="rule-num">맥락 없음</span>"무엇을 도와드릴까요?" + Quick Reply Chip 3개 (자주 찾는 태스크 기반)</div>
+          <div class="rule-row"><span class="rule-num">태스크 미완료</span>"저번에 {태스크명}을 진행하다 멈추셨어요. 이어서 할까요?" + Quick Reply "이어서 하기 / 새로 시작"</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>채팅 진입 즉시 T Agent가 먼저 맥락 기반 발화. Quick Reply Chip으로 타이핑 없이 이어갈 수 있는 경로 제공.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>빈 채팅창 노출, 입력 대기, "어떻게 도와드릴까요?"만 표시 — 고객이 먼저 생각해야 하는 구조.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="AIG_VIC_3" data-status="recommend">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">AIG_VIC_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">AI 색상 &amp; 타이포 시스템</div>
+          <div class="pattern-desc">T Agent가 사용하는 색상과 타이포그래피는 SKT 디자인 시스템 토큰을 기반으로 하되, AI 고유의 시각 언어를 일관되게 유지합니다.</div>
+        </div>
+        <span class="status-badge status-recommend">Recommend</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">AI 컴포넌트 색상 규칙</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>요소</th><th>색상 토큰</th><th>용도</th></tr></thead>
+              <tbody>
+                <tr><td>T Agent 버블 배경</td><td>semantic.color.background.surface.primary (#FFFFFF)</td><td>AI 발화 배경 · 흰색으로 신뢰감 유지</td></tr>
+                <tr><td>T Agent 버블 테두리</td><td>semantic.color.brand.primary (#5135C8) @ 30%</td><td>AI 존재감 · 브랜드 동일선</td></tr>
+                <tr><td>고객 버블 배경</td><td>semantic.color.brand.primary (#5135C8)</td><td>고객 발화 강조 · 대화 방향 구분</td></tr>
+                <tr><td>Quick Reply Chip</td><td>semantic.color.background.brand.subtle (#EEE9FF)</td><td>제안 선택지 · 퍼플 라이트</td></tr>
+                <tr><td>AI Glow 효과</td><td>#5135C8 → #7C3AED 그라디언트</td><td>AI 인식 중 상태 표시</td></tr>
+                <tr><td>Shimmer 배경</td><td>semantic.color.background.surface.secondary</td><td>로딩 중 스켈레톤</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>T Agent 고유 색상으로 새로운 색상을 추가하지 않습니다. SKT 디자인 시스템 토큰 범위 내에서 AI 시각 언어를 구성합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>AI 관련 컴포넌트와 일반 UI 컴포넌트의 색상을 혼용하지 않습니다. 고객이 AI 개입 여부를 시각적으로 즉시 구분할 수 있어야 합니다.</div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+</main>
+<script>
+  // IntersectionObserver for sidebar active state
+  var sections = document.querySelectorAll('section[data-section]');
+  var navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var id = entry.target.id;
+        navLinks.forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-56px 0px -60% 0px', threshold: 0 });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  // Intercept sidebar anchor clicks → replaceState
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = this.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (target) {
+        var top = target.getBoundingClientRect().top + window.scrollY - 64;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + id);
+      }
+    });
+  });
+</script>
+<script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+<script>
+function exportMarkdown() {
+  var td = new TurndownService({ headingStyle: 'atx', bulletListMarker: '-', codeBlockStyle: 'fenced' });
+  td.remove(['script', 'style', 'nav', 'header']);
+  var content = document.querySelector('.main') || document.body;
+  var md = td.turndown(content);
+  var filename = (document.title || 'governance').replace(/[^\w가-힣\-]/g, '_') + '.md';
+  var blob = new Blob([md], { type: 'text/markdown; charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+}
+</script>
+<script>
+(function(){
+  var n=document.querySelector('.doc-nav-tabs'),ts=document.querySelectorAll('.doc-nav-tab'),c=document.querySelector('.doc-nav-tab.current');
+  if(!c||!n)return;
+  var ind=document.createElement('div');
+  ind.style.cssText='position:absolute;bottom:0;height:2px;background:#111;pointer-events:none;';
+  n.appendChild(ind);
+  function mv(el,anim){var nr=n.getBoundingClientRect(),tr=el.getBoundingClientRect();ind.style.transition=anim?'left .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1)':'none';ind.style.left=(tr.left-nr.left)+'px';ind.style.width=tr.width+'px';}
+  var ta=Array.prototype.slice.call(ts),ci=ta.indexOf(c),pi=parseInt(sessionStorage.getItem('govTab')||ci);
+  sessionStorage.setItem('govTab',ci);
+  mv(ta[pi]||c,false);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){mv(c,true);});});
+}());
+</script>
+<div id="cvOvl" class="cv-overlay"></div>
+<div id="cvPnl" class="cv-panel">
+  <div class="cv-panel-inner">
+    <div id="cvPanelHead" class="cv-panel-head"></div>
+    <div class="cv-panel-body"><div id="cvPanelBody"></div></div>
+  </div>
+</div>
+<script>
+var CV_CONTENT = {
+  'CV01': { code:'CV01', en:'Borderless Experience', driver:'Journey Readable',
+    def:'통합된 고객 Data set을 기반으로 SKT 서비스 접점 전반에서 일관된 경험을 제공합니다.',
+    outcomes:[
+      {num:'01',title:'여정 중심의 UX 설계',desc:'고객 목적에 따른 핵심 여정 중심 탭 구조. 분산된 관리 정보(요금제·구독·혜택)를 하나의 앱에서 통합 열람·진단·관리합니다.'},
+      {num:'02',title:'맥락 중심의 옴니채널',desc:'모바일 탐색 이력이 매장 상담 시스템으로, 매장 상담 이력이 온라인 채널로 끊김 없이 양방향으로 연결됩니다.'},
+      {num:'03',title:'외·내부 접점 동선 설계',desc:'OS 에이전트에서 탐색·호출 후 채널로 자연스럽게 이어지는 흐름. 혜택 확인 후 외부 채널과의 접점까지 설계합니다.'}
+    ]},
+  'CV02': { code:'CV02', en:'Intent-Based Experience', driver:'Segment Readable',
+    def:'고객의 의도를 기반으로 UX를 동적으로 재구성하여, 초개인화된 경험을 제공합니다.',
+    outcomes:[
+      {num:'01',title:'타깃 별 UX 최적화',desc:'고객 케이스마다 개인화된 마이크로 태스크와 우선순위 메뉴로 홈을 동적으로 구성합니다. (혜택 사용자·가족 데이터·시니어·약정 만료·비로그인)'},
+      {num:'02',title:'고객 해석 기반 UI',desc:'서비스 이용 성향(분석형·가치 체감형·관계 중심형·혜택 중심형)에 따라 요금제 비교 방식을 차별화합니다.'},
+      {num:'03',title:'진입 의도에 알맞는 여정',desc:'채널별 주요 세그먼트 특성과 방문 목적에 맞춰 각 진입 의도에 최적화된 여정으로 안내합니다.'}
+    ]},
+  'CV03': { code:'CV03', en:'Frictionless Lead', driver:'Task & Info Readable',
+    def:'의사결정과 행동이 막히지 않도록 간결하고 명확한 흐름을 설계합니다.',
+    outcomes:[
+      {num:'01',title:'안심의 톤으로 신뢰 형성',desc:'결정 전 결과 정보를 먼저 제시해 안심 기반의 실행을 유도합니다. 위약금·혜택 변동 등을 선제 안내합니다.'},
+      {num:'02',title:'체감 가치 증명',desc:'고객 맥락에 맞는 혜택과 체감 가치를 수치·시뮬레이션으로 즉각 제시합니다.'},
+      {num:'03',title:'고객 응대·셀프처리 지원',desc:'맥락 감지 기반 AI 상담 보조와 고객 직접 처리형 셀프 업무 가이드를 단계별로 제공합니다.'},
+      {num:'04',title:'차근차근 안내되는 경험',desc:'긴 절차가 필요한 여정에서도 단계별 태스크 모듈로 이탈 없이 완료까지 이어줍니다.'}
+    ]},
+  'CV04': { code:'CV04', en:'Engaging Experience', driver:'Relationship Readable',
+    def:'고객의 이용 맥락과 관계 수준에 따라, 지속적으로 반응하고 참여하게 되는 경험을 설계합니다.',
+    outcomes:[
+      {num:'01',title:'장기 고객 가치 체감',desc:'장기 고객에게 추가 혜택을 제안하고, 누적된 결합 혜택 가치를 화면 곳곳에서 가시화해 신뢰를 형성합니다.'},
+      {num:'02',title:'선제적 결합 기회 확산',desc:'고객 관계망 기반으로 AI가 결합 기회를 제안하고, 타 통신사 지인까지 그룹 단위로 자연스럽게 유입됩니다.'},
+      {num:'03',title:'관계 기반 인게이지먼트 확장',desc:'위치 기반 혜택 공유·구독 파티 등 개인 소비를 관계 기반으로 확장해 멤버십 사용률과 참여를 높입니다.'}
+    ]}
+};
+
+function cvOpen(cvCode) {
+  var data = CV_CONTENT[cvCode];
+  if (!data) return;
+  var tkPnl = document.getElementById('tkPnl');
+  if (tkPnl) { tkPnl.classList.remove('open'); var tkOvl = document.getElementById('tkOvl'); if (tkOvl) tkOvl.classList.remove('open'); }
+  var head = document.getElementById('cvPanelHead');
+  var body = document.getElementById('cvPanelBody');
+  head.innerHTML = '<div><div class="cv-pcode">' + data.code + '</div><div class="cv-pname">' + data.en + '</div><span class="cv-driver-badge">' + data.driver + '</span></div>' +
+    '<button class="cv-panel-close" id="cvCloseBtn">\xd7</button>';
+  document.getElementById('cvCloseBtn').addEventListener('click', cvClose);
+  var html = '<div class="cv-def-box">' + data.def + '</div><div class="cv-ko-label">Key Outcomes</div>';
+  data.outcomes.forEach(function(o) {
+    html += '<div class="cv-outcome"><div class="cv-outcome-num">KO \xb7 ' + o.num + '</div><div class="cv-outcome-title">' + o.title + '</div><div class="cv-outcome-desc">' + o.desc + '</div></div>';
+  });
+  body.innerHTML = html;
+  document.getElementById('cvOvl').classList.add('open');
+  document.getElementById('cvPnl').classList.add('open');
+}
+
+function cvClose() {
+  document.getElementById('cvOvl').classList.remove('open');
+  document.getElementById('cvPnl').classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.cv-tag').forEach(function(tag) {
+    tag.addEventListener('click', function() {
+      var cls = Array.from(tag.classList).find(function(c) { return /^cv-0[1234]$/.test(c); });
+      if (cls) cvOpen('CV0' + cls.slice(-1));
+    });
+  });
+  var cvOvl = document.getElementById('cvOvl');
+  if (cvOvl) cvOvl.addEventListener('click', function(e) { if (e.target === this) cvClose(); });
+
+  var searchWrap = document.getElementById('searchWrap');
+  var searchField = document.getElementById('searchField');
+  var searchCounter = document.getElementById('searchCounter');
+  var searchPrevBtn = document.getElementById('searchPrev');
+  var searchNextBtn = document.getElementById('searchNext');
+  var searchXBtn = document.getElementById('searchXBtn');
+  var searchBtn = document.getElementById('searchBtn');
+  var _matches = [], _cur = -1;
+  function collectRanges(node, q, out) {
+    if (node.nodeType === 3) {
+      var txt = node.nodeValue.toLowerCase(), idx = 0, r;
+      while ((idx = txt.indexOf(q, idx)) !== -1) {
+        r = new Range(); r.setStart(node, idx); r.setEnd(node, idx + q.length);
+        out.push(r); idx += q.length;
+      }
+    } else if (node.nodeType === 1 && !({SCRIPT:1,STYLE:1}[node.tagName])) {
+      Array.from(node.childNodes).forEach(function(c) { collectRanges(c, q, out); });
+    }
+  }
+  function applyHL() {
+    CSS.highlights.clear();
+    if (!_matches.length) return;
+    var rest = _matches.filter(function(_, i) { return i !== _cur; });
+    if (rest.length) CSS.highlights.set('search-mark', new Highlight(...rest));
+    if (_cur >= 0 && _matches[_cur]) CSS.highlights.set('search-mark-cur', new Highlight(_matches[_cur]));
+  }
+  function updateCtr() {
+    if (!_matches.length) { searchCounter.textContent = ''; return; }
+    searchCounter.textContent = (_cur + 1) + '/' + _matches.length;
+  }
+  function goTo(idx) {
+    if (!_matches.length) return;
+    _cur = ((idx % _matches.length) + _matches.length) % _matches.length;
+    updateCtr(); applyHL();
+    var el = _matches[_cur].startContainer.parentElement;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function doSearch(q) {
+    CSS.highlights.clear(); _matches = []; _cur = -1;
+    if (!q.trim()) { updateCtr(); return; }
+    document.querySelectorAll('.pattern-card').forEach(function(c) { collectRanges(c, q.toLowerCase(), _matches); });
+    if (_matches.length) goTo(0); else updateCtr();
+  }
+  function openSrch() { searchWrap.classList.add('open'); setTimeout(function() { searchField.focus(); }, 320); }
+  function closeSrch() { searchWrap.classList.remove('open'); searchField.value = ''; doSearch(''); }
+  if (searchBtn) searchBtn.addEventListener('click', function() {
+    searchWrap.classList.contains('open') ? closeSrch() : openSrch();
+  });
+  if (searchXBtn) searchXBtn.addEventListener('click', closeSrch);
+  if (searchPrevBtn) searchPrevBtn.addEventListener('click', function() { goTo(_cur - 1); });
+  if (searchNextBtn) searchNextBtn.addEventListener('click', function() { goTo(_cur + 1); });
+  if (searchField) {
+    searchField.addEventListener('input', function() { doSearch(this.value); });
+    searchField.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); e.shiftKey ? goTo(_cur - 1) : goTo(_cur + 1); }
+    });
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { cvClose(); closeSrch(); } });
+});
+</script>
+</body>
+</html>

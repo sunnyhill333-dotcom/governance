@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23111'/><path d='M22.7 9.3A9.3 9.3 0 1 0 25.3 16h-6.7' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round'/></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV — CX Core Values | SKT Next</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --skt-purple: #111111;
+      --skt-purple-light: #EFEFEF;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg-page: #F5F6F8;
+      --bg-card: #FFFFFF;
+      --sidebar-w: 240px; --header-h: 45px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; font-size: 14px; color: var(--text-primary); background: var(--bg-page); line-height: 1.6; }
+
+    .top-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: #fff; border-bottom: 1px solid #E8E8E8; display: flex; align-items: center; padding: 0 20px; gap: 10px; z-index: 100; }
+    .top-bar .brand { font-size: 13px; font-weight: 600; color: #111; white-space: nowrap; }
+    .top-bar .divider { color: #D0D0D0; }
+    .top-bar .doc-title { font-size: 13px; color: #888; white-space: nowrap; }
+    .home-g-btn { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; text-decoration: none; flex-shrink: 0; }
+    .top-bar-sep { width: 1px; height: 18px; background: #E0E0E0; flex-shrink: 0; margin: 0 2px; }
+    .doc-nav-tabs { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; align-items: stretch; justify-content: center; pointer-events: none; gap: 0; }
+    .doc-nav-tab { pointer-events: auto; display: flex; align-items: center; justify-content: center; width: 72px; height: 100%; font-size: 12px; font-weight: 600; color: #999; text-decoration: none; transition: color 0.2s; white-space: nowrap; }
+    .doc-nav-tab:hover { color: #444; }
+    .doc-nav-tab.current { color: #111; }
+
+    .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--border); overflow-y: auto; padding: 0 0 40px; z-index: 90; }
+    .sidebar-group-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; padding: 12px 20px 8px; display: block; }
+    .sidebar a { display: flex; align-items: center; gap: 10px; padding: 8px 20px; font-size: 13px; font-weight: 500; color: var(--text-secondary); text-decoration: none; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar a:hover { color: var(--skt-purple); background: var(--skt-purple-light); }
+    .sidebar a.active { color: var(--skt-purple); border-left-color: var(--skt-purple); background: var(--skt-purple-light); font-weight: 600; }
+    .nav-code { font-size: 10px; font-weight: 700; background: #F3F4F6; color: var(--text-muted); padding: 1px 6px; border-radius: 3px; }
+    .sidebar a.active .nav-code { background: #C0C0C0; color: #111; }
+
+    .main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 56px 80px; }
+    .section { margin-bottom: 80px; scroll-margin-top: calc(var(--header-h) + 24px); }
+
+    .doc-intro { margin-bottom: 48px; }
+    .doc-intro h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 10px; }
+    .doc-intro p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .doc-meta { display: flex; gap: 32px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .doc-meta-item { font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 5px; }
+    .doc-meta-item strong { font-size: 10px; font-weight: 600; color: #ABABAB; letter-spacing: .06em; text-transform: uppercase; }
+
+    .section-header { background: #1A1A1A; border-radius: 8px; padding: 32px 36px; margin-bottom: 32px; color: #fff; }
+    .section-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .section-code-badge { font-size: 11px; font-weight: 700; letter-spacing: .08em; background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); padding: 3px 10px; border-radius: 4px; }
+    .cv-driver-badge-hd { font-size: 11px; font-weight: 600; letter-spacing: .04em; background: rgba(255,255,255,.08); color: rgba(255,255,255,.6); padding: 3px 10px; border-radius: 4px; border: 1px solid rgba(255,255,255,.15); }
+    .section-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .section-desc { font-size: 14px; color: rgba(255,255,255,.7); line-height: 1.7; margin-top: 10px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; }
+    .tag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.8); background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 3px 10px; border-radius: 20px; }
+
+    /* ── Outcome cards ── */
+    .outcome-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; margin-bottom: 28px; }
+    .outcome-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+    .outcome-num { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: .06em; }
+    .outcome-title { font-size: 14px; font-weight: 700; color: var(--text-primary); letter-spacing: -0.2px; }
+    .outcome-desc { font-size: 12.5px; color: var(--text-secondary); line-height: 1.7; }
+
+    /* ── Connected block ── */
+    .connected-block { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+    .connected-hd { padding: 12px 16px; background: #F9FAFB; border-bottom: 1px solid var(--border); font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; }
+    .connected-grid { display: flex; flex-direction: column; }
+    .connected-row { display: flex; align-items: baseline; gap: 12px; padding: 10px 16px; border-bottom: 1px solid #F3F4F6; font-size: 13px; }
+    .connected-row:last-child { border-bottom: none; }
+    .connected-doc { font-size: 10px; font-weight: 700; color: #ABABAB; background: #F3F4F6; padding: 1px 6px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
+    .connected-label { font-weight: 600; color: var(--text-primary); }
+    .connected-desc { font-size: 12px; color: var(--text-muted); }
+
+    /* ── Search ── */
+    .view-toggle { display: flex; align-items: center; background: #F3F4F6; border-radius: 8px; padding: 2px; flex-shrink: 0; margin-left: auto; }
+    .vt-btn { display: flex; align-items: center; padding: 4px 12px; font-size: 12px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; background: transparent; color: #888; white-space: nowrap; }
+    .vt-btn.active { background: #111; color: #fff; }
+    .export-icon-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; background: transparent; border: none; cursor: pointer; border-radius: 6px; color: #666; transition: background .12s; flex-shrink: 0; }
+    .export-icon-btn:hover { background: #F5F5F5; }
+    .search-wrap { display: flex; align-items: center; }
+    .search-expand { display: flex; align-items: center; gap: 4px; overflow: hidden; width: 0; opacity: 0; flex-shrink: 0; transition: width .3s cubic-bezier(.4,0,.2,1), opacity .2s; }
+    .search-wrap.open .search-expand { width: 205px; opacity: 1; }
+    .search-field { border: none; border-bottom: 1.5px solid #D8D8D8; outline: none; font-size: 13px; font-family: inherit; background: transparent; color: #111; flex: 1; min-width: 0; padding: 2px 0; }
+    .search-field::placeholder { color: #C8C8C8; }
+    .search-counter { font-size: 11px; color: #ABABAB; white-space: nowrap; min-width: 26px; text-align: right; flex-shrink: 0; }
+    .search-nav-btns { display: flex; gap: 1px; flex-shrink: 0; }
+    .search-nav-btn { background: none; border: none; cursor: pointer; color: #ABABAB; font-size: 9px; padding: 2px 4px; line-height: 1; }
+    .search-nav-btn:hover { color: #555; }
+    .search-x-btn { background: none; border: none; cursor: pointer; color: #BDBDBD; font-size: 18px; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+    .search-x-btn:hover { color: #555; }
+    .search-icon-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; background: transparent; border: none; cursor: pointer; border-radius: 6px; color: #888; transition: background .12s; flex-shrink: 0; }
+    .search-icon-btn:hover { background: #F5F5F5; }
+    ::highlight(search-mark) { background: #FFF3B0; color: inherit; }
+    ::highlight(search-mark-cur) { background: #FFD700; color: inherit; }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]::after { content: attr(data-tooltip); position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; font-size: 10px; font-weight: 500; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.12s; z-index: 200; }
+    [data-tooltip]:hover::after { opacity: 1; }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 60px 0; }
+  </style>
+</head>
+<body>
+
+<header class="top-bar">
+  <a href="../index.html" class="home-g-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"><path d="M17 7A7 7 0 1 0 19 12h-5"/></svg></a>
+  <span class="doc-title">CX Core Values</span>
+  <div class="view-toggle">
+    <button class="vt-btn" onclick="location.href='../UXP/UXP_governance.html'">거버넌스</button>
+    <button class="vt-btn active">핵심가치</button>
+  </div>
+  <button class="export-icon-btn" onclick="exportMarkdown()" data-tooltip="MD 내려받기"><svg width="14" height="14" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v7M4 6.5l2.5 2.5 2.5-2.5M2 11h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="search-wrap" id="searchWrap"><div class="search-expand" id="searchExpand"><input id="searchField" class="search-field" placeholder="검색..." autocomplete="off"><span id="searchCounter" class="search-counter"></span><div class="search-nav-btns"><button id="searchPrev" class="search-nav-btn" title="이전">&#9650;</button><button id="searchNext" class="search-nav-btn" title="다음">&#9660;</button></div><button id="searchXBtn" class="search-x-btn" title="닫기">&times;</button></div><button class="search-icon-btn" id="searchBtn" title="검색" aria-label="검색"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></div>
+</header>
+
+<nav class="sidebar">
+  <span class="sidebar-group-label">CX Core Values</span>
+  <a href="#cv01" class="active"><span class="nav-code">CV01</span> Borderless</a>
+  <a href="#cv02"><span class="nav-code">CV02</span> Intent-Based</a>
+  <a href="#cv03"><span class="nav-code">CV03</span> Frictionless</a>
+  <a href="#cv04"><span class="nav-code">CV04</span> Engaging</a>
+</nav>
+
+<main class="main">
+
+  <div class="doc-intro">
+    <h1>CX Core Values</h1>
+    <p>SKT 통합 채널의 모든 UX 결정은 네 가지 핵심 가치를 기준으로 판단합니다. 이 가치들은 원칙(UXP), 패턴(UXPT), 라이팅(VOT), AI 가이드(AIG) 전반에 걸쳐 일관되게 반영됩니다.</p>
+    <div class="doc-meta">
+      <div class="doc-meta-item"><strong>Document</strong>CX Core Values · CV01–CV04</div>
+      <div class="doc-meta-item"><strong>Scope</strong>전 거버넌스 문서 공통 기준</div>
+      <div class="doc-meta-item"><strong>Source</strong>SKT Next CX Consulting Strategy</div>
+      <div class="doc-meta-item"><strong>버전</strong> 1.1</div>
+      <div class="doc-meta-item"><strong>업데이트</strong> 2026.06.17</div>
+    </div>
+  </div>
+
+  <!-- ── CV01 ── -->
+  <section class="section" id="cv01">
+    <div class="section-header">
+      <div class="section-header-top">
+        <span class="section-code-badge">CV01</span>
+        <span class="cv-driver-badge-hd">Journey Readable</span>
+      </div>
+      <div class="section-title">Borderless Experience</div>
+      <div class="section-desc">통합된 고객 Data set을 기반으로 SKT 서비스 접점 전반에서 일관된 경험을 제공합니다.</div>
+      <div class="tag-row">
+        <span class="tag">채널 통합</span>
+        <span class="tag">여정 연속성</span>
+        <span class="tag">옴니채널</span>
+        <span class="tag">접점 동선</span>
+      </div>
+    </div>
+
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 01</div>
+        <div class="outcome-title">여정 중심의 UX 설계</div>
+        <div class="outcome-desc">고객 목적에 따른 핵심 여정 중심 탭 구조. 분산된 관리 정보(요금제·구독·혜택)를 하나의 앱에서 통합 열람·진단·관리합니다.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 02</div>
+        <div class="outcome-title">맥락 중심의 옴니채널</div>
+        <div class="outcome-desc">모바일 탐색 이력이 매장 상담 시스템으로, 매장 상담 이력이 온라인 채널로 끊김 없이 양방향으로 연결됩니다.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 03</div>
+        <div class="outcome-title">외·내부 접점 동선 설계</div>
+        <div class="outcome-desc">OS 에이전트에서 탐색·호출 후 채널로 자연스럽게 이어지는 흐름. 혜택 확인 후 외부 채널과의 접점까지 설계합니다.</div>
+      </div>
+    </div>
+
+    <div class="connected-block">
+      <div class="connected-hd">연결된 거버넌스</div>
+      <div class="connected-grid">
+        <div class="connected-row">
+          <span class="connected-doc">UXP · ETR</span>
+          <span class="connected-label">진입 &amp; 복귀</span>
+          <span class="connected-desc">최근 과업·다음 행동 이어하기 진입, 통합 고객 식별/여정 흐름 기준</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXP · RSV</span>
+          <span class="connected-label">문제해결</span>
+          <span class="connected-desc">Self-Serve 우선 + 상담 fallback으로 채널 간 단절 없는 문제 해결</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · PGT</span>
+          <span class="connected-label">화면 전환</span>
+          <span class="connected-desc">과업 자동 저장/복원으로 채널 이탈 후에도 여정 연속성 보장</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · NAV</span>
+          <span class="connected-label">내비게이션</span>
+          <span class="connected-desc">여정 기반 탭 구조 및 과업 기반 분기 원칙 적용</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · CCC</span>
+          <span class="connected-label">채널 연속성</span>
+          <span class="connected-desc">크로스채널 컨텍스트 연결 패턴</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── CV02 ── -->
+  <section class="section" id="cv02">
+    <div class="section-header">
+      <div class="section-header-top">
+        <span class="section-code-badge">CV02</span>
+        <span class="cv-driver-badge-hd">Segment Readable</span>
+      </div>
+      <div class="section-title">Intent-Based Experience</div>
+      <div class="section-desc">고객의 의도를 기반으로 UX를 동적으로 재구성하여, 초개인화된 경험을 제공합니다.</div>
+      <div class="tag-row">
+        <span class="tag">초개인화</span>
+        <span class="tag">의도 기반 UX</span>
+        <span class="tag">동적 재구성</span>
+        <span class="tag">세그먼트 최적화</span>
+      </div>
+    </div>
+
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 01</div>
+        <div class="outcome-title">개인화 해상도 별 UX 최적화</div>
+        <div class="outcome-desc">마이크로 태스크와 주요 메뉴들의 우선순위부터, 고객 개인에게 알맞는 화면 제공 방식까지의 맞춤형 구조 제공. (Generic → Segmentation → Personalization → Hyper Personalization)</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 02</div>
+        <div class="outcome-title">고객 해석 기반 UI</div>
+        <div class="outcome-desc">고객의 서비스 이용 성향에 따라 요금제 비교 방식을 상이하게 구성합니다. (분석형·가치 체감형·관계 중심형)</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 03</div>
+        <div class="outcome-title">채널별 주요 여정에 대한 지원</div>
+        <div class="outcome-desc">채널별 주요 세그먼트 특성과 방문 목적에 맞춰, 각 진입 의도에 알맞는 여정으로 안내합니다. (App · 오프라인 매장 · BSS·CC)</div>
+      </div>
+    </div>
+
+    <div class="connected-block">
+      <div class="connected-hd">연결된 거버넌스</div>
+      <div class="connected-grid">
+        <div class="connected-row">
+          <span class="connected-doc">UXP · EXP</span>
+          <span class="connected-label">탐색</span>
+          <span class="connected-desc">가치 우선(Value First), 단계적 확장, 핵심 행동 중심 화면 구성</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXP · SCH</span>
+          <span class="connected-label">검색</span>
+          <span class="connected-desc">Search/Compare-first 원칙 — 추천보다 탐색·비교를 우선 설계</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · SDUI</span>
+          <span class="connected-label">서버 구동 UI</span>
+          <span class="connected-desc">세그먼트별 전시 컴포넌트 동적 구성 패턴</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · AIA</span>
+          <span class="connected-label">AI 어시스턴트</span>
+          <span class="connected-desc">의도 파악 기반 비서형 UX — 고객 결정을 돕는 AI 설계</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · ISR</span>
+          <span class="connected-label">인스토어 &amp; 스캔</span>
+          <span class="connected-desc">진입 맥락별 최적화된 정보 제공 패턴</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── CV03 ── -->
+  <section class="section" id="cv03">
+    <div class="section-header">
+      <div class="section-header-top">
+        <span class="section-code-badge">CV03</span>
+        <span class="cv-driver-badge-hd">Task &amp; Info Readable</span>
+      </div>
+      <div class="section-title">Frictionless Lead</div>
+      <div class="section-desc">의사결정과 행동이 막히지 않도록 간결하고 명확한 흐름을 설계합니다.</div>
+      <div class="tag-row">
+        <span class="tag">마찰 제거</span>
+        <span class="tag">안심 기반 실행</span>
+        <span class="tag">셀프처리</span>
+        <span class="tag">단계별 안내</span>
+      </div>
+    </div>
+
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 01</div>
+        <div class="outcome-title">'안심'의 톤으로 신뢰 형성</div>
+        <div class="outcome-desc">결정 전 결과에 대한 정보를 먼저 제시해 안심 기반 실행을 유도합니다. 절차 부담을 낮추는 안심형 응대와 판단에 필요한 정보를 선제적으로 안내합니다.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 02</div>
+        <div class="outcome-title">고객 응대 지원</div>
+        <div class="outcome-desc">고객의 맥락에 맞는 상담 및 업무처리 보조 AI로 지원합니다. 상황에 따라 필요한 태스크를 직접 꺼내 다음 행동으로 자연스럽게 이어줍니다.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 03</div>
+        <div class="outcome-title">고객 셀프처리 지원</div>
+        <div class="outcome-desc">채널 전반 AI 보조를 통해 최적의 의사결정과 셀프처리를 지원합니다. 혜택 변화의 가치를 체감하도록 설계하고, 연계 태스크를 제시해 즉시 실행으로 이어줍니다.</div>
+      </div>
+    </div>
+
+    <div class="connected-block">
+      <div class="connected-hd">연결된 거버넌스</div>
+      <div class="connected-grid">
+        <div class="connected-row">
+          <span class="connected-doc">UXP · DCD</span>
+          <span class="connected-label">결정</span>
+          <span class="connected-desc">안내정보 구조화, 유료 항목 명확 고지 — 결정 전 결과 선제 제시</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXP · ACT</span>
+          <span class="connected-label">실행</span>
+          <span class="connected-desc">명확한 행동(Clear Action), 3초 답변 — Primary CTA 명료화</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXP · TCP</span>
+          <span class="connected-label">완료</span>
+          <span class="connected-desc">핵심 행동 중심 화면 구성, 안내정보 구조화 — 완료까지 단절 방지</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · PRC</span>
+          <span class="connected-label">프로세스</span>
+          <span class="connected-desc">단계별 입력 최소화, 동일 안내 중복 방지 패턴</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · ERR</span>
+          <span class="connected-label">오류·복구</span>
+          <span class="connected-desc">폴백 페이지/안전모드, 빈 상태 화면 표준 — 막히는 상황 즉시 대안 제공</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · BTN</span>
+          <span class="connected-label">버튼·CTA</span>
+          <span class="connected-desc">공통 UI 컴포넌트 배치 규격, CTA 작성 기준</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="section-divider">
+
+  <!-- ── CV04 ── -->
+  <section class="section" id="cv04">
+    <div class="section-header">
+      <div class="section-header-top">
+        <span class="section-code-badge">CV04</span>
+        <span class="cv-driver-badge-hd">Relationship Readable</span>
+      </div>
+      <div class="section-title">Engaging Experience</div>
+      <div class="section-desc">고객의 이용 맥락과 관계 수준에 따라, 지속적으로 반응하고 참여하게 되는 경험을 설계합니다.</div>
+      <div class="tag-row">
+        <span class="tag">장기 고객 가치</span>
+        <span class="tag">관계 기반 인게이지먼트</span>
+        <span class="tag">결합 혜택</span>
+        <span class="tag">LTV 시각화</span>
+      </div>
+    </div>
+
+    <div class="outcome-grid">
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 01</div>
+        <div class="outcome-title">장기 고객 가치 체감</div>
+        <div class="outcome-desc">장기 고객에게 추가 혜택을 제안하고, 누적된 결합 혜택 가치를 화면 곳곳에서 가시화해 신뢰를 형성합니다.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 02</div>
+        <div class="outcome-title">선제적 결합 기회 확산</div>
+        <div class="outcome-desc">고객 관계망 기반으로 AI가 결합 기회를 제안하고, 타 통신사 지인까지 그룹 단위로 자연스럽게 유입됩니다.</div>
+      </div>
+      <div class="outcome-card">
+        <div class="outcome-num">OUTCOME 03</div>
+        <div class="outcome-title">관계 기반 인게이지먼트 확장</div>
+        <div class="outcome-desc">위치 기반 혜택 공유·구독 파티 등 개인 소비를 관계 기반으로 확장해 멤버십 사용률과 참여를 높입니다.</div>
+      </div>
+    </div>
+
+    <div class="connected-block">
+      <div class="connected-hd">연결된 거버넌스</div>
+      <div class="connected-grid">
+        <div class="connected-row">
+          <span class="connected-doc">UXP · EXP</span>
+          <span class="connected-label">탐색</span>
+          <span class="connected-desc">강요하지 않는 톤앤매너 원칙 — 고객 페이스 존중, 판매 압박 배제</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXP · ACT</span>
+          <span class="connected-label">실행</span>
+          <span class="connected-desc">셀프 처리 업무 확대 — 고객 주도적 업무 처리 지원</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · LCV</span>
+          <span class="connected-label">고객 생애가치</span>
+          <span class="connected-desc">추가 혜택 카드 구성 요소 기준, 혜택 정보 구조 정비 — LTV 시각화</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · RGP</span>
+          <span class="connected-label">관계 &amp; 그룹</span>
+          <span class="connected-desc">결합 기회 제안, 그룹 단위 유입 — 관계 기반 인게이지먼트 확장 패턴</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · OUP</span>
+          <span class="connected-label">옵트인·권한</span>
+          <span class="connected-desc">유료 항목 명확 고지 — 신뢰 기반 동의 설계</span>
+        </div>
+        <div class="connected-row">
+          <span class="connected-doc">UXPT · CTL</span>
+          <span class="connected-label">카피·톤</span>
+          <span class="connected-desc">비서형 UX 라이팅 가이드 — 조력자 톤앤매너, AI 검수 체계</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+function exportMarkdown() {
+  var lines = ['# CX Core Values\n'];
+  document.querySelectorAll('.section[id]').forEach(function(sec) {
+    var hd = sec.querySelector('.section-header');
+    if (hd) {
+      var code = hd.querySelector('.section-code-badge');
+      var title = hd.querySelector('.section-title');
+      var desc = hd.querySelector('.section-desc');
+      lines.push('## ' + (code ? code.textContent.trim() + ' ' : '') + (title ? title.textContent.trim() : ''));
+      if (desc) lines.push('\n> ' + desc.textContent.trim() + '\n');
+    }
+    sec.querySelectorAll('.outcome-card').forEach(function(card) {
+      var num = card.querySelector('.outcome-num');
+      var ot = card.querySelector('.outcome-title');
+      var od = card.querySelector('.outcome-desc');
+      lines.push('### ' + (num ? num.textContent.trim() + ' · ' : '') + (ot ? ot.textContent.trim() : ''));
+      if (od) lines.push('\n' + od.textContent.trim() + '\n');
+    });
+    lines.push('---\n');
+  });
+  var blob = new Blob([lines.join('\n')], {type: 'text/markdown'});
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'CV_governance.md';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+(function() {
+  // Sidebar active state on scroll
+  var sections = document.querySelectorAll('.section[id]');
+  var navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+  function onScroll() {
+    var scrollY = window.scrollY + 80;
+    var cur = sections[0] ? sections[0].id : null;
+    sections.forEach(function(s) { if (scrollY >= s.offsetTop) cur = s.id; });
+    navLinks.forEach(function(a) {
+      a.classList.toggle('active', a.getAttribute('href') === '#' + cur);
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  // Search
+  var searchWrap = document.getElementById('searchWrap');
+  var searchField = document.getElementById('searchField');
+  var searchCounter = document.getElementById('searchCounter');
+  var searchPrevBtn = document.getElementById('searchPrev');
+  var searchNextBtn = document.getElementById('searchNext');
+  var searchXBtn = document.getElementById('searchXBtn');
+  var searchBtn = document.getElementById('searchBtn');
+  var _matches = [], _cur = -1;
+  function collectRanges(node, q, out) {
+    if (node.nodeType === 3) {
+      var txt = node.nodeValue.toLowerCase(), idx = 0, r;
+      while ((idx = txt.indexOf(q, idx)) !== -1) {
+        r = new Range(); r.setStart(node, idx); r.setEnd(node, idx + q.length);
+        out.push(r); idx += q.length;
+      }
+    } else if (node.nodeType === 1 && !({SCRIPT:1,STYLE:1}[node.tagName])) {
+      Array.from(node.childNodes).forEach(function(c) { collectRanges(c, q, out); });
+    }
+  }
+  function applyHL() {
+    CSS.highlights.clear();
+    if (!_matches.length) return;
+    var rest = _matches.filter(function(_, i) { return i !== _cur; });
+    if (rest.length) CSS.highlights.set('search-mark', new Highlight(...rest));
+    if (_cur >= 0 && _matches[_cur]) CSS.highlights.set('search-mark-cur', new Highlight(_matches[_cur]));
+  }
+  function updateCtr() {
+    if (!_matches.length) { searchCounter.textContent = ''; return; }
+    searchCounter.textContent = (_cur + 1) + '/' + _matches.length;
+  }
+  function goTo(idx) {
+    if (!_matches.length) return;
+    _cur = ((idx % _matches.length) + _matches.length) % _matches.length;
+    updateCtr(); applyHL();
+    var el = _matches[_cur].startContainer.parentElement;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function doSearch(q) {
+    CSS.highlights.clear(); _matches = []; _cur = -1;
+    if (!q.trim()) { updateCtr(); return; }
+    collectRanges(document.querySelector('main'), q.toLowerCase(), _matches);
+    if (_matches.length) goTo(0); else updateCtr();
+  }
+  function openSrch() { searchWrap.classList.add('open'); setTimeout(function() { searchField.focus(); }, 320); }
+  function closeSrch() { searchWrap.classList.remove('open'); searchField.value = ''; doSearch(''); }
+  searchBtn.addEventListener('click', function() { searchWrap.classList.contains('open') ? closeSrch() : openSrch(); });
+  searchXBtn.addEventListener('click', closeSrch);
+  searchPrevBtn.addEventListener('click', function() { goTo(_cur - 1); });
+  searchNextBtn.addEventListener('click', function() { goTo(_cur + 1); });
+  searchField.addEventListener('input', function() { doSearch(this.value); });
+  searchField.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') { e.preventDefault(); e.shiftKey ? goTo(_cur - 1) : goTo(_cur + 1); }
+  });
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeSrch(); });
+}());
+</script>
+</body>
+</html>

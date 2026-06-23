@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정책서 → SB → 목업 프로세스 & 거버넌스 연결접점</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Pretendard', -apple-system, sans-serif;
+  background: #f7f7f8;
+  color: #111;
+  padding: 56px 40px 100px;
+}
+
+/* ─── Page header ─── */
+.page-header {
+  max-width: 960px;
+  margin: 0 auto 52px;
+}
+.page-tag {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 10px;
+}
+.page-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  line-height: 1.25;
+  margin-bottom: 12px;
+}
+.page-desc {
+  font-size: 14px;
+  color: #666;
+  line-height: 1.7;
+  max-width: 600px;
+}
+
+/* ─── Section label ─── */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 16px;
+  max-width: 960px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ─── FLOW DIAGRAM ─── */
+.flow-diagram {
+  max-width: 960px;
+  margin: 0 auto 64px;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+
+.flow-block {
+  flex: 1;
+  border-radius: 14px;
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  position: relative;
+}
+.flow-block-tag {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+.flow-block-title {
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1.25;
+}
+.flow-block-desc {
+  font-size: 12px;
+  line-height: 1.6;
+  opacity: 0.72;
+  margin-top: 2px;
+}
+.flow-block-files {
+  margin-top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.flow-file {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Mono', monospace;
+  padding: 3px 8px;
+  border-radius: 5px;
+  background: rgba(0,0,0,0.06);
+  color: inherit;
+  display: inline-block;
+  width: fit-content;
+}
+
+.fb-policy { background: #111; color: #fff; }
+.fb-sb     { background: #fff; color: #111; border: 1.5px solid #ddd; }
+.fb-mockup { background: #fff; color: #111; border: 1.5px solid #ddd; }
+.fb-out    { background: #111; color: #fff; }
+
+.fb-policy .flow-file { background: rgba(255,255,255,0.12); }
+.fb-out    .flow-file { background: rgba(255,255,255,0.12); }
+
+/* Arrow between blocks */
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 2px;
+}
+.flow-arrow-line {
+  width: 24px;
+  height: 1.5px;
+  background: #ccc;
+}
+.flow-arrow-tip {
+  width: 0; height: 0;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 7px solid #ccc;
+  margin-left: 24px;
+}
+.flow-arrow-label {
+  font-size: 9px;
+  color: #bbb;
+  text-align: center;
+  margin-top: 6px;
+  line-height: 1.4;
+  letter-spacing: 0.2px;
+}
+
+/* Governance injection badges on arrows */
+.gov-inject {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+.gov-badge {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  white-space: nowrap;
+  letter-spacing: 0.2px;
+}
+.gb-uxp  { background: #dbeafe; color: #1d4ed8; border: 1px solid #93c5fd; }
+.gb-uxpt { background: #fce7f3; color: #be185d; border: 1px solid #f9a8d4; }
+.gb-vot  { background: #fef9c3; color: #92400e; border: 1px solid #fde68a; }
+.gb-sdg  { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+
+/* ─── ROLE CARDS ─── */
+.role-section {
+  max-width: 960px;
+  margin: 0 auto 64px;
+}
+.role-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.role-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 24px;
+  border: 1.5px solid #e8e8e8;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.role-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+.role-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 800;
+  flex-shrink: 0;
+  letter-spacing: -0.5px;
+}
+.ri-policy { background: #111; color: #fff; }
+.ri-uxp    { background: #dbeafe; color: #1d4ed8; }
+.ri-uxpt   { background: #fce7f3; color: #be185d; }
+.ri-vot    { background: #fef9c3; color: #92400e; }
+.ri-sdg    { background: #dcfce7; color: #166534; }
+
+.role-card-name {
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  margin-bottom: 3px;
+}
+.role-card-subtitle {
+  font-size: 12px;
+  color: #888;
+  font-weight: 500;
+}
+.role-stage-tag {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 20px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  letter-spacing: 0.2px;
+}
+.rst-lock  { background: #111; color: #fff; }
+.rst-sb    { background: #dbeafe; color: #1d4ed8; }
+.rst-mockup{ background: #f3f4f6; color: #374151; }
+
+.role-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.role-row {}
+.role-row-label {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-bottom: 5px;
+}
+.role-row-content {
+  font-size: 13px;
+  line-height: 1.65;
+  color: #333;
+}
+.role-row-content strong {
+  color: #111;
+  font-weight: 700;
+}
+.role-file-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 6px;
+}
+.role-file {
+  font-size: 11px;
+  font-family: 'SF Mono', 'Fira Mono', monospace;
+  background: #f5f5f7;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  padding: 2px 8px;
+  color: #555;
+}
+
+/* Full-width policy card */
+.role-card-full {
+  grid-column: 1 / -1;
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+.role-card-full .role-row-label { color: rgba(255,255,255,0.4); }
+.role-card-full .role-row-content { color: rgba(255,255,255,0.82); }
+.role-card-full .role-row-content strong { color: #fff; }
+.role-card-full .role-file { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); color: rgba(255,255,255,0.7); }
+.role-card-full .role-card-subtitle { color: rgba(255,255,255,0.45); }
+
+/* ─── MATRIX TABLE ─── */
+.matrix-section {
+  max-width: 960px;
+  margin: 0 auto 48px;
+}
+.matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1.5px solid #e8e8e8;
+  font-size: 13px;
+}
+.matrix-table th {
+  background: #f7f7f8;
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #888;
+  border-bottom: 1.5px solid #e8e8e8;
+}
+.matrix-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: top;
+  color: #333;
+  line-height: 1.55;
+}
+.matrix-table tr:last-child td { border-bottom: none; }
+.matrix-table td:first-child { font-weight: 700; color: #111; white-space: nowrap; }
+
+.stage-pill {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.2px;
+}
+.sp-lock   { background: #111; color: #fff; }
+.sp-sb     { background: #dbeafe; color: #1d4ed8; }
+.sp-mockup { background: #f3f4f6; color: #374151; }
+.sp-both   { background: #fce7f3; color: #be185d; }
+
+.impact-tag {
+  display: inline-block;
+  font-size: 11px;
+  background: #f5f5f7;
+  border: 1px solid #e5e5e5;
+  border-radius: 5px;
+  padding: 1px 7px;
+  color: #555;
+  margin: 2px 2px 0 0;
+  font-family: 'SF Mono', 'Fira Mono', monospace;
+}
+
+/* ─── NOTE ─── */
+.note-box {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fffbe6;
+  border: 1.5px solid #fde68a;
+  border-radius: 12px;
+  padding: 18px 22px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: #78350f;
+}
+.note-box strong { color: #92400e; }
+</style>
+</head>
+<body>
+
+<!-- ── PAGE HEADER ── -->
+<div class="page-header">
+  <div class="page-tag">SB to Mockup Process</div>
+  <div class="page-title">정책서 → SB → 목업<br>프로세스 & 거버넌스 연결접점</div>
+  <div class="page-desc">정책서를 기반으로 화면 설계서(SB)를 생성하고, 목업으로 구현하는 전 과정에서 각 거버넌스 문서가 어느 단계에 어떤 역할로 개입하는지 정의합니다.</div>
+</div>
+
+
+<!-- ── SECTION 1: FLOW ── -->
+<div class="section-label">01 — 전체 흐름</div>
+
+<div class="flow-diagram">
+
+  <!-- 정책서 -->
+  <div class="flow-block fb-policy">
+    <div class="flow-block-tag">Hard Lock</div>
+    <div class="flow-block-title">정책서</div>
+    <div class="flow-block-desc">무엇을 만들어야 하는가. 모든 흐름의 출발점이자 변경 불가 기준.</div>
+    <div class="flow-block-files">
+      <span class="flow-file">usecase_US-*.md</span>
+      <span class="flow-file">scenario_*.json</span>
+    </div>
+  </div>
+
+  <!-- arrow → SB -->
+  <div class="flow-arrow">
+    <div class="gov-inject">
+      <span class="gov-badge gb-uxp">UXP</span>
+    </div>
+    <div style="display:flex;align-items:center;">
+      <div class="flow-arrow-line"></div>
+      <div class="flow-arrow-tip"></div>
+    </div>
+    <div class="flow-arrow-label">SB 생성 인풋</div>
+  </div>
+
+  <!-- SB -->
+  <div class="flow-block fb-sb">
+    <div class="flow-block-tag">Stage 1</div>
+    <div class="flow-block-title">화면 설계서<br>(SB)</div>
+    <div class="flow-block-desc">화면 ID · 오가니즘 배치 · 섹션 구성 · 조건부 노출 정의.</div>
+    <div class="flow-block-files">
+      <span class="flow-file" style="background:#f5f5f7;color:#555;">NOVA-*.md</span>
+    </div>
+  </div>
+
+  <!-- arrow → 목업 -->
+  <div class="flow-arrow">
+    <div class="gov-inject">
+      <span class="gov-badge gb-uxpt">UXPT</span>
+      <span class="gov-badge gb-vot">VOT</span>
+      <span class="gov-badge gb-sdg">SDG</span>
+    </div>
+    <div style="display:flex;align-items:center;">
+      <div class="flow-arrow-line"></div>
+      <div class="flow-arrow-tip"></div>
+    </div>
+    <div class="flow-arrow-label">목업 생성 인풋</div>
+  </div>
+
+  <!-- 목업 -->
+  <div class="flow-block fb-out">
+    <div class="flow-block-tag">Stage 2</div>
+    <div class="flow-block-title">목업</div>
+    <div class="flow-block-desc">오가니즘 컴포넌트 호출 · 상태 처리 · 카피 적용 · SDUI 구조 완성.</div>
+    <div class="flow-block-files">
+      <span class="flow-file">organism 렌더링</span>
+    </div>
+  </div>
+
+</div>
+
+
+<!-- ── SECTION 2: ROLE CARDS ── -->
+<div class="section-label">02 — 항목별 역할 정의</div>
+
+<div class="role-section">
+<div class="role-grid">
+
+  <!-- 정책서 -->
+  <div class="role-card role-card-full">
+    <div class="role-card-header">
+      <div class="role-icon ri-policy">정책</div>
+      <div>
+        <div class="role-card-name">정책서</div>
+        <div class="role-card-subtitle">Policy Documents — usecase_US-*.md / scenario_*.json</div>
+      </div>
+      <div class="role-stage-tag rst-lock">Hard Lock</div>
+    </div>
+    <div class="role-rows">
+      <div class="role-row">
+        <div class="role-row-label">역할</div>
+        <div class="role-row-content"><strong>무엇을 만들 것인가를 결정하는 유일한 기준.</strong> 화면 수, 플로우, 기능 입출력, 예외 처리, 정책 규칙을 확정한다. 이후 모든 거버넌스는 이 범위 안에서만 동작한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">SB 생성 시 제공하는 것</div>
+        <div class="role-row-content">유즈케이스 → 프로세스 → 기능(처리 흐름) : <strong>어떤 화면이 몇 개 필요한지, 어떤 순서로 이어지는지, 각 화면에서 무슨 기능이 실행되는지</strong> 정의한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">목업 생성 시 제공하는 것</div>
+        <div class="role-row-content">기능(실패·예외 케이스) + Policy Item : <strong>어떤 오류 상황이 존재하는지, 각 텍스트·레이블의 정책 기준이 무엇인지</strong> 정의한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">거버넌스와의 관계</div>
+        <div class="role-row-content">거버넌스가 정책서와 충돌할 경우 <strong>정책서가 항상 우선한다.</strong> 거버넌스는 정책서가 정한 범위 안에서 경험 품질을 높이는 역할만 한다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UX원칙 -->
+  <div class="role-card">
+    <div class="role-card-header">
+      <div class="role-icon ri-uxp">UXP</div>
+      <div>
+        <div class="role-card-name">UXP (UX원칙)</div>
+        <div class="role-card-subtitle">UXL_ETR / EXP / SCH / DCD / ACT / TCP / RSV</div>
+      </div>
+      <div class="role-stage-tag rst-sb">SB 생성 인풋</div>
+    </div>
+    <div class="role-rows">
+      <div class="role-row">
+        <div class="role-row-label">역할</div>
+        <div class="role-row-content"><strong>이 화면이 속한 여정에서 사용자에게 어떤 경험을 제공해야 하는가</strong>를 정의한다. 화면 수나 플로우는 정책서가 결정하지만, 각 화면 안의 정보 위계·섹션 우선순위·상호작용 원칙은 UX원칙이 결정한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">SB 생성 시 작용 방식</div>
+        <div class="role-row-content">화면 ID가 속한 여정(진입·탐색·결정·실행·완료·CS)을 파악 → 해당 UXL 파일의 DO/DON'T 원칙을 적용해 <strong>오가니즘 배치 순서, 조건부 섹션 노출 기준, 정보 밀도</strong>를 결정한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">활용 예시</div>
+        <div class="role-row-content">ACT 여정 화면 → UXL_ACT "입력·선택 간소화" 원칙 적용 → 필수 입력 섹션만 기본 노출, 조건부 섹션은 서버 제어로 처리</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UX패턴 -->
+  <div class="role-card">
+    <div class="role-card-header">
+      <div class="role-icon ri-uxpt">UXPT</div>
+      <div>
+        <div class="role-card-name">UXPT (UX패턴)</div>
+        <div class="role-card-subtitle">UX_Pattern_1(구조) / UX_Pattern_2(상태)</div>
+      </div>
+      <div class="role-stage-tag rst-mockup">목업 생성 인풋</div>
+    </div>
+    <div class="role-rows">
+      <div class="role-row">
+        <div class="role-row-label">역할</div>
+        <div class="role-row-content"><strong>각 UI 컴포넌트가 어떻게 동작해야 하는가</strong>를 정의한다. 내비게이션, 버튼, 화면 전환, 로딩, 에러, 리커버리 등 공통 상태 처리 방식을 규정한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">목업 생성 시 작용 방식</div>
+        <div class="role-row-content">정책서의 <strong>기능(실패·예외 케이스)</strong>를 읽어 → 어떤 상태 처리 패턴을 써야 하는지 결정한다.<br><br>필수 미동의 → 인라인 에러 패턴<br>버전 불일치 → Recovery Flow 패턴<br>API 저장 실패 → 시스템 에러 패턴</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">활용 예시</div>
+        <div class="role-row-content">SB에 정의된 오가니즘이 로딩 상태를 가질 경우 → UX패턴 2-1(스켈레톤 UI) 기준으로 렌더링 방식 결정</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VOT -->
+  <div class="role-card">
+    <div class="role-card-header">
+      <div class="role-icon ri-vot">VOT</div>
+      <div>
+        <div class="role-card-name">VOT</div>
+        <div class="role-card-subtitle">Voice & Tone — 보이스톤 가이드</div>
+      </div>
+      <div class="role-stage-tag rst-mockup">목업 생성 인풋</div>
+    </div>
+    <div class="role-rows">
+      <div class="role-row">
+        <div class="role-row-label">역할</div>
+        <div class="role-row-content"><strong>화면 안의 모든 텍스트가 어떤 톤으로 작성되어야 하는가</strong>를 정의한다. 버튼 라벨, 안내 문구, 에러 메시지, 추천 카피 등에 적용된다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">목업 생성 시 작용 방식</div>
+        <div class="role-row-content">정책서의 <strong>Policy Item(텍스트·안내 규칙)</strong>을 읽어 → 해당 상황(안내·추천·경고·관계)에 맞는 VOT 기준을 적용해 카피를 완성한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">활용 예시</div>
+        <div class="role-row-content">약관 동의 화면의 필수 약관 레이블 → VOT 안내 기준 적용 → "서비스 이용약관 (필수)" 표기 방식·어조 결정</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SDG -->
+  <div class="role-card">
+    <div class="role-card-header">
+      <div class="role-icon ri-sdg">SDG</div>
+      <div>
+        <div class="role-card-name">SDG</div>
+        <div class="role-card-subtitle">SDUI Governance — 컴포넌트 구조 기준</div>
+      </div>
+      <div class="role-stage-tag rst-mockup">목업 생성 인풋</div>
+    </div>
+    <div class="role-rows">
+      <div class="role-row">
+        <div class="role-row-label">역할</div>
+        <div class="role-row-content"><strong>SDUI에서 컴포넌트를 어떻게 명명하고 구조화하고 페이지를 어떻게 조합하는가</strong>의 기준을 정의한다. 오가니즘 ID 체계, 서버 제어 항목 구조, 페이지 단위 조합 규칙을 포함한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">목업 생성 시 작용 방식</div>
+        <div class="role-row-content">SB에 정의된 오가니즘 ID(<code>ogn-MBR-terms-agree</code> 등)가 SDG 네이밍 기준을 따르는지 검증하고, 서버 제어 항목 구조가 SDG 페이지 조합 규칙에 맞게 설계되었는지 확인한다.</div>
+      </div>
+      <div class="role-row">
+        <div class="role-row-label">활용 예시</div>
+        <div class="role-row-content">조건부 섹션(최소=0, 최대=1) → SDG 서버제어 항목 "노출 여부" 필드 구조 기준으로 payload 스펙 정의</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+
+<!-- ── SECTION 3: MATRIX ── -->
+<div class="section-label">03 — 파일별 SB·목업 연결접점 매트릭스</div>
+
+<div class="matrix-section">
+<table class="matrix-table">
+  <thead>
+    <tr>
+      <th>문서</th>
+      <th>개입 단계</th>
+      <th>읽는 대상</th>
+      <th>결정하는 것</th>
+      <th>검수 체크포인트</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>정책서</td>
+      <td><span class="stage-pill sp-lock">전 단계 기준</span></td>
+      <td>유즈케이스 / 프로세스 / 기능 / Policy Item</td>
+      <td>화면 수 · 플로우 · 기능 입출력 · 예외 처리 · 텍스트 정책</td>
+      <td>
+        <span class="impact-tag">화면 수 일치</span>
+        <span class="impact-tag">플로우 순서</span>
+        <span class="impact-tag">필수 오가니즘</span>
+      </td>
+    </tr>
+    <tr>
+      <td>UXP<br><span style="font-size:11px;font-weight:400;color:#888;">UXL_*.md</span></td>
+      <td><span class="stage-pill sp-sb">SB 생성</span></td>
+      <td>기능(처리 흐름) + 여정 구분</td>
+      <td>오가니즘 배치 순서 · 섹션 노출 우선순위 · 정보 위계 · 조건부 노출 기준</td>
+      <td>
+        <span class="impact-tag">UXL DO 원칙 반영</span>
+        <span class="impact-tag">섹션 우선순위</span>
+        <span class="impact-tag">단일 추천 vs 리스트</span>
+      </td>
+    </tr>
+    <tr>
+      <td>UXPT<br><span style="font-size:11px;font-weight:400;color:#888;">UX_Pattern_*.md</span></td>
+      <td><span class="stage-pill sp-mockup">목업 생성</span></td>
+      <td>기능(실패·예외 케이스)</td>
+      <td>로딩 방식 · 에러 표시 방식 · 리커버리 경로 · 버튼 계층 · 화면 전환 방식</td>
+      <td>
+        <span class="impact-tag">예외케이스 처리 존재</span>
+        <span class="impact-tag">에러 오가니즘 포함</span>
+        <span class="impact-tag">Recovery 경로</span>
+      </td>
+    </tr>
+    <tr>
+      <td>VOT<br><span style="font-size:11px;font-weight:400;color:#888;">보이스톤 가이드</span></td>
+      <td><span class="stage-pill sp-mockup">목업 생성</span></td>
+      <td>Policy Item (텍스트·안내 규칙)</td>
+      <td>버튼 라벨 · 안내 문구 · 에러 메시지 · 추천 카피 · 관계 수준별 어조</td>
+      <td>
+        <span class="impact-tag">카피 톤 일치</span>
+        <span class="impact-tag">상황별 어조</span>
+        <span class="impact-tag">금지 표현</span>
+      </td>
+    </tr>
+    <tr>
+      <td>SDG<br><span style="font-size:11px;font-weight:400;color:#888;">SDUI Governance</span></td>
+      <td><span class="stage-pill sp-mockup">목업 생성</span></td>
+      <td>SB 오가니즘 ID · 서버제어항목</td>
+      <td>오가니즘 ID 네이밍 · 서버 payload 구조 · 페이지 단위 조합 방식 · 노출 제어 항목 정의</td>
+      <td>
+        <span class="impact-tag">ID 네이밍 기준</span>
+        <span class="impact-tag">payload 구조</span>
+        <span class="impact-tag">조건부 제어</span>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+<!-- ── NOTE ── -->
+<div class="note-box">
+  <strong>변하지 않는 단 하나의 원칙</strong><br>
+  정책서는 기본값이다. 충돌이 발생했을 때 판단이 서지 않으면 정책서를 따른다. 단, 정책서를 따른 결과가 사용자에게 실질적 혼란·이탈·오류를 유발한다고 판단될 경우, 거버넌스는 정책서 수정을 제안할 권한을 가진다. 어느 방향으로 결론이 나든, <strong>충돌을 묵인하거나 기록 없이 넘어가는 것은 항상 금지</strong>다. 모든 충돌은 반드시 검수 리포트에 남기고 의사결정 이력을 보관한다.
+</div>
+
+</body>
+</html>

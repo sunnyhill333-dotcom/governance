@@ -1,0 +1,78 @@
+WRMCB=function(e){var c=console;if(c&&c.log&&c.error){c.log('Error running batched script.');c.error(e);}}
+;
+try {
+/* module-key = 'com.atlassian.confluence.extra.officeconnector:slide-viewer-resources', location = 'templates/extra/slideviewer/slideviewer.soy' */
+// This file was automatically generated from slideviewer.soy.
+// Please don't edit this file by hand.
+
+/**
+ * @fileoverview Templates in namespace OC.Templates.
+ */
+
+if (typeof OC == 'undefined') { var OC = {}; }
+if (typeof OC.Templates == 'undefined') { OC.Templates = {}; }
+
+
+OC.Templates.slide = function(opt_data, opt_ignored) {
+  return '<span class="vf-vertical-center"></span><img class="vf-slide-image" draggable="false" />';
+};
+if (goog.DEBUG) {
+  OC.Templates.slide.soyTemplateName = 'OC.Templates.slide';
+}
+
+
+OC.Templates.preview = function(opt_data, opt_ignored) {
+  return '<div class="vf-preview-image-wrapper"><div class="vf-preview-image"></div><div class="vf-slide-loading"></div></div><p class="vf-preview-text"></p>';
+};
+if (goog.DEBUG) {
+  OC.Templates.preview.soyTemplateName = 'OC.Templates.preview';
+}
+
+
+OC.Templates.controls = function(opt_data, opt_ignored) {
+  return '<div class="left"><a class="aui-button aui-button-subtle download" href="' + soy.$$escapeHtmlAttribute(soy.$$filterNormalizeUri(opt_data.downloadPath)) + '" title="' + soy.$$filterNoAutoescape('\ub2e4\uc6b4\ub85c\ub4dc') + '"><span class="aui-icon aui-icon-small aui-iconfont-download">' + soy.$$filterNoAutoescape('\ub2e4\uc6b4\ub85c\ub4dc') + '</span></a>' + ((opt_data.allowEdit) ? (opt_data.editInOfficeEnabled) ? '<button class="aui-button aui-button-subtle edit-in-office" title="' + soy.$$filterNoAutoescape('\uc624\ud53c\uc2a4\uc5d0\uc11c \ud3b8\uc9d1') + '"><span class="aui-icon aui-icon-small aui-iconfont-edit-filled">' + soy.$$filterNoAutoescape('\uc624\ud53c\uc2a4\uc5d0\uc11c \ud3b8\uc9d1') + '</span></button>' : '<span class="companion-edit-button-placeholder" data-template-name="companionEditIcon" data-linked-resource-id="' + soy.$$escapeHtmlAttribute(opt_data.attachmentId) + '" data-linked-resource-container-id="' + soy.$$escapeHtmlAttribute(opt_data.pageId) + '" data-source-location="office-slide-viewer-macro"></span>' : '') + '</div><div class="center"><button class="aui-button aui-button-subtle prev" title="' + soy.$$filterNoAutoescape('\uc774\uc804 \uc2ac\ub77c\uc774\ub4dc') + '"><span class="aui-icon aui-icon-small aui-iconfont-chevron-left">' + soy.$$filterNoAutoescape('\uc774\uc804 \uc2ac\ub77c\uc774\ub4dc') + '</span></button><button class="aui-button aui-button-subtle next" title="' + soy.$$filterNoAutoescape('\ub2e4\uc74c \uc2ac\ub77c\uc774\ub4dc') + '"><span class="aui-icon aui-icon-small aui-iconfont-chevron-right">' + soy.$$filterNoAutoescape('\ub2e4\uc74c \uc2ac\ub77c\uc774\ub4dc') + '</span></button></div><div class="right"><button class="aui-button aui-button-subtle enter fs" title="' + soy.$$filterNoAutoescape('\uc804\uccb4\ud654\uba74 \ubaa8\ub4dc') + '"><span class="aui-icon aui-icon-small aui-iconfont-vid-full-screen-on">' + soy.$$filterNoAutoescape('\uc804\uccb4\ud654\uba74 \ubaa8\ub4dc') + '</span></button></div>';
+};
+if (goog.DEBUG) {
+  OC.Templates.controls.soyTemplateName = 'OC.Templates.controls';
+}
+
+
+OC.Templates.progress = function(opt_data, opt_ignored) {
+  return '<div class="vf-progress-wrapper"><div class="vf-progress-indicator"></div></div>';
+};
+if (goog.DEBUG) {
+  OC.Templates.progress.soyTemplateName = 'OC.Templates.progress';
+}
+
+}catch(e){WRMCB(e)};
+;
+try {
+/* module-key = 'com.atlassian.confluence.extra.officeconnector:slide-viewer-resources', location = 'javascript/slide-viewer.js' */
+var OC=OC||{};OC.Util={pairs:function(a){var b=[],c;for(c in a)_.has(a,c)&&b.push([c,a[c]]);return b},queryParams:function(a){return _.map(this.pairs(a),function(b){return b.join("\x3d")}).join("\x26")},decodeUrl:function(a){return decodeURIComponent(a.replace(/\+/g,"%20"))},imageDimensions:function(a){a instanceof jQuery&&(a=a[0]);var b=new Image;b.src=(a.getAttribute?a.getAttribute("src"):!1)||a.src;return{width:b.width,height:b.height}}};
+OC.Slide=Backbone.Model.extend({initialize:function(){this.set("selectedIndex",-1)},href:function(a){var b=AJS.contextPath()+"/plugins/servlet/pptslide?";a=OC.Util.queryParams(a);return b+a},ready:function(){var a={attachment:this.get("attachment"),attachmentId:this.get("attachmentId"),attachmentVer:this.get("attachmentVer"),pageId:this.get("pageId"),ready:!0};a=this.href(a);return AJS.$.ajax(a,{dataType:"json",cache:!0})},waitUntilReady:function(){var a=this;this.ready().done(function(b){a.set("numSlides",
+b.numSlides);a.set("selectedIndex",0);a.trigger("ready")}).fail(function(b){try{var c=b.responseText?JSON.parse(b.responseText).error:null;"converting"===c?_.defer(_.bind(a.waitUntilReady,a)):null!=c&&a.trigger("error",c)}catch(d){AJS.log('Error while parsing "'+b.responseText+'": '+d)}})},urlForSlide:function(a){a={attachment:this.get("attachment"),attachmentId:this.get("attachmentId"),attachmentVer:this.get("attachmentVer"),pageId:this.get("pageId"),slide:a};return this.href(a)},aspectRatio:function(){return this.get("width")/
+this.get("height")},prev:function(){var a=this.get("selectedIndex")-1;0>a&&(a=0);this.set("selectedIndex",a)},next:function(){var a=this.get("selectedIndex")+1;a>=this.get("numSlides")&&(a=this.get("numSlides")-1);this.set("selectedIndex",a)}});
+OC.PreviewView=Backbone.View.extend({template:OC.Templates.preview,className:"vf-preview",initialize:function(a){this.slideCache=a.slideCache;this.model.on("preview:show",this.showPreview,this);this.model.on("preview:hide change:selectedIndex",this.hidePreview,this)},showPreview:function(a,b){if(b!==this.previewIndex){this.previewIndex=b;this.updateDescription(b);this.$el.fadeIn(300);this.$(".vf-slide-loading").fadeIn(300);var c=this;this.slideCache.getView(b,function(d,e){d===c.previewIndex&&(c.$(".vf-preview-image").html(e),
+c.$(".vf-slide-loading").stop().fadeOut(300))})}},updateDescription:function(a){a=AJS.format("{1} \uc911 {0} \uc2ac\ub77c\uc774\ub4dc",a+1,this.model.get("numSlides"));this.$("p").html(a)},hidePreview:function(a,b){this.previewIndex=b;this.$el.fadeOut(300)},render:function(){this.$el.html(this.template());this.$el.hide();var a=this.model.aspectRatio();this.$(".vf-preview-image").css({width:"200px",height:200/a+"px"});this.$(".vf-slide-loading").spin("large");
+return this}});OC.SlideView=Backbone.View.extend({template:OC.Templates.slide,className:"vf-slide",initialize:function(a){this.href=a.href},load:function(a){function b(){d=!0;c.trigger("ready",c.el)}var c=this,d=!1,e=0;(function g(){a.on("load",b).attr("src",c.href);setTimeout(function(){!d&&2>e?(g(),e++):b()},1500)})()},render:function(){this.$el.html(this.template());var a=this.$(".vf-slide-image");this.load(a);return this}});
+OC.ControlView=Backbone.View.extend({template:OC.Templates.controls,className:"vf-controls",events:{"click .prev":"prev","click .next":"next","click .enter.fs":"enterFullscreen","click .leave.fs":"leaveFullscreen"},initialize:function(a){_.bindAll(this,"render","edit","prev","next","enterFullscreen","leaveFullscreen","onEnterFullscreen","onLeaveFullscreen","keyboardHandler","delegateEvents","undelegateEvents");this.fullscreenViewer=a.fullscreenViewer;this.fullscreenViewer.on("leaveFullscreen",this.onLeaveFullscreen);
+this.fullscreenViewer.on("enterFullscreen",this.onEnterFullscreen)},render:function(){this.$el.html(this.template(this.model.toJSON()));this.undelegateEvents();this.model.on("ready",this.delegateEvents);if(this.model.get("editInOfficeEnabled"))this.$el.find(".edit-in-office").off("click",this.edit),this.$el.find(".edit-in-office").on("click",this.edit.bind(this));else{var a=this.$el.find(".companion-edit-button-placeholder");try{var b=require("cp/component/companion/embedded-edit-with")}catch(c){AJS.warn("officeconnector.slide-viewer.ControlView.render: Embedded Edit With resource not available",
+c)}b&&b.loadEditButton&&a.length&&b.loadEditButton(a).then(function(c){AJS.trigger("oc-slideviewer-embedded-edit-button-loaded",c)},function(c){AJS.debug(c)})}return this},edit:function(a){a.preventDefault();require("office-connector/edit-in-office").doEditInOffice(AJS.contextPath(),this.model.get("editUrl"),"PowerPoint.Show",this.model.get("usePathAuth"))},prev:function(){this.model.prev()},next:function(){this.model.next()},enterFullscreen:function(){this.fullscreenViewer.enterFullscreen()},leaveFullscreen:function(){this.fullscreenViewer.leaveFullscreen()},
+onEnterFullscreen:function(){this.$(".fs").removeClass("enter").addClass("leave");this.$(".fs .aui-icon").removeClass("aui-iconfont-vid-full-screen-on").addClass("aui-iconfont-vid-full-screen-off fs");this.$(".prev .aui-icon").addClass("fs");this.$(".next .aui-icon").addClass("fs");this.$(".download, .edit-in-office").hide();AJS.$(document).on("keydown.vf-keyboard",_.bind(this.keyboardHandler,this))},onLeaveFullscreen:function(){this.$(".fs").removeClass("leave").addClass("enter");this.$(".fs .aui-icon").removeClass("aui-iconfont-vid-full-screen-off fs").addClass("aui-iconfont-vid-full-screen-on");
+this.$(".prev .aui-icon").removeClass("fs");this.$(".next .aui-icon").removeClass("fs");this.$(".download, .edit-in-office").show();AJS.$(document).off("keydown.vf-keyboard")},keyboardHandler:function(a){switch(a.which){case 37:this.prev();break;case 39:this.next();break;case 27:this.fullscreenViewer.leaveFullscreen()}a.preventDefault();a.stopPropagation()}});
+OC.FullscreenViewer=function(a,b){this.viewer=a;this.model=b;_.bindAll(this,"leaveFullscreen","enterFullscreen","changeFullscreen","setLayout","showFullscreen","hideFullscreen");AJS.$(document).on("webkitfullscreenchange mozfullscreenchange fullscreenchange",_.bind(function(){setTimeout(this.changeFullscreen,100)},this))};_.extend(OC.FullscreenViewer.prototype,Backbone.Events);
+OC.FullscreenViewer.prototype.leaveFullscreen=function(){document.cancelFullScreen?document.cancelFullScreen():document.mozCancelFullScreen?document.mozCancelFullScreen():document.webkitCancelFullScreen?document.webkitCancelFullScreen():(this.viewer.$el.removeClass("ie"),AJS.$("html").css("overflow",""),this.hideFullscreen())};
+OC.FullscreenViewer.prototype.enterFullscreen=function(){var a=this.viewer.el;a.requestFullscreen?a.requestFullscreen():a.mozRequestFullScreen?a.mozRequestFullScreen():a.webkitRequestFullscreen?a.webkitRequestFullscreen():(this.viewer.$el.addClass("ie"),AJS.$("html").css("overflow","hidden"),this.showFullscreen());this.viewer.on("show:slide",this.setLayout,this)};
+OC.FullscreenViewer.prototype.changeFullscreen=function(){document.fullscreenElement||document.webkitFullscreenElement||document.mozFullScreenElement?this.showFullscreen():this.hideFullscreen()};OC.FullscreenViewer.prototype.setLayout=function(a){var b=this.viewer.$(".vf-toolbar"),c=AJS.$(window).width();b=AJS.$(window).height()-b.height();c/=b;a=OC.Util.imageDimensions(a);a=a.width/a.height>c?"wide":"narrow";this.viewer.$(".vf-slide-outer").css({width:"auto",height:b+"px"}).removeClass("narrow wide").addClass(a)};
+OC.FullscreenViewer.prototype.showFullscreen=function(){this.viewer.$el.addClass("vf-fullscreen");this.setLayout(this.viewer.getSlideImage());this.trigger("enterFullscreen")};OC.FullscreenViewer.prototype.hideFullscreen=function(){this.viewer.$el.removeClass("vf-fullscreen");this.viewer.$(".vf-slide-outer").css({width:this.model.get("width"),height:this.model.get("height")}).removeClass("narrow wide");this.viewer.off("show:slide");this.trigger("leaveFullscreen")};
+OC.ProgressView=Backbone.View.extend({template:OC.Templates.progress,className:"vf-progress",events:{"mousedown .vf-progress-wrapper":"onMousedown","mousemove .vf-progress-wrapper":"showPreview","mouseleave .vf-progress-wrapper":"hidePreview"},initialize:function(){_.bindAll(this,"updateStatus","render","showPreview","hidePreview","onMousedown","getSlideIndex","selectSlide","delegateEvents","undelegateEvents");this.model.on("change:selectedIndex",this.updateStatus);this.futurePreview=null},updateStatus:function(){var a=
+100/this.model.get("numSlides")*(this.model.get("selectedIndex")+1);this.$(".vf-progress-indicator").css("width",a+"%")},render:function(){this.$el.html(this.template());this.undelegateEvents();this.model.on("ready",this.delegateEvents);return this},showPreview:function(a){clearTimeout(this.futurePreview);this.futurePreview=setTimeout(_.bind(function(){var b=this.getSlideIndex(a);this.model.trigger("preview:show",this.model,b)},this),300)},hidePreview:function(a){clearTimeout(this.futurePreview);
+this.model.trigger("preview:hide",this.model)},onMousedown:function(a){this.selectSlide(a)},getSlideIndex:function(a){a=a.pageX-this.$el.offset().left;var b=this.model.get("numSlides"),c=this.$el.width();return Math.floor(a/(c/b))},selectSlide:function(a){a=this.getSlideIndex(a);this.model.set("selectedIndex",a)}});
+OC.SlideCache=function(a){var b={};this.preload=function(c,d){var e=c.get("numSlides");_.times(2,function(f){d+f<e&&this.getView(d+f)},this)};this.getView=function(c,d){if(b[c]&&"loaded"===b[c].status)d&&d.call(d,c,b[c].getElement());else{var e=b[c]||(b[c]={}),f=e.callbacks||(e.callbacks=[]);d&&f.push(d);"loading"!==e.status&&(e.status="loading",d=new OC.SlideView({href:a.urlForSlide(c)}),d.on("ready",function(g){e.status="loaded";e.getElement=function(){return AJS.$(g).clone()};_.each(f,function(h){h.call(h,
+c,e.getElement())});f.length=0}),d.render())}};a.on("change:selectedIndex",this.preload,this)};
+OC.SlideViewerView=Backbone.View.extend({initialize:function(a){_.bindAll(this,"showError","selectSlide","render","getSlideImage");this.loadingSlide=a.loadingSlide;this.slideCache=a.cache;this.model.on("change:selectedIndex",this.selectSlide);this.model.on("error",this.showError)},showError:function(a){this.$(".vf-error").html(a)},selectSlide:function(a,b){var c=this.$(".vf-slide-loading").first();c.fadeIn(900);this.slideCache.getView(b,_.bind(function(d,e){d===this.model.get("selectedIndex")&&(this.$(".vf-slide-outer").html(e),
+setTimeout(_.bind(function(){c.stop().fadeOut(300,function(){c.hide()});this.trigger("show:slide",this.getSlideImage())},this),10))},this))},render:function(){this.$(".vf-preview-placeholder").replaceWith((new OC.PreviewView({model:this.model,slideCache:this.slideCache})).render().el);this.$(".vf-progress-placeholder").replaceWith((new OC.ProgressView({model:this.model})).render().el);var a=new OC.FullscreenViewer(this,this.model);this.$(".vf-controls-placeholder").replaceWith((new OC.ControlView({model:this.model,
+fullscreenViewer:a})).render().el);return this},getSlideImage:function(){return this.$(".vf-slide-outer .vf-slide-image")}});
+AJS.$(function(){AJS.$(".vf-slide-viewer-macro").each(function(){var a=AJS.$(this),b=a.find(".vf-slide-viewer");a.find(".vf-slide-loading").spin("large");var c={width:a.data("width"),height:a.data("height"),attachment:a.data("attachment"),attachmentId:a.data("attachment-id"),attachmentVer:a.data("attachment-ver"),pageId:a.data("page-id"),downloadPath:AJS.contextPath()+a.data("download-path"),usePathAuth:a.data("use-path-auth"),editUrl:AJS.contextPath()+OC.Util.decodeUrl(a.data("edit-url")),editInOfficeEnabled:AJS.DarkFeatures.isEnabled("enable.legacy.edit.in.office"),
+allowEdit:a.data("allow-edit")};AJS.DarkFeatures.isEnabled("enable.legacy.edit.in.office")&&(c.allowEdit=a.data("allow-edit")&&"pdf"!==c.editUrl.substring(c.editUrl.length-3));c=new OC.Slide(c);var d=new OC.SlideCache(c);b=new OC.SlideViewerView({model:c,cache:d,el:b});a.append(b.render().el);c.waitUntilReady()})});
+}catch(e){WRMCB(e)};

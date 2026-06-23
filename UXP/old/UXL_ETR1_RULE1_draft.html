@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_ETR_1 — RULE 1 Human/AI Dual Layer</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer: #E8E8E8;
+  --gray-card:  #F5F5F5;
+  --white:      #FFFFFF;
+
+  --badge-do:   #2E7D32;
+  --badge-dont: #C62828;
+  --badge-rule: #1A1A1A;
+
+  /* Human / AI 배지 */
+  --human-bg:   #3C3C3C;
+  --ai-bg:      #5135C8;
+
+  /* AI 메타 블록 */
+  --ai-block-bg:     #F0EDFF;
+  --ai-block-border: #7C57FF;
+  --ai-key:          #5135C8;
+
+  /* 인라인 변수 하이라이트 */
+  --var-color: #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --border:   rgba(0,0,0,0.07);
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  padding: 40px;
+}
+
+/* ══════════════════════════════════
+   공통 배지
+══════════════════════════════════ */
+.rule-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--badge-rule);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.do-badge, .dont-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  margin-bottom: 14px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+
+/* ══════════════════════════════════
+   Human / AI 레이어 배지
+══════════════════════════════════ */
+.lbadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: white;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 2px;
+  min-width: 36px;
+}
+.lbadge.human { background: var(--human-bg); }
+.lbadge.ai    { background: var(--ai-bg); }
+
+/* ══════════════════════════════════
+   레이어 블록 (Human 줄 + AI 줄)
+══════════════════════════════════ */
+.layer-block {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.layer-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.layer-row p {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  line-height: 1.7;
+}
+.layer-row p strong { color: var(--text); font-weight: 700; }
+
+/* 인라인 변수 하이라이트 */
+.var {
+  color: var(--var-color);
+  font-weight: 600;
+}
+
+/* AI 메타 블록 */
+.ai-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--ai-block-bg);
+  border-left: 3px solid var(--ai-block-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  flex: 1;
+}
+.ai-line {
+  display: flex;
+  gap: 8px;
+  font-size: 11.5px;
+  line-height: 1.6;
+  font-family: var(--mono);
+}
+.ai-k {
+  color: var(--ai-key);
+  font-weight: 700;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+.ai-v { color: #2A2040; }
+
+/* ══════════════════════════════════
+   와이어프레임 AI 어노테이션
+══════════════════════════════════ */
+.wire-annotation {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+  margin-bottom: 4px;
+}
+.wire-annotation .ai-meta { padding: 6px 12px; }
+.wire-annotation .ai-line { font-size: 11px; }
+
+/* ══════════════════════════════════
+   RULE 컨테이너
+══════════════════════════════════ */
+.rule-wrap {
+  background: var(--gray-card);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.rule-header {
+  padding: 28px 32px 24px;
+}
+.rule-header .layer-row p {
+  font-size: 14px;
+  color: var(--text-sub);
+}
+
+/* ══════════════════════════════════
+   DO / DON'T 칸
+══════════════════════════════════ */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.do-col, .dont-col {
+  padding: 24px 28px;
+}
+.do-col {
+  border-right: 1px solid var(--border);
+  background: #FAFFFE;
+}
+.dont-col {
+  background: #FFFAFA;
+}
+
+.phone-img {
+  width: 100%;
+  border-radius: 12px;
+  display: block;
+  margin: 16px 0 0;
+}
+
+/* ══════════════════════════════════
+   시나리오 섹션
+══════════════════════════════════ */
+.scen-wrap {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.scen-heading {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 24px 32px 0;
+  margin-bottom: 0;
+}
+
+.scen-strip img {
+  display: block;
+  width: 100%;
+  margin-top: 0;
+}
+
+/* 시나리오 어노테이션: 3컬럼 */
+.scen-annotations {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--border);
+}
+
+.scen-ann-col {
+  padding: 20px 24px;
+  border-right: 1px solid var(--border);
+}
+.scen-ann-col:last-child { border-right: none; }
+
+.scen-label {
+  display: inline-block;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #555;
+  background: #EBEBEB;
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 14px;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════════════
+  RULE 1
+══════════════════════════════════════════════════════ -->
+<div class="rule-wrap">
+
+  <!-- RULE 헤더 -->
+  <div class="rule-header">
+    <div class="rule-badge">RULE 1</div>
+
+    <div class="layer-block">
+
+      <!-- 사람 줄 -->
+      <div class="layer-row">
+        <span class="lbadge human">사람</span>
+        <p>시스템이 고객의 현재 상태를 해석하고 <strong>행동을 선제 제안하여 즉시 실행으로 이어지도록</strong> 해야 합니다.</p>
+      </div>
+
+      <!-- AI 줄 -->
+      <div class="layer-row">
+        <span class="lbadge ai">AI</span>
+        <div class="ai-meta">
+          <div class="ai-line"><span class="ai-k">rule_id</span>    <span class="ai-v">UXL_ETR_1_RULE_1</span></div>
+          <div class="ai-line"><span class="ai-k">component</span>  <span class="ai-v">ProactiveMicroTaskCard</span></div>
+          <div class="ai-line"><span class="ai-k">trigger</span>    <span class="ai-v">session.start == true AND customer_data.available == true</span></div>
+          <div class="ai-line"><span class="ai-k">output</span>     <span class="ai-v">slot: home_primary, max_count: 1</span></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /rule-header -->
+
+
+  <!-- DO / DON'T -->
+  <div class="do-dont">
+
+    <!-- ── DO ── -->
+    <div class="do-col">
+      <div class="do-badge">Do</div>
+
+      <div class="layer-block">
+
+        <div class="layer-row">
+          <span class="lbadge human">사람</span>
+          <p>반드시 <strong>고객 데이터 기반으로 상태를 정의</strong>하고, <strong>하나의 실행 가능한 단위</strong>로 제공해야 합니다.</p>
+        </div>
+
+        <div class="layer-row">
+          <span class="lbadge ai">AI</span>
+          <div class="ai-meta">
+            <div class="ai-line"><span class="ai-k">component</span>     <span class="ai-v">ProactiveMicroTaskCard</span></div>
+            <div class="ai-line"><span class="ai-k">slot</span>          <span class="ai-v">home_primary</span></div>
+            <div class="ai-line"><span class="ai-k">max_count</span>     <span class="ai-v">1 — 동시에 복수 카드 렌더링 금지</span></div>
+            <div class="ai-line"><span class="ai-k">data_required</span> <span class="ai-v">[customer_status, pending_action, recent_event]</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DO 와이어프레임 이미지 -->
+      <img class="phone-img"
+           src="assets/ETR_rule1_do_phone.png"
+           alt="DO 와이어프레임 — 상태 기반 단일 태스크 카드">
+
+      <!-- 와이어프레임 AI 어노테이션 -->
+      <div class="wire-annotation">
+        <span class="lbadge ai">AI</span>
+        <div class="ai-meta">
+          <div class="ai-line"><span class="ai-k">상단 퍼플 블록</span> <span class="ai-v">ProactiveMicroTaskCard — 체크 아이콘 + 메시지 + CTA 버튼 1개</span></div>
+          <div class="ai-line"><span class="ai-k">하단 회색 블록</span> <span class="ai-v">secondary_content (dimmed) — 터치 비활성, 배경 처리</span></div>
+        </div>
+      </div>
+    </div><!-- /do-col -->
+
+
+    <!-- ── DON'T ── -->
+    <div class="dont-col">
+      <div class="dont-badge">Don't</div>
+
+      <div class="layer-block">
+
+        <div class="layer-row">
+          <span class="lbadge human">사람</span>
+          <p><strong>고객의 현재 상태와 무관한 콘텐츠</strong>를 동일 구조로 노출하지 않습니다.</p>
+        </div>
+
+        <div class="layer-row">
+          <span class="lbadge ai">AI</span>
+          <div class="ai-meta">
+            <div class="ai-line"><span class="ai-k">prohibited</span>  <span class="ai-v">static_home_layout — 고정 타일·범용 배너를 동등 가중치로 나열</span></div>
+            <div class="ai-line"><span class="ai-k">condition</span>   <span class="ai-v">customer_data.available == false 또는 pending_action == null</span></div>
+            <div class="ai-line"><span class="ai-k">fallback</span>    <span class="ai-v">ProactiveMicroTaskCard 미표시 → static_home_layout 렌더링</span></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- DON'T 와이어프레임 이미지 -->
+      <img class="phone-img"
+           src="assets/ETR_rule1_dont_phone.png"
+           alt="DON'T 와이어프레임 — 고정 구조 범용 콘텐츠 나열">
+
+      <!-- 와이어프레임 AI 어노테이션 -->
+      <div class="wire-annotation">
+        <span class="lbadge ai">AI</span>
+        <div class="ai-meta">
+          <div class="ai-line"><span class="ai-k">회색 블록 나열</span> <span class="ai-v">static_tile_list — 개인화 없는 동등 가중치 카드 구조</span></div>
+          <div class="ai-line"><span class="ai-k">금지 이유</span>     <span class="ai-v">고객 데이터 미반영 → 우선순위 없음 → 탐색 부담 증가</span></div>
+        </div>
+      </div>
+    </div><!-- /dont-col -->
+
+  </div><!-- /do-dont -->
+
+</div><!-- /rule-wrap -->
+
+
+<!-- ══════════════════════════════════════════════════════
+  Scenario. 상황별 적용 방식
+══════════════════════════════════════════════════════ -->
+<div class="scen-wrap">
+
+  <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+
+  <!-- 원본 시나리오 이미지 (폰 스크린샷 3종 + 레이블) -->
+  <div class="scen-strip">
+    <img src="assets/ETR_rule1_scen_strip.png"
+         alt="시나리오 3종 — 요청받은 데이터 선물 / 약정 만료 임박 / 혜택 사용">
+  </div>
+
+  <!-- 시나리오별 Human / AI 어노테이션 (폰 이미지 아래) -->
+  <div class="scen-annotations">
+
+    <!-- ① 요청받은 데이터 선물 -->
+    <div class="scen-ann-col">
+      <span class="scen-label">요청받은 데이터 선물</span>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge human">사람</span>
+          <p>"<span class="var">자녀</span>가 데이터 요청을 보냈어요."
+          <br>CTA: "지금 바로 선물하기"</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge ai">AI</span>
+          <div class="ai-meta">
+            <div class="ai-line"><span class="ai-k">trigger</span> <span class="ai-v">family_data_request.pending == true</span></div>
+            <div class="ai-line"><span class="ai-k">copy</span>    <span class="ai-v">"{family.name}이(가) 데이터 요청을 보냈어요."</span></div>
+            <div class="ai-line"><span class="ai-k">cta</span>     <span class="ai-v">"지금 바로 선물하기" → action: data_gift_flow</span></div>
+            <div class="ai-line"><span class="ai-k">target</span>  <span class="ai-v">{family.member_id}</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ② 약정 만료 임박 -->
+    <div class="scen-ann-col">
+      <span class="scen-label">약정 만료 임박</span>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge human">사람</span>
+          <p>"약정 만료 <span class="var">7일</span> 전, VIP <span class="var">민선님</span>은 지금 기기 변경하면 최대 <span class="var">55만 원</span> 할인받아요."
+          <br>CTA: "기기변경비교하기"</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge ai">AI</span>
+          <div class="ai-meta">
+            <div class="ai-line"><span class="ai-k">trigger</span> <span class="ai-v">contract.days_until_expiry ≤ 7</span></div>
+            <div class="ai-line"><span class="ai-k">copy</span>    <span class="ai-v">"약정 만료 {contract.days_until_expiry}일 전, {user.grade} {user.name}님은 지금 기기 변경하면 최대 {benefit.max_discount}원 할인받아요."</span></div>
+            <div class="ai-line"><span class="ai-k">cta</span>     <span class="ai-v">"기기변경비교하기" → action: device_change_comparison</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ③ 혜택 사용 -->
+    <div class="scen-ann-col">
+      <span class="scen-label">혜택 사용</span>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge human">사람</span>
+          <p>"지금 <span class="var">파리바게뜨</span> 결제 대기 중이신가요? 적립혜택 놓치지 마세요."
+          <br>CTA: "바코드 열기"</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge ai">AI</span>
+          <div class="ai-meta">
+            <div class="ai-line"><span class="ai-k">trigger</span> <span class="ai-v">payment.status == pending AND nearby_benefit.applicable == true</span></div>
+            <div class="ai-line"><span class="ai-k">copy</span>    <span class="ai-v">"지금 {nearby_benefit.partner_name} 결제 대기 중이신가요? 적립혜택 놓치지 마세요."</span></div>
+            <div class="ai-line"><span class="ai-k">cta</span>     <span class="ai-v">"바코드 열기" → action: benefit_barcode_open</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /scen-annotations -->
+</div><!-- /scen-wrap -->
+
+
+</body>
+</html>

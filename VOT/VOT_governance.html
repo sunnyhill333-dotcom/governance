@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%23111'/><path d='M22.7 9.3A9.3 9.3 0 1 0 25.3 16h-6.7' fill='none' stroke='%23fff' stroke-width='1.5' stroke-linecap='round'/></svg>">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VOT — Voice &amp; Tone Governance | SKT Next Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --skt-purple: #111111;
+      --skt-purple-light: #EFEFEF;
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #9CA3AF;
+      --border: #E5E7EB;
+      --bg-page: #F5F6F8;
+      --bg-card: #FFFFFF;
+      --do-color: #059669; --do-bg: #ECFDF5; --do-border: #A7F3D0;
+      --dont-color: #DC2626; --dont-bg: #FEF2F2; --dont-border: #FECACA;
+      --copy-bg: #F7F7F7; --copy-border: #E5E5E5;
+      --sidebar-w: 240px; --header-h: 45px;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Pretendard', -apple-system, sans-serif; font-size: 14px; color: var(--text-primary); background: var(--bg-page); line-height: 1.6; }
+
+    .top-bar { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: #fff; border-bottom: 1px solid #E8E8E8; display: flex; align-items: center; padding: 0 20px; gap: 10px; z-index: 100; }
+    .top-bar .brand { font-size: 13px; font-weight: 600; color: #111; white-space: nowrap; }
+    .top-bar .divider { color: #D0D0D0; }
+    .top-bar .doc-title { font-size: 13px; color: #888; white-space: nowrap; }
+    .top-bar .version-tag { font-size: 11px; color: #AAA; background: #F5F5F5; padding: 2px 8px; border-radius: 4px; white-space: nowrap; }
+    .view-toggle { display: flex; align-items: center; background: #F3F4F6; border-radius: 8px; padding: 2px; flex-shrink: 0; margin-left: auto; }
+    .vt-btn { display: flex; align-items: center; padding: 4px 12px; font-size: 12px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; transition: all .15s; background: transparent; color: #888; white-space: nowrap; }
+    .vt-btn.active { background: #111; color: #fff; }
+    .export-icon-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; background: transparent; border: none; cursor: pointer; border-radius: 6px; color: #666; transition: background .12s; flex-shrink: 0; }
+    .export-icon-btn:hover { background: #F5F5F5; }
+    [data-tooltip] { position: relative; }
+    [data-tooltip]::after { content: attr(data-tooltip); position: absolute; top: calc(100% + 6px); left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; font-size: 10px; font-weight: 500; letter-spacing: 0.02em; padding: 3px 8px; border-radius: 4px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.12s; z-index: 200; }
+    [data-tooltip]:hover::after { opacity: 1; }
+
+    .sidebar { position: fixed; top: var(--header-h); left: 0; bottom: 0; width: var(--sidebar-w); background: #fff; border-right: 1px solid var(--border); overflow-y: auto; padding: 0 0 40px; z-index: 90; }
+    .sidebar-group-label { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; padding: 12px 20px 8px; display: block; }
+    .sidebar a { display: flex; align-items: center; gap: 10px; padding: 8px 20px; font-size: 13px; font-weight: 500; color: var(--text-secondary); text-decoration: none; border-left: 3px solid transparent; transition: all .15s; }
+    .sidebar a:hover { color: var(--skt-purple); background: var(--skt-purple-light); }
+    .sidebar a.active { color: var(--skt-purple); border-left-color: var(--skt-purple); background: var(--skt-purple-light); font-weight: 600; }
+    .nav-code { font-size: 10px; font-weight: 700; background: #F3F4F6; color: var(--text-muted); padding: 1px 6px; border-radius: 3px; }
+    .sidebar a.active .nav-code { background: #C0C0C0; color: #111; }
+
+    .main { margin-left: var(--sidebar-w); margin-top: var(--header-h); padding: 40px 56px 80px; }
+    .section { margin-bottom: 80px; scroll-margin-top: calc(var(--header-h) + 24px); }
+
+    .section-header { background: #1A1A1A; border-radius: 8px; padding: 32px 36px; margin-bottom: 32px; color: #fff; }
+    .section-header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .section-code-badge { font-size: 11px; font-weight: 700; letter-spacing: .08em; background: rgba(255,255,255,.15); color: rgba(255,255,255,.9); padding: 3px 10px; border-radius: 4px; }
+    .section-title { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+    .section-desc { font-size: 14px; color: rgba(255,255,255,.75); line-height: 1.7; margin-bottom: 16px; }
+    .tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+    .tag { font-size: 11px; font-weight: 500; color: rgba(255,255,255,.8); background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); padding: 3px 10px; border-radius: 20px; }
+
+    .pattern-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+    .pattern-card-header { padding: 20px 24px 16px; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; gap: 12px; }
+    .pattern-id-badge { font-size: 11px; font-weight: 700; color: var(--skt-purple); background: var(--skt-purple-light); padding: 3px 10px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .pattern-meta { flex: 1; }
+    .pattern-name { font-size: 16px; font-weight: 700; letter-spacing: -0.3px; }
+    .pattern-desc { font-size: 13px; color: var(--text-secondary); margin-top: 4px; line-height: 1.6; }
+    .status-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; }
+    .status-fundamental { color: #444; background: #EBEBEB; }
+    .status-recommend   { color: #666; background: #E3E3E3; }
+    .status-new         { color: #555; background: #E0E0E0; }
+    .status-refine      { color: #4B5563; background: #F3F4F6; }
+
+    .pattern-body { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+    .rule-label { font-size: 10px; font-weight: 700; color: var(--text-muted); letter-spacing: .08em; text-transform: uppercase; margin-bottom: 8px; }
+    .rule-row { display: flex; gap: 8px; align-items: flex-start; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text-secondary); }
+    .rule-row:last-child { border-bottom: none; padding-bottom: 0; }
+    .rule-num { font-size: 10px; font-weight: 700; color: var(--skt-purple); background: var(--skt-purple-light); padding: 2px 6px; border-radius: 3px; flex-shrink: 0; margin-top: 2px; }
+
+    .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .do-block, .dont-block { border-radius: 8px; padding: 14px 16px; }
+    .do-block { background: var(--do-bg); border: 1px solid var(--do-border); }
+    .dont-block { background: var(--dont-bg); border: 1px solid var(--dont-border); }
+    .do-tag, .dont-tag { display: inline-block; font-size: 10px; font-weight: 800; letter-spacing: .1em; margin-bottom: 6px; }
+    .do-tag { color: var(--do-color); } .dont-tag { color: var(--dont-color); }
+    .do-block p { font-size: 12px; line-height: 1.6; color: #065F46; }
+    .dont-block p { font-size: 12px; line-height: 1.6; color: #991B1B; }
+
+    .scenario-wrap { overflow-x: auto; }
+    .scenario-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .scenario-table th { background: #F9FAFB; font-weight: 600; color: var(--text-secondary); padding: 8px 12px; text-align: left; border: 1px solid var(--border); }
+    .scenario-table td { padding: 8px 12px; border: 1px solid var(--border); color: var(--text-secondary); vertical-align: top; }
+    .scenario-table tr:hover td { background: #FAFAFA; }
+    .scenario-table td:first-child { font-weight: 600; color: var(--text-primary); white-space: nowrap; }
+
+    .copy-block { background: var(--copy-bg); border: 1px solid var(--copy-border); border-radius: 8px; padding: 14px 16px; }
+    .copy-block .rule-label { margin-bottom: 10px; }
+    .copy-item { display: flex; gap: 10px; margin-bottom: 8px; align-items: flex-start; }
+    .copy-item:last-child { margin-bottom: 0; }
+    .copy-key { font-size: 10px; font-weight: 700; color: #333; background: rgba(0,0,0,.06); padding: 2px 7px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+    .copy-val { font-size: 12px; color: var(--text-secondary); line-height: 1.6; font-style: italic; }
+
+    .section-divider { border: none; border-top: 1px solid var(--border); margin: 60px 0; }
+    .doc-intro { margin-bottom: 48px; }
+    .doc-intro h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.8px; margin-bottom: 10px; }
+    .doc-intro p { font-size: 14px; color: var(--text-secondary); line-height: 1.7; }
+    .doc-meta { display: flex; gap: 32px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); flex-wrap: wrap; }
+    .doc-meta-item { font-size: 13px; color: var(--text-secondary); display: flex; flex-direction: column; gap: 5px; }
+    .doc-meta-item strong { font-size: 10px; font-weight: 600; color: #ABABAB; letter-spacing: .06em; text-transform: uppercase; }
+
+    /* ── Voice axis 3열 카드 ── */
+    .voice-axis-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .voice-axis-card { background: #F3F3F3; border: 1px solid #E0E0E0; border-radius: 10px; padding: 18px 20px; }
+    .voice-axis-title { font-size: 14px; font-weight: 700; color: #333; margin-bottom: 6px; }
+    .voice-axis-desc { font-size: 12px; color: var(--text-secondary); line-height: 1.6; }
+    .voice-axis-ex { font-size: 11px; color: var(--text-muted); margin-top: 8px; font-style: italic; }
+
+    /* ── 보이스 인용구 ── */
+    .voice-quote { background: #1A1A1A; border-radius: 12px; padding: 28px 32px; text-align: center; margin-bottom: 20px; }
+    .voice-quote p { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.4px; line-height: 1.6; }
+    .voice-quote span { font-size: 12px; color: rgba(255,255,255,.5); margin-top: 10px; display: block; }
+
+    /* ── 세그먼트 배지 ── */
+    .seg-badge { display: inline-block; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; margin-bottom: 10px; }
+    .seg-new      { background: #D1FAE5; color: #065F46; }
+    .seg-long     { background: #DBEAFE; color: #1E40AF; }
+    .seg-senior   { background: #FEF3C7; color: #92400E; }
+    .seg-prospect { background: #F3F4F6; color: #374151; }
+    .home-g-btn { display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; text-decoration: none; flex-shrink: 0; }
+    .top-bar-sep { width: 1px; height: 18px; background: #E0E0E0; flex-shrink: 0; margin: 0 2px; }
+    .doc-nav-tabs { position: absolute; left: 0; right: 0; top: 0; bottom: 0; display: flex; align-items: stretch; justify-content: center; pointer-events: none; gap: 0; }
+    .doc-nav-tab { pointer-events: auto; display: flex; align-items: center; justify-content: center; width: 88px; height: 100%; font-size: 12px; font-weight: 600; color: #999; text-decoration: none; transition: color 0.2s; white-space: nowrap; }
+    .doc-nav-tab:hover { color: #444; }
+    .doc-nav-tab.current { color: #111; }
+
+    /* ── Search ── */
+    /* Search */
+    .search-wrap { display: flex; align-items: center; }
+    .search-expand { display: flex; align-items: center; gap: 4px; overflow: hidden; width: 0; opacity: 0; flex-shrink: 0; transition: width .3s cubic-bezier(.4,0,.2,1), opacity .2s; }
+    .search-wrap.open .search-expand { width: 205px; opacity: 1; }
+    .search-field { border: none; border-bottom: 1.5px solid #D8D8D8; outline: none; font-size: 13px; font-family: inherit; background: transparent; color: #111; flex: 1; min-width: 0; padding: 2px 0; }
+    .search-field::placeholder { color: #C8C8C8; }
+    .search-counter { font-size: 11px; color: #ABABAB; white-space: nowrap; min-width: 26px; text-align: right; flex-shrink: 0; }
+    .search-nav-btns { display: flex; gap: 1px; flex-shrink: 0; }
+    .search-nav-btn { background: none; border: none; cursor: pointer; color: #ABABAB; font-size: 9px; padding: 2px 4px; line-height: 1; }
+    .search-nav-btn:hover { color: #555; }
+    .search-x-btn { background: none; border: none; cursor: pointer; color: #BDBDBD; font-size: 18px; line-height: 1; padding: 0 2px; flex-shrink: 0; }
+    .search-x-btn:hover { color: #555; }
+    .search-icon-btn { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; background: transparent; border: none; cursor: pointer; border-radius: 6px; color: #888; transition: background .12s; flex-shrink: 0; }
+    .search-icon-btn:hover { background: #F5F5F5; }
+    ::highlight(search-mark) { background: #FFF3B0; color: inherit; }
+    ::highlight(search-mark-cur) { background: #FFD700; color: inherit; }
+    /* ── CV Panel ── */
+    .cv-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0); pointer-events: none; z-index: 400; transition: background .25s; }
+    .cv-overlay.open { background: rgba(0,0,0,.35); pointer-events: all; }
+    .cv-panel { position: fixed; top: 0; right: -440px; bottom: 0; width: 420px; background: #fff; box-shadow: -4px 0 40px rgba(0,0,0,.12); z-index: 401; transition: right .3s cubic-bezier(.4,0,.2,1); display: flex; flex-direction: row; }
+    .cv-panel.open { right: 0; }
+    .cv-panel-inner { flex: 1; min-width: 0; display: flex; flex-direction: column; overflow-y: auto; }
+    .cv-panel-head { position: sticky; top: 0; z-index: 2; background: #fff; border-bottom: 1px solid #EBEBEB; padding: 14px 20px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; flex-shrink: 0; }
+    .cv-panel-body { padding: 20px 20px 48px; }
+    .cv-panel-close { width: 28px; height: 28px; background: #F0F0F0; border: none; border-radius: 50%; cursor: pointer; font-size: 18px; line-height: 1; color: #555; flex-shrink: 0; display: flex; align-items: center; justify-content: center; margin-top: 2px; }
+    .cv-panel-close:hover { background: #E0E0E0; }
+    .cv-pcode { font-size: 10px; font-weight: 700; letter-spacing: .08em; color: #ABABAB; margin-bottom: 3px; }
+    .cv-pname { font-size: 17px; font-weight: 700; color: #111; letter-spacing: -.3px; line-height: 1.2; }
+    .cv-driver-badge { font-size: 10px; font-weight: 600; color: #555; background: #F0F0F0; padding: 2px 8px; border-radius: 3px; white-space: nowrap; margin-top: 5px; display: inline-block; }
+    .cv-def-box { font-size: 13px; line-height: 1.75; color: #444; padding: 14px 16px; background: #F9F9F9; border-radius: 8px; border: 1px solid #EBEBEB; margin-bottom: 20px; }
+    .cv-ko-label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #ABABAB; margin-bottom: 10px; }
+    .cv-outcome { border: 1px solid #E8E8E8; border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; }
+    .cv-outcome-num { font-size: 10px; font-weight: 700; color: #ABABAB; margin-bottom: 3px; letter-spacing: .04em; }
+    .cv-outcome-title { font-size: 13px; font-weight: 700; color: #111; margin-bottom: 5px; }
+    .cv-outcome-desc { font-size: 12px; color: #555; line-height: 1.65; }
+    .cv-tag { cursor: pointer; }
+    .cv-tag:hover { background: #DEDEDE !important; }
+  </style>
+</head>
+<body>
+
+<header class="top-bar">
+  <a href="../index.html" class="home-g-btn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"><path d="M17 7A7 7 0 1 0 19 12h-5"/></svg></a>
+  <span class="doc-title">Voice &amp; Tone Governance</span>
+  <nav class="doc-nav-tabs">
+    <a href="../UXP/UXP_governance.html" class="doc-nav-tab" data-tooltip="UX원칙">UXP</a>
+    <a href="../UXPT/UXPT_governance.html" class="doc-nav-tab" data-tooltip="UX패턴">UXPT</a>
+    <a href="../VOT/VOT_governance.html" class="doc-nav-tab current" data-tooltip="보이스톤">VOT</a>
+    <a href="../AIG/AIG_governance.html" class="doc-nav-tab" data-tooltip="AI">AIG</a>
+  </nav>
+  <div class="view-toggle">
+    <button class="vt-btn active">거버넌스</button>
+    <button class="vt-btn" onclick="location.href='../CV/CV_governance.html'">핵심가치</button>
+  </div>
+  <button class="export-icon-btn" onclick="exportMarkdown()" data-tooltip="MD 내려받기"><svg width="14" height="14" viewBox="0 0 13 13" fill="none"><path d="M6.5 1.5v7M4 6.5l2.5 2.5 2.5-2.5M2 11h9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+  <div class="search-wrap" id="searchWrap"><div class="search-expand" id="searchExpand"><input id="searchField" class="search-field" placeholder="검색..." autocomplete="off"><span id="searchCounter" class="search-counter"></span><div class="search-nav-btns"><button id="searchPrev" class="search-nav-btn" title="이전">&#9650;</button><button id="searchNext" class="search-nav-btn" title="다음">&#9660;</button></div><button id="searchXBtn" class="search-x-btn" title="닫기">&times;</button></div><button class="search-icon-btn" id="searchBtn" title="검색" aria-label="검색"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="6.5" cy="6.5" r="4.5" stroke="currentColor" stroke-width="1.4"/><path d="M10 10l3.5 3.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></div>
+</header>
+
+<nav class="sidebar" aria-label="VOT 섹션 네비게이션">
+  <span class="sidebar-group-label">Foundation</span>
+  <a href="#def" class="active"><span class="nav-code">DEF</span> 브랜드 보이스 정의</a>
+  <span class="sidebar-group-label">Rules</span>
+  <a href="#rul"><span class="nav-code">RUL</span> 기본 표현 규칙</a>
+  <span class="sidebar-group-label">Application</span>
+  <a href="#sit"><span class="nav-code">SIT</span> 상황별 가이드</a>
+  <a href="#seg"><span class="nav-code">SEG</span> 고객 특성별 가이드</a>
+</nav>
+
+<main class="main">
+
+  <div class="doc-intro">
+    <h1>Voice &amp; Tone Governance</h1>
+    <p>SKT Next Platform의 언어 표현 정책서입니다.<br>브랜드 보이스 원칙부터 상황별·고객 특성별 톤 가이드까지 정의하며, BSS가 생성하는 카피와 디자이너·기획자가 작성하는 모든 UI 문구의 Single Source of Truth입니다.<br>UXPT의 CTL·FRL 섹션과 함께 참조해주세요.</p>
+    <div class="doc-meta">
+      <div class="doc-meta-item"><strong>문서 코드</strong> VOT</div>
+      <div class="doc-meta-item"><strong>버전</strong> 1.1</div>
+      <div class="doc-meta-item"><strong>업데이트</strong> 2026.06.17</div>
+      <div class="doc-meta-item"><strong>연관 문서</strong> UXPT_governance.html (CTL · FRL)</div>
+    </div>
+  </div>
+
+  <!-- ═══ DEF ═══ -->
+  <section class="section" id="def" data-section="DEF">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">VOT · DEF</span></div>
+      <div class="section-title">1. 브랜드 보이스 정의</div>
+      <div class="section-desc">SKT Next Platform이 고객에게 말하는 방식의 근간입니다. 전략 슬로건 "Readable, Less Effort"를 언어로 구현한 보이스 원칙과 3가지 표현 축을 정의합니다.</div>
+      <div class="tag-row"><span class="tag">Readable, Less Effort</span><span class="tag">브랜드 보이스</span><span class="tag">표현 원칙</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="VOT_DEF_1" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_DEF_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">브랜드 보이스 선언</div>
+          <div class="pattern-desc">SKT Next Platform의 언어가 고객에게 전달해야 하는 핵심 인상을 한 문장으로 정의합니다. 모든 UI 카피의 방향성 기준입니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="voice-quote">
+          <p>"나를 잘 알고, 부담없이 전하고, 끝까지 책임집니다."</p>
+          <span>SKT Next Platform 브랜드 보이스 선언</span>
+        </div>
+        <div>
+          <div class="rule-label">선언 3축 해설</div>
+          <div class="rule-row"><span class="rule-num">나를 잘 알고</span>고객의 이름·상태·이용 맥락을 반영한 개인화 언어를 사용합니다. "고객님" 대신 상황에 따라 "민선님", "데이터가 거의 다 됐어요" 같이 구체적이고 나에게 맞춰진 표현.</div>
+          <div class="rule-row"><span class="rule-num">부담없이 전하고</span>어렵지 않게, 짧고 명확하게 전달합니다. 전문 용어·약어·긴 설명을 지양합니다. 고객이 읽는 데 에너지를 쓰지 않도록 합니다.</div>
+          <div class="rule-row"><span class="rule-num">끝까지 책임집니다</span>행동 이후 결과까지 명확히 알려줍니다. "완료됩니다"가 아닌 "다음 달 1일부터 적용됩니다"처럼 결과를 끝까지 안내합니다.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_DEF_2" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_DEF_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">보이스 3축 정의</div>
+          <div class="pattern-desc">브랜드 보이스를 구성하는 3가지 표현 축입니다. 모든 카피는 이 3축의 균형을 유지하면서 작성해야 합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div class="voice-axis-grid">
+          <div class="voice-axis-card">
+            <div class="voice-axis-title">친근함 (Warm)</div>
+            <div class="voice-axis-desc">고객과 같은 눈높이에서 편안하게 말합니다. 딱딱한 공지문 투가 아닌, 잘 아는 전문가가 옆에서 말하는 느낌.</div>
+            <div class="voice-axis-ex">예: "포인트가 곧 사라져요. 지금 쓰면 딱 좋아요!"</div>
+          </div>
+          <div class="voice-axis-card">
+            <div class="voice-axis-title">명확함 (Clear)</div>
+            <div class="voice-axis-desc">한 문장에 한 가지 사실만 담습니다. 수식어보다 동사와 숫자로 말합니다. 고객이 해석하지 않아도 바로 이해됩니다.</div>
+            <div class="voice-axis-ex">예: "위약금은 없어요. 다음 달 1일부터 적용됩니다."</div>
+          </div>
+          <div class="voice-axis-card">
+            <div class="voice-axis-title">신뢰감 (Reliable)</div>
+            <div class="voice-axis-desc">근거와 결과를 함께 제시합니다. 추측형·가능성형 표현 대신 확정형으로 말하여 고객이 안심하고 행동할 수 있게 합니다.</div>
+            <div class="voice-axis-ex">예: "분석 결과, 월 8,800원을 절약할 수 있어요."</div>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>세 축 중 하나만 강조하지 않습니다. 친근하되 불명확하거나, 명확하되 차갑거나, 신뢰감을 주되 딱딱한 카피는 균형이 깨진 것입니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>상황에 따라 축의 비중이 달라질 수 있습니다. 오류 상황은 신뢰감 > 친근함, Offer 제안은 친근함 > 신뢰감 순서로 비중을 조정합니다.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_DEF_3" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_DEF_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">전략 슬로건과의 연결</div>
+          <div class="pattern-desc">"Readable, Less Effort" 전략이 언어 레이어에서 어떻게 구현되는지 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Readable → 언어 원칙</div>
+          <div class="rule-row"><span class="rule-num">R1</span>BSS가 고객을 읽듯, 언어도 고객의 상황을 먼저 읽고 말합니다. 고객이 "왜 이 말을 하는 거지?"를 생각하지 않도록 문맥을 언어에 담습니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>고객이 텍스트를 전부 읽지 않아도 핵심을 파악할 수 있도록 구조화합니다. 강조어(숫자·행동 동사)가 먼저 눈에 들어와야 합니다.</div>
+        </div>
+        <div>
+          <div class="rule-label">Less Effort → 언어 원칙</div>
+          <div class="rule-row"><span class="rule-num">R3</span>고객이 해석하거나 추론해야 하는 표현을 쓰지 않습니다. 결과를 먼저 말하고, 조건은 뒤에 붙입니다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>행동 유도 문구(CTA)는 고객이 다음 행동을 생각 없이 따라갈 수 있는 동사형 단문으로 작성합니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"월 8,800원 절약됩니다. 지금 변경할까요?" — 결과 먼저, 행동은 하나.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"해당 요금제로 변경하실 경우 할인 혜택이 적용되어 비용 절감 효과를 기대하실 수 있습니다." — 고객이 읽는 데 에너지를 씁니다.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ═══ RUL ═══ -->
+  <section class="section" id="rul" data-section="RUL">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">VOT · RUL</span></div>
+      <div class="section-title">2. 기본 표현 규칙</div>
+      <div class="section-desc">UI 카피 전반에 적용되는 문장 구조·길이·어조 규칙입니다. 디자이너·기획자·BSS 카피 생성 모두 이 기준을 따릅니다.</div>
+      <div class="tag-row"><span class="tag">문장 구조</span><span class="tag">길이 규칙</span><span class="tag">능동태</span><span class="tag">금지 표현</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="VOT_RUL_1" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_RUL_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">텍스트 길이 규칙</div>
+          <div class="pattern-desc">컴포넌트 유형별 최대 텍스트 길이 기준을 정의합니다. 길이 제한은 읽기 편의성과 직결됩니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">컴포넌트별 길이 기준</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>컴포넌트</th><th>텍스트 유형</th><th>최대 길이</th><th>비고</th></tr></thead>
+              <tbody>
+                <tr><td>Micro Task 카드</td><td>레이블</td><td>한 줄 / 20자 이내</td><td>명사+동사형 단문</td></tr>
+                <tr><td>Micro Task 카드</td><td>컨텍스트 요약</td><td>한 줄 / 30자 이내</td><td>선택적. 안심 정보만</td></tr>
+                <tr><td>AIA Advice</td><td>메인 메시지</td><td>2줄 이내 / 50자 이내</td><td>줄바꿈 1회 허용. <strong>예외</strong>: 요금제 비교 맥락에서는 제목(15자) + 본문(50자) 2줄 구조 허용. (예: "지금보다 월 N원 절약" + "5GX 플래티넘 → 5GX 스탠다드 비교 바로 보기")</td></tr>
+                <tr><td>Offer 카드 headline</td><td>절감 금액 강조</td><td>한 줄 / 15자 이내</td><td>숫자+단위 중심</td></tr>
+                <tr><td>Offer 카드 sub</td><td>추천 근거</td><td>한 줄 / 40자 이내</td><td>고객명 포함 시 +5자</td></tr>
+                <tr><td>FRL 안심 문구</td><td>CTA 위 인라인</td><td>한 줄 / 35자 이내</td><td>확정형 문장</td></tr>
+                <tr><td>토스트 / 스낵바</td><td>완료 피드백</td><td>한 줄 / 25자 이내</td><td>동사형 결과 보고</td></tr>
+                <tr><td>오류 메시지</td><td>원인 안내</td><td>2줄 이내</td><td>원인 + 다음 행동</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>AIA Advice: "데이터가 거의 다 됐어요. 지금 충전하면 끊김 없이 쓸 수 있어요." (2줄, 핵심 먼저)</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>AIA Advice에 3줄 이상 설명을 넣거나, Micro Task 레이블에 조건절("~하시면 ~됩니다")을 포함하지 않습니다.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_RUL_2" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_RUL_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">능동태 사용 원칙</div>
+          <div class="pattern-desc">UI 문구는 원칙적으로 능동태를 사용합니다. 수동태는 고객이 행동의 주체임을 흐리게 하고 문장을 길어지게 합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>행동 주체를 명확히 합니다. "처리됩니다(수동)" 대신 "처리했어요(완료)" / "변경해 드릴게요(SKT 행동)" 중 맥락에 맞게 선택합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>시스템이 주어인 경우 "SKT가", 고객이 주어인 경우 고객명 또는 "고객님이" 형태로 주어를 명시합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>수동태가 허용되는 예외: 법적·약관 고지, 공식 안내문. 이 경우에도 핵심 행동 안내는 능동태로 추가 병기합니다.</div>
+          <div class="rule-row"><span class="rule-num">예외1</span><strong>FRL 불안 해소 맥락</strong>: 수동 완료형 허용. 고객의 불안을 해소하는 확정형 완료 표현에 한해 수동형을 허용합니다. (예: "보장돼 있어요", "확인됐어요", "처리됐어요")</div>
+          <div class="rule-row"><span class="rule-num">예외2</span><strong>AI 면책 고지 맥락</strong>: AI 추천의 비구속성 고지에 한해 수동형 허용. 법적 성격의 면책 문구에 적용됩니다. (예: "제안됐어요", "분석됐어요") — VOT_RUL_6 AI 라벨 원칙 연동.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"요금제를 변경했어요. 다음 달 1일부터 적용됩니다." — SKT가 완료한 행동(능동) + 결과 시점(명시).</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"요금제 변경이 완료되었습니다." — 누가 바꿨는지 불분명하고 책임감이 낮아 보입니다.</p>
+          </div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"1GB를 전송했어요. 바로 사용할 수 있어요." — 결과와 다음 상태를 함께 안내.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"데이터 선물이 발송되었습니다." — 수동형 + 결과 상태 미안내.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_RUL_3" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_RUL_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">금지 &amp; 제한 표현</div>
+          <div class="pattern-desc">SKT Next Platform의 보이스 원칙과 충돌하거나 고객 신뢰를 낮추는 표현 유형을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">절대 금지 표현</div>
+          <div class="scenario-wrap">
+            <table class="scenario-table">
+              <thead><tr><th>금지 유형</th><th>금지 표현 예시</th><th>대체 표현</th></tr></thead>
+              <tbody>
+                <tr><td>불확실 추측형</td><td>"~일 수 있습니다", "~될 수도 있어요"</td><td>확정형으로 재작성 또는 조건 명시</td></tr>
+                <tr><td>위협·압박형</td><td>"지금 바로 하지 않으면 불이익이 발생합니다"</td><td>"오늘까지 사용하면 혜택을 받을 수 있어요"</td></tr>
+                <tr><td>과잉 친근체</td><td>"어머! 깜짝이야~", "짜잔~", "완전 꿀혜택!"</td><td>감탄사 없이 혜택 수치 직접 표기</td></tr>
+                <tr><td>모호한 시스템 오류문</td><td>"오류가 발생했습니다", "잠시 후 다시 시도해 주세요"</td><td>원인 + 다음 행동 명시</td></tr>
+                <tr><td>책임 회피형</td><td>"고객님의 설정에 따라 다를 수 있습니다"</td><td>구체적 조건과 결과를 명시</td></tr>
+                <tr><td>중복 경어</td><td>"사용하시어 이용하실 수 있으십니다"</td><td>"사용할 수 있어요"</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div>
+          <div class="rule-label">제한 표현 (맥락에 따라 사용 가능)</div>
+          <div class="rule-row"><span class="rule-num">제한</span>"~하시기 바랍니다" — 법적 고지문·공식 안내문에 한해 허용. 일반 UI 카피에는 금지.</div>
+          <div class="rule-row"><span class="rule-num">제한</span>"최대 N원" — 조건 명시가 불가한 경우에만 사용. 가능하면 "N원"으로 확정 표기.</div>
+          <div class="rule-row"><span class="rule-num">제한</span>이모지 사용 — 토스트·푸시 알림에서 맥락 강화 목적 1개에 한해 허용. 카드·본문에는 금지.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_RUL_4" data-status="recommend">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_RUL_4</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">숫자 &amp; 단위 표기 규칙</div>
+          <div class="pattern-desc">금액·데이터량·기간 등 수치를 표기할 때의 형식 규칙입니다. 일관된 수치 표기가 신뢰감을 만듭니다.</div>
+        </div>
+        <span class="status-badge status-recommend">Recommend</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>금액: 천 단위 콤마 없이 "8,800원" 형식. 만 단위 이상은 "1만 2,000원"이 아닌 "12,000원"으로 통일.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>데이터: "1GB", "500MB" — 단위는 붙여씁니다. "1 GB" (띄어쓰기) 금지.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>기간: "D-7", "7일 후", "다음 달 1일" 중 맥락에 맞게 선택. 혼용 금지.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>퍼센트: "20%"로 표기. "20 퍼센트", "20프로" 금지.</div>
+          <div class="rule-row"><span class="rule-num">R5</span>포인트: "3,000P" 형식. "3000 포인트", "3천P" 금지.</div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_RUL_5" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_RUL_5</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">Zone A LLM 대화 응답 보이스 원칙</div>
+          <div class="pattern-desc">홈 Zone A LLM 입력창과 태스크형(SDUI_2) 화면에서 생성되는 AI 응답 텍스트에 적용되는 전용 보이스 원칙입니다. 정적 컴포넌트 카피와 달리 멀티턴 대화 맥락을 유지하며 결론을 선행합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">연계 CV</div>
+          <div class="rule-row"><span class="rule-num">CV</span>CV02 Intent-Based · CV03 Frictionless</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>첫 문장은 결론을 먼저 전달한다. (DEF_3 Readable 원칙 연장 적용) 배경·이유는 두 번째 문장 이후에 위치한다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>멀티턴 대화에서 이전 발화 내용을 반복하지 않는다. "방금 말씀드린 것처럼" 등의 반복 표현을 금지한다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>응답 길이 기준: 홈 Zone A 초기 응답 최대 150자, 세부 대화 창 응답 최대 300자. 이를 초과할 경우 핵심 요약 + "자세히 보기" 구조로 분리한다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>AI가 정보를 확인할 수 없는 경우 "지금 제가 드릴 수 있는 정보가 없어요"라고 안내한다. 추측형·회피형 표현("아마도", "인 것 같아요")을 사용하지 않는다.</div>
+          <div class="rule-row"><span class="rule-num">R5</span>단계별 진행 표현은 "알겠어요, 다음으로 넘어갈게요" 형태로 능동 완료형을 사용한다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>결론 선행: "요금제 변경이 가능해요. 3가지 옵션이 있어요."</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>이전 발화 반복: "방금 말씀드린 것처럼 요금제 변경은…"</p>
+          </div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>단계 전환 능동형: "다음 단계로 이동할게요"</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>150자 초과 단일 단락 / 추측형: "아마 가능할 것 같아요"</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — LLM 대화 응답</div>
+          <div class="copy-item"><span class="copy-key">llm_no_info</span><span class="copy-val">지금 제가 드릴 수 있는 정보가 없어요. 고객센터에서 도움받으실 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">llm_step_next</span><span class="copy-val">알겠어요. 다음 단계로 넘어갈게요.</span></div>
+          <div class="copy-item"><span class="copy-key">llm_clarify</span><span class="copy-val">조금 더 알려주시면 정확하게 안내드릴 수 있어요. {question}</span></div>
+          <div class="copy-item"><span class="copy-key">llm_summary_cta</span><span class="copy-val">요약하면 {summary}이에요. 자세히 볼까요?</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_RUL_6" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_RUL_6</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">AI 생성 콘텐츠 언어 라벨 원칙</div>
+          <div class="pattern-desc">T Agent가 생성하거나 추천하는 콘텐츠에 부착하는 언어 레이블의 표현 방식과 면책 고지 언어를 정의합니다. 시각 레이블(AIG_VIC)과 함께 AI 콘텐츠 신뢰성을 언어적으로 뒷받침합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">연계 CV &amp; 패턴</div>
+          <div class="rule-row"><span class="rule-num">CV</span>CV02 Intent-Based · CV03 Frictionless</div>
+          <div class="rule-row"><span class="rule-num">연계</span>AIG_DEF_5 (AI 라벨링 정책) · AIG_VIC_1/2 (시각 레이블)</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>AI 분석 근거 레이블은 "T가 {데이터 근거}를 분석했어요" 형식을 사용한다. 추상적 "AI 분석" 표현은 금지한다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>AI 추천 레이블은 "T 추천" 고유 페르소나명을 사용한다. "인공지능 추천", "AI가 추천" 형식은 금지한다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>AI 처리 중 레이블은 "T가 확인 중이에요"(능동형)를 사용한다. "처리 중입니다", "로딩 중" 수동형 표현은 금지한다.</div>
+          <div class="rule-row"><span class="rule-num">R4</span>면책 고지 문구는 "T의 제안은 참고용이며 최종 결정은 고객님께 있어요" 형식을 표준으로 한다. 법적 고지이므로 수동태 예외 허용 (VOT_RUL_2 연동).</div>
+          <div class="rule-row"><span class="rule-num">R5</span>신뢰도별 표현 기준: 고신뢰 → 단정형 허용("분석 결과 {plan}이 합리적이에요"), 중간 신뢰 → 조건부 + 근거 명시("{name}님 패턴에 가까운 요금제를 찾았어요"), 저신뢰 → 탐색 유도만("지금 확인된 정보를 바탕으로 안내드려요").</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"T가 이용 데이터를 분석했어요" (구체 근거) / "T 추천" 레이블 사용</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"AI 분석 결과", "인공지능 추천" 사용 / 저신뢰 상황에서 단정형 추천</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — AI 언어 라벨</div>
+          <div class="copy-item"><span class="copy-key">ai_label_analysis</span><span class="copy-val">T가 {data_source}를 분석했어요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_label_recommend</span><span class="copy-val">T 추천</span></div>
+          <div class="copy-item"><span class="copy-key">ai_label_processing</span><span class="copy-val">T가 확인 중이에요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_disclaimer</span><span class="copy-val">T의 제안은 참고용이며 최종 결정은 고객님께 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_confidence_high</span><span class="copy-val">분석 결과 {plan_name}이 가장 합리적이에요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_confidence_mid</span><span class="copy-val">{name}님 패턴에 가까운 요금제를 찾았어요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_confidence_low</span><span class="copy-val">지금 확인된 정보를 바탕으로 안내드려요.</span></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ═══ SIT ═══ -->
+  <section class="section" id="sit" data-section="SIT">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">VOT · SIT</span></div>
+      <div class="section-title">3. 상황별 가이드</div>
+      <div class="section-desc">T world Next에서 고객이 마주치는 주요 상황별로 언어 톤과 카피 구조를 정의합니다. 같은 보이스 원칙이라도 상황에 따라 강조하는 축이 달라집니다.</div>
+      <div class="tag-row"><span class="tag">오류·실패</span><span class="tag">혜택 안내</span><span class="tag">절감 금액</span><span class="tag">Offer 제안</span><span class="tag">완료 피드백</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_1" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">오류 &amp; 실패 상황</div>
+          <div class="pattern-desc">고객이 오류를 만났을 때의 언어 톤입니다. 신뢰감 > 친근함 순서로 비중을 둡니다. 원인을 솔직하게 인정하고 다음 행동을 즉시 제시합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>오류 메시지는 "무엇이 안 됐는지" + "어떻게 하면 되는지"를 2문장 이내로 구성합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>시스템·기술 원인을 고객에게 전가하지 않습니다. "고객님의 네트워크 상태" 대신 "잠시 연결이 끊겼어요"처럼 현상 중심으로 서술합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>복구 경로(다음 행동)가 없는 오류 메시지는 노출하지 않습니다. 항상 CTA 또는 대안 안내를 포함합니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"요청을 처리하지 못했어요. 다시 시도하거나, 고객센터(114)에 문의하면 바로 해결해 드릴게요."</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"오류가 발생했습니다. 잠시 후 다시 시도해 주세요." — 원인도, 다음 행동도 없습니다.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 오류 유형별</div>
+          <div class="copy-item"><span class="copy-key">네트워크</span><span class="copy-val">잠시 연결이 끊겼어요. 네트워크를 확인하고 다시 시도해 주세요.</span></div>
+          <div class="copy-item"><span class="copy-key">처리 실패</span><span class="copy-val">{태스크명}을 처리하지 못했어요. 다시 시도해도 안 되면 고객센터(114)로 연결해 드릴게요.</span></div>
+          <div class="copy-item"><span class="copy-key">빈 결과</span><span class="copy-val">아직 {콘텐츠 유형}이 없어요. {유도 행동}하면 여기에 나타납니다.</span></div>
+          <div class="copy-item"><span class="copy-key">입력 오류</span><span class="copy-val">{항목명}을 다시 확인해 주세요. {조건 안내}.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_2" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">혜택 안내 상황</div>
+          <div class="pattern-desc">포인트·쿠폰·구독 혜택을 안내할 때의 언어 톤입니다. 친근함 > 명확함 순서로, 고객이 혜택의 가치를 즉각 체감하도록 합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>혜택의 수치(금액·데이터·기간)를 가장 먼저 말합니다. "다양한 혜택을 드립니다" 같은 모호한 선언 금지.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>사용 기한이 있는 혜택은 기한을 항상 명시합니다. 단, 압박이 아닌 안내 톤으로 표현합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>혜택 설명 후 사용법 또는 CTA를 1개 포함합니다. "사용하러 가기", "지금 받기" 등.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"3,000P가 생겼어요. 이번 달 말까지 사용할 수 있어요." + CTA "포인트 쓰기"</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"포인트 혜택이 적립되었습니다. 마이페이지에서 확인하실 수 있습니다." — 수치 없음, CTA 없음, 수동태.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 혜택 유형별</div>
+          <div class="copy-item"><span class="copy-key">포인트 적립</span><span class="copy-val">{N}P가 쌓였어요. 누적 {총N}P 보유 중이에요.</span></div>
+          <div class="copy-item"><span class="copy-key">쿠폰 발급</span><span class="copy-val">{혜택명} 쿠폰이 도착했어요. {D-day}까지 사용할 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">소멸 임박</span><span class="copy-val">{N}P가 {D-day}에 사라져요. 지금 쓰면 딱 맞아요.</span></div>
+          <div class="copy-item"><span class="copy-key">혜택 공유</span><span class="copy-val">{이름}님의 {혜택명}을 함께 쓸 수 있어요. 초대하면 둘 다 {N}P를 받아요.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_3" data-status="fundamental">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">절감 금액 안내 상황</div>
+          <div class="pattern-desc">요금제 변경·Offer 전환으로 절약되는 금액을 표현할 때의 언어 톤입니다. 신뢰감 > 명확함 순서로, 숫자를 생활 맥락과 연결합니다.</div>
+        </div>
+        <span class="status-badge status-fundamental">Fundamental</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>월 단위 절감액을 headline으로 먼저 제시하고, 연 환산을 sub로 병기합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>절감 근거(CVM 분석 요약)를 1줄 이내로 추가합니다. 근거 없는 숫자는 신뢰를 낮춥니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>"절약", "아낄 수 있어요"처럼 고객 입장의 언어를 사용합니다. "할인", "감면"같은 기업 입장 언어를 지양합니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"월 8,800원 절약됩니다. 연 105,600원이에요." + 근거 "고객님의 데이터 사용 패턴을 분석했어요."</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"월 8,800원 할인 혜택을 제공해 드립니다." — 기업 입장 언어 + 근거 없음.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 절감 안내</div>
+          <div class="copy-item"><span class="copy-key">월 절감</span><span class="copy-val">월 {N}원 절약됩니다.</span></div>
+          <div class="copy-item"><span class="copy-key">연 환산</span><span class="copy-val">연 {N×12}원, 지금 바로 변경할 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">근거</span><span class="copy-val">고객님의 {데이터/통화/이용 패턴} 분석을 바탕으로 추천드려요.</span></div>
+          <div class="copy-item"><span class="copy-key">그룹 절감</span><span class="copy-val">가족이 함께하면 월 {N}원을 더 절약할 수 있어요.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_4" data-status="recommend">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_4</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">완료 피드백 상황</div>
+          <div class="pattern-desc">고객이 태스크를 완료했을 때의 언어 톤입니다. 간결하게 결과를 확인해 주고, 다음 행동이 있다면 자연스럽게 연결합니다.</div>
+        </div>
+        <span class="status-badge status-recommend">Recommend</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>완료 메시지는 "무엇을 완료했는지" + "언제부터 적용되는지"를 1~2문장으로 구성합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>감탄사·과잉 표현("완료됐어요! 축하드려요~")을 사용하지 않습니다. 담담하고 확실한 확인 톤.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>후속 행동이 있는 경우 (LCV 마일스톤, Offer 연결 등) 완료 피드백에 자연스럽게 연결합니다.</div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 완료 유형별</div>
+          <div class="copy-item"><span class="copy-key">요금제 변경</span><span class="copy-val">요금제를 변경했어요. 다음 달 1일부터 적용됩니다.</span></div>
+          <div class="copy-item"><span class="copy-key">데이터 전송</span><span class="copy-val">{N}GB를 {이름}님께 전송했어요. 바로 사용할 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">부가서비스 가입</span><span class="copy-val">{서비스명} 가입이 완료됐어요. 지금 바로 이용할 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">초대 전송</span><span class="copy-val">{이름}님께 초대를 보냈어요. 수락하면 알려드릴게요.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_5" data-status="recommend">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_5</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">Offer &amp; Upsell 제안 상황</div>
+          <div class="pattern-desc">CVM이 추천한 Offer를 언어로 전달할 때의 톤입니다. 강매가 아닌 "나를 위한 제안"으로 받아들여지도록 설계합니다.</div>
+        </div>
+        <span class="status-badge status-recommend">Recommend</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1</span>Offer 문구는 고객 행동·데이터에서 출발합니다. "지금 이 상품을 추천합니다" 대신 "고객님이 자주 {행동}하시는 것을 봤어요"로 시작.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>혜택 수치를 먼저 말하고, 제품명은 뒤에 붙입니다. 제품명을 headline으로 쓰지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>거절 옵션을 항상 쉽게 접근할 수 있도록 합니다. 고객이 "닫기"를 클릭할 때 부정적인 언어("혜택을 포기하겠습니다")를 사용하지 않습니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"월 8,800원 절약할 수 있어요. 고객님의 데이터 이용 패턴을 분석했어요." → CTA "요금제 바꿔볼게요" / 닫기 "다음에"</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"5GX 프리미엄을 추천합니다! 지금 바로 가입하세요." → 제품명 먼저, 압박형 CTA, 닫기 버튼 없음.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — Offer 제안</div>
+          <div class="copy-item"><span class="copy-key">intro</span><span class="copy-val">고객님의 {이용 패턴/신호 요약} 분석을 바탕으로 추천드려요.</span></div>
+          <div class="copy-item"><span class="copy-key">headline</span><span class="copy-val">월 {N}원 절약됩니다.</span></div>
+          <div class="copy-item"><span class="copy-key">cta-confirm</span><span class="copy-val">지금 변경하기 / 바로 신청하기</span></div>
+          <div class="copy-item"><span class="copy-key">cta-dismiss</span><span class="copy-val">다음에 / 괜찮아요</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_6" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_6</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">마찰 해소 상황별 카피 가이드</div>
+          <div class="pattern-desc">UXPT_FRL에서 정의한 3가지 마찰 유형(불안·비교·복잡)에 대응하는 카피 톤과 표현 원칙입니다. 각 유형은 서로 다른 고객 심리에 기반하므로 톤과 구조가 다르게 적용됩니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">연계 패턴</div>
+          <div class="rule-row"><span class="rule-num">연계</span>UXPT_FRL_1 (마찰 유형 분류) · UXPT_FRL_2 (선제 안내 타이밍) · UXPT_FRL_3 (마찰 유형별 카피)</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1 불안</span>불안 마찰 상황에서는 확정형 완료 표현을 사용한다. 고객이 걱정하는 결과가 보장됨을 먼저 선언한다. (예: "위약금이 없어요", "기존 혜택이 그대로 유지돼요")</div>
+          <div class="rule-row"><span class="rule-num">R2 비교</span>비교 마찰 상황에서는 차이 중심 표현과 질문형으로 유도한다. (예: "지금보다 월 {N}원 저렴해요. 한번 볼까요?") 단정형 단독 사용 금지.</div>
+          <div class="rule-row"><span class="rule-num">R3 복잡</span>복잡 마찰 상황에서는 진행 위치를 먼저 알려주고 단계를 순서대로 안내한다. (예: "3단계 중 1단계예요. 지금은 {current_step}만 하면 돼요.")</div>
+          <div class="rule-row"><span class="rule-num">R4</span>어떤 마찰 유형이든 시스템 내부 용어(약정코드, 오류코드, 배치명)는 사용하지 않는다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>(불안) "위약금 없이 변경 가능해요" (확정형 선행)<br>(비교) "지금보다 월 {N}원 저렴해요. 볼까요?" (차이+질문형)<br>(복잡) "3단계 중 1단계예요" (위치 먼저)</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"아마 괜찮을 거예요" (불안 맥락 추측형)<br>"월 {N}원 더 저렴한 옵션이 있어요" (비교 맥락 단정형만)</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — FRL 마찰 유형별</div>
+          <div class="copy-item"><span class="copy-key">frl_anxiety_safe</span><span class="copy-val">{benefit}이(가) 그대로 유지돼요. 안심하고 진행하세요.</span></div>
+          <div class="copy-item"><span class="copy-key">frl_anxiety_no_penalty</span><span class="copy-val">위약금 없이 변경할 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">frl_compare_invite</span><span class="copy-val">지금보다 월 {savings}원 저렴해요. 한번 확인해 볼까요?</span></div>
+          <div class="copy-item"><span class="copy-key">frl_complex_position</span><span class="copy-val">{total_steps}단계 중 {current_step}단계예요. 지금은 {action}만 하면 돼요.</span></div>
+          <div class="copy-item"><span class="copy-key">frl_complex_next</span><span class="copy-val">다음은 {next_step}이에요.</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SIT_7" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SIT_7</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">AI 한계 안내 상황 카피 가이드</div>
+          <div class="pattern-desc">T Agent가 정보 부재·권한 초과·오답 인정·에스컬레이션 상황에서 사용하는 카피 원칙입니다. VOT_RUL_3 금지 표현을 준수하면서도 고객 신뢰를 유지하는 표현 방식을 정의합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">연계 패턴</div>
+          <div class="rule-row"><span class="rule-num">연계</span>AIG_DEF_4 (한계 안내 Copy) · VOT_RUL_3 (금지 표현) · VOT_RUL_6 (AI 라벨 원칙)</div>
+        </div>
+        <div>
+          <div class="rule-label">Rules</div>
+          <div class="rule-row"><span class="rule-num">R1 정보 부재</span>모른다는 사실을 즉시 인정하되 다음 행동을 제시한다. 추측형 대신 확인 가능한 다음 경로를 안내한다.</div>
+          <div class="rule-row"><span class="rule-num">R2 권한 초과</span>처리 불가 사유는 고객 탓이 아닌 시스템 구조로 설명하고, 가능한 대안 경로를 즉시 제시한다.</div>
+          <div class="rule-row"><span class="rule-num">R3 오답 인정</span>"제가 잘못 이해했을 수도 있어요"(추측형·책임 회피형) 표현은 금지한다. "다시 확인하고 안내드릴게요"(능동 재처리형)로 대체한다.</div>
+          <div class="rule-row"><span class="rule-num">R4 에스컬레이션</span>상담사 연결 시 고객에게 "지금까지 내용을 상담사에게 전달했어요"를 선행하여 처음부터 다시 설명할 필요 없음을 알린다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"지금 확인할 수 없어요. 고객센터에서 도움받을 수 있어요." (정보 부재 → 경로 제시)<br>"다시 확인하고 안내드릴게요" (오답 인정 → 재처리)</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"제가 잘못 이해했을 수도 있어요" (추측·회피형)<br>"시스템상 처리가 불가능합니다" (시스템 내부 용어·수동형)</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — AI 한계 안내</div>
+          <div class="copy-item"><span class="copy-key">ai_no_info_with_path</span><span class="copy-val">지금 제가 확인할 수 없어요. {alternative_path}에서 도움받으실 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_out_of_scope</span><span class="copy-val">이 내용은 제가 직접 처리할 수 없어요. {escalation_path}로 연결해 드릴게요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_reprocess</span><span class="copy-val">다시 확인하고 안내드릴게요. 잠깐만요.</span></div>
+          <div class="copy-item"><span class="copy-key">ai_escalation_context</span><span class="copy-val">지금까지 내용을 상담사에게 전달했어요. 처음부터 다시 설명하지 않으셔도 돼요.</span></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <hr class="section-divider" />
+
+  <!-- ═══ SEG ═══ -->
+  <section class="section" id="seg" data-section="SEG">
+    <div class="section-header">
+      <div class="section-header-top"><span class="section-code-badge">VOT · SEG</span></div>
+      <div class="section-title">4. 고객 특성별 가이드</div>
+      <div class="section-desc">C360이 파악한 고객 특성 세그먼트에 따라 보이스의 톤과 강조점이 달라집니다. 기본 원칙(DEF·RUL)은 동일하게 유지하되, 세그먼트별로 친근함·명확함·신뢰감 3축의 비중을 조정합니다.</div>
+      <div class="tag-row"><span class="tag">신규 가입자</span><span class="tag">장기 고객</span><span class="tag">실버 고객</span><span class="tag">잠재 고객</span></div>
+    </div>
+
+    <article class="pattern-card" data-pattern-id="VOT_SEG_1" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SEG_1</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">신규 가입자</div>
+          <div class="pattern-desc">가입 후 90일 이내 고객. 서비스 구조와 용어가 낯설기 때문에 친근함 + 명확함을 최우선으로 합니다. 전문 용어는 풀어 씁니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">보이스 비중</div>
+          <div class="rule-row"><span class="rule-num">친근함</span>★★★ — 어색함과 낯섦을 줄이는 것이 최우선입니다.</div>
+          <div class="rule-row"><span class="rule-num">명확함</span>★★★ — 약어·용어 없이 풀어 씁니다. "VoLTE" → "고품질 통화"</div>
+          <div class="rule-row"><span class="rule-num">신뢰감</span>★★☆ — 결과 안내는 하되, 과도한 근거 제시는 오히려 복잡하게 느껴집니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"처음이라 낯설 수 있어요. 자주 쓰는 메뉴를 여기에 바로 올려드릴게요." — 공감 + 행동 유도.</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"C360 기반 Micro Task가 홈 hero 슬롯에 렌더링됩니다." — 내부 용어 그대로 노출.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 신규 가입자</div>
+          <div class="copy-item"><span class="copy-key">온보딩</span><span class="copy-val">SKT에 오신 걸 환영해요, {이름}님. 필요한 게 생기면 언제든 알려드릴게요.</span></div>
+          <div class="copy-item"><span class="copy-key">첫 Offer</span><span class="copy-val">가입 기념으로 {혜택명}을 드려요. {D-day}까지 사용할 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">기능 안내</span><span class="copy-val">포인트는 매달 쌓여요. 커피 한 잔 값쯤 아낄 수 있어요.</span></div>
+        </div>
+        <div>
+          <div class="rule-label">연계 패턴 &amp; CVM 키</div>
+          <div class="rule-row"><span class="rule-num">연계</span>UXPT_ISR_1 (Intent Signal 계층) · UXPT_CTL_3 (CVM 세그먼트 텍스트) · UXPT_SDUI_5 (세그먼트 기반 홈 화면)</div>
+          <div class="rule-row"><span class="rule-num">CVM 키</span><code>new_subscriber</code></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SEG_2" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SEG_2</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">장기 고객</div>
+          <div class="pattern-desc">가입 3년 이상 고객. 서비스에 익숙하기 때문에 설명보다 가치 체감에 집중합니다. 누적 혜택·관계 언어를 활용하여 신뢰 관계를 강화합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">보이스 비중</div>
+          <div class="rule-row"><span class="rule-num">친근함</span>★★☆ — 이미 익숙한 관계. 과도한 친절보다 대등한 동반자 톤.</div>
+          <div class="rule-row"><span class="rule-num">명확함</span>★★★ — 이미 아는 고객에게 불필요한 설명을 반복하지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">신뢰감</span>★★★ — "함께한 시간"을 수치로 보여주며 관계를 강화합니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"SKT와 함께한 지 5년이 됐어요. 그간 총 {N}원을 아끼셨어요. 감사합니다, {이름}님."</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"SKT 서비스를 소개해 드릴게요! 포인트 제도가 궁금하신가요?" — 장기 고객에게 기초 안내 반복.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 장기 고객</div>
+          <div class="copy-item"><span class="copy-key">마일스톤</span><span class="copy-val">함께한 지 {N}년이 됐어요. 감사한 마음을 담아 {혜택명}을 드립니다.</span></div>
+          <div class="copy-item"><span class="copy-key">누적 가치</span><span class="copy-val">지금까지 총 {N}원을 아끼셨어요. 앞으로도 더 많은 혜택을 드릴게요.</span></div>
+          <div class="copy-item"><span class="copy-key">장기 Offer</span><span class="copy-val">{이름}님께만 드리는 장기 고객 혜택이 생겼어요. 월 {N}원 추가 절약이에요.</span></div>
+        </div>
+        <div>
+          <div class="rule-label">연계 패턴 &amp; CVM 키</div>
+          <div class="rule-row"><span class="rule-num">연계</span>UXPT_ISR_1 (Intent Signal 계층) · UXPT_CTL_3 (CVM 세그먼트 텍스트) · UXPT_SDUI_5 (세그먼트 기반 홈 화면)</div>
+          <div class="rule-row"><span class="rule-num">CVM 키</span><code>loyal_customer</code> · <code>high_value</code></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SEG_3" data-status="new">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SEG_3</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">실버 고객</div>
+          <div class="pattern-desc">50대 이상 고객. 디지털 서비스 피로도를 낮추고 안심감을 최우선으로 합니다. 문장은 더 짧게, 행동은 하나씩, 결과는 구체적으로 안내합니다.</div>
+        </div>
+        <span class="status-badge status-new">New</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">보이스 비중</div>
+          <div class="rule-row"><span class="rule-num">친근함</span>★★★ — 따뜻하고 편안한 톤. 딱딱한 공지문 투 금지.</div>
+          <div class="rule-row"><span class="rule-num">명확함</span>★★★ — 한 화면에 한 가지 행동만. 단계를 나눠서 안내.</div>
+          <div class="rule-row"><span class="rule-num">신뢰감</span>★★★ — 불안 해소 > 가치 강조. 결과를 먼저 확인시켜 줍니다.</div>
+        </div>
+        <div>
+          <div class="rule-label">추가 표현 규칙 (실버 전용)</div>
+          <div class="rule-row"><span class="rule-num">R1</span>문장 길이를 일반 기준보다 20% 줄입니다. 문장당 15자 이내를 권장합니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>CTA 버튼 레이블은 결과가 보이는 동사로 작성합니다. "확인" 대신 "요금 보기", "변경" 대신 "요금제 바꾸기".</div>
+          <div class="rule-row"><span class="rule-num">R3</span>중요 정보(금액·날짜)는 반드시 한 줄에 단독으로 강조합니다. 다른 정보와 섞지 않습니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"추가 요금은 없어요." (1줄 단독) → "다음 달 1일부터 바뀌어요." (2번째 문장 분리)</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"추가 요금 없이 다음 달 1일부터 변경 사항이 적용되어 요금제가 전환될 예정입니다." — 한 문장에 정보 과부하.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 실버 고객</div>
+          <div class="copy-item"><span class="copy-key">안심 완료</span><span class="copy-val">다 됐어요. 걱정하지 않으셔도 됩니다.</span></div>
+          <div class="copy-item"><span class="copy-key">Offer 제안</span><span class="copy-val">{이름}님께 딱 맞는 요금제가 있어요. 월 {N}원 덜 내실 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">기능 안내</span><span class="copy-val">어려우시면 전화로 도와드릴게요. 114를 누르시면 바로 연결돼요.</span></div>
+        </div>
+        <div>
+          <div class="rule-label">연계 패턴 &amp; CVM 키</div>
+          <div class="rule-row"><span class="rule-num">연계</span>UXPT_ISR_1 (Intent Signal 계층) · UXPT_CTL_3 (CVM 세그먼트 텍스트) · UXPT_SDUI_5 (세그먼트 기반 홈 화면)</div>
+          <div class="rule-row"><span class="rule-num">CVM 키</span><code>senior_user</code></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="pattern-card" data-pattern-id="VOT_SEG_4" data-status="recommend">
+      <div class="pattern-card-header">
+        <div class="pattern-id-badge">VOT_SEG_4</div>
+        <div class="pattern-meta">
+          <div class="pattern-name">잠재 고객 (타사 이용자)</div>
+          <div class="pattern-desc">가족 결합 초대 등으로 첫 접점을 갖는 비SKT 고객. 현재 통신사와 비교하지 않고, SKT와 함께할 때 얻는 가치를 중심으로 말합니다.</div>
+        </div>
+        <span class="status-badge status-recommend">Recommend</span>
+      </div>
+      <div class="pattern-body">
+        <div>
+          <div class="rule-label">보이스 비중</div>
+          <div class="rule-row"><span class="rule-num">친근함</span>★★★ — 낯선 서비스에 대한 경계심을 낮춥니다.</div>
+          <div class="rule-row"><span class="rule-num">명확함</span>★★★ — 가입 절차·혜택을 단순하게 설명합니다.</div>
+          <div class="rule-row"><span class="rule-num">신뢰감</span>★★☆ — 타사 비교·비판 없이 SKT 자체 가치로 어필합니다.</div>
+        </div>
+        <div>
+          <div class="rule-label">추가 표현 규칙 (잠재 고객 전용)</div>
+          <div class="rule-row"><span class="rule-num">R1</span>타사를 직접·간접적으로 언급하거나 비교하지 않습니다.</div>
+          <div class="rule-row"><span class="rule-num">R2</span>가족이 초대했다는 맥락을 언어에 담아 "나를 위한 제안"이 아닌 "가족과의 연결"로 포지셔닝합니다.</div>
+          <div class="rule-row"><span class="rule-num">R3</span>가입 이후 바로 얻을 수 있는 혜택(즉시 수혜)을 첫 문장에 배치합니다.</div>
+        </div>
+        <div class="do-dont-grid">
+          <div class="do-block">
+            <div class="do-tag">DO</div>
+            <p>"{가족이름}님이 초대했어요. 함께 가입하면 둘 다 월 {N}원을 아낄 수 있어요."</p>
+          </div>
+          <div class="dont-block">
+            <div class="dont-tag">DON'T</div>
+            <p>"타사보다 N원 저렴합니다. 지금 바로 SKT로 번호이동 하세요!" — 타사 비교, 압박형 CTA.</p>
+          </div>
+        </div>
+        <div class="copy-block">
+          <div class="rule-label">Copy Template — 잠재 고객</div>
+          <div class="copy-item"><span class="copy-key">초대 도착</span><span class="copy-val">{이름}님이 SKT 가족 결합에 초대했어요. 함께하면 둘 다 매월 {N}원을 아낄 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">가입 유도</span><span class="copy-val">가입하면 바로 {즉시 혜택}을 받을 수 있어요.</span></div>
+          <div class="copy-item"><span class="copy-key">가입 완료</span><span class="copy-val">환영해요, {이름}님! {가족이름}님과 함께 월 {N}원 절약이 시작됐어요.</span></div>
+        </div>
+        <div>
+          <div class="rule-label">연계 패턴 &amp; CVM 키</div>
+          <div class="rule-row"><span class="rule-num">연계</span>UXPT_ISR_1 (Intent Signal 계층) · UXPT_CTL_3 (CVM 세그먼트 텍스트) · UXPT_SDUI_5 (세그먼트 기반 홈 화면)</div>
+          <div class="rule-row"><span class="rule-num">CVM 키</span><code>churn_risk</code> · <code>benefit_dormant</code></div>
+        </div>
+      </div>
+    </article>
+  </section>
+
+</main>
+<script>
+  // IntersectionObserver for sidebar active state
+  var sections = document.querySelectorAll('section[data-section]');
+  var navLinks = document.querySelectorAll('.sidebar a[href^="#"]');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        var id = entry.target.id;
+        navLinks.forEach(function(link) {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-56px 0px -60% 0px', threshold: 0 });
+  sections.forEach(function(s) { observer.observe(s); });
+
+  // Intercept sidebar anchor clicks → replaceState
+  navLinks.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = this.getAttribute('href').slice(1);
+      var target = document.getElementById(id);
+      if (target) {
+        var top = target.getBoundingClientRect().top + window.scrollY - 64;
+        window.scrollTo({ top: top, behavior: 'smooth' });
+        history.replaceState(null, '', '#' + id);
+      }
+    });
+  });
+</script>
+<script src="https://unpkg.com/turndown/dist/turndown.js"></script>
+<script>
+function exportMarkdown() {
+  var td = new TurndownService({ headingStyle: 'atx', bulletListMarker: '-', codeBlockStyle: 'fenced' });
+  td.remove(['script', 'style', 'nav', 'header']);
+  var content = document.querySelector('.main') || document.body;
+  var md = td.turndown(content);
+  var filename = (document.title || 'governance').replace(/[^\w가-힣\-]/g, '_') + '.md';
+  var blob = new Blob([md], { type: 'text/markdown; charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  a.click();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 1000);
+}
+</script>
+<script>
+(function(){
+  var n=document.querySelector('.doc-nav-tabs'),ts=document.querySelectorAll('.doc-nav-tab'),c=document.querySelector('.doc-nav-tab.current');
+  if(!c||!n)return;
+  var ind=document.createElement('div');
+  ind.style.cssText='position:absolute;bottom:0;height:2px;background:#111;pointer-events:none;';
+  n.appendChild(ind);
+  function mv(el,anim){var nr=n.getBoundingClientRect(),tr=el.getBoundingClientRect();ind.style.transition=anim?'left .28s cubic-bezier(.4,0,.2,1),width .28s cubic-bezier(.4,0,.2,1)':'none';ind.style.left=(tr.left-nr.left)+'px';ind.style.width=tr.width+'px';}
+  var ta=Array.prototype.slice.call(ts),ci=ta.indexOf(c),pi=parseInt(sessionStorage.getItem('govTab')||ci);
+  sessionStorage.setItem('govTab',ci);
+  mv(ta[pi]||c,false);
+  requestAnimationFrame(function(){requestAnimationFrame(function(){mv(c,true);});});
+}());
+</script>
+<div id="cvOvl" class="cv-overlay"></div>
+<div id="cvPnl" class="cv-panel">
+  <div class="cv-panel-inner">
+    <div id="cvPanelHead" class="cv-panel-head"></div>
+    <div class="cv-panel-body"><div id="cvPanelBody"></div></div>
+  </div>
+</div>
+<script>
+var CV_CONTENT = {
+  'CV01': { code:'CV01', en:'Borderless Experience', driver:'Journey Readable',
+    def:'통합된 고객 Data set을 기반으로 SKT 서비스 접점 전반에서 일관된 경험을 제공합니다.',
+    outcomes:[
+      {num:'01',title:'여정 중심의 UX 설계',desc:'고객 목적에 따른 핵심 여정 중심 탭 구조. 분산된 관리 정보(요금제·구독·혜택)를 하나의 앱에서 통합 열람·진단·관리합니다.'},
+      {num:'02',title:'맥락 중심의 옴니채널',desc:'모바일 탐색 이력이 매장 상담 시스템으로, 매장 상담 이력이 온라인 채널로 끊김 없이 양방향으로 연결됩니다.'},
+      {num:'03',title:'외·내부 접점 동선 설계',desc:'OS 에이전트에서 탐색·호출 후 채널로 자연스럽게 이어지는 흐름. 혜택 확인 후 외부 채널과의 접점까지 설계합니다.'}
+    ]},
+  'CV02': { code:'CV02', en:'Intent-Based Experience', driver:'Segment Readable',
+    def:'고객의 의도를 기반으로 UX를 동적으로 재구성하여, 초개인화된 경험을 제공합니다.',
+    outcomes:[
+      {num:'01',title:'타깃 별 UX 최적화',desc:'고객 케이스마다 개인화된 마이크로 태스크와 우선순위 메뉴로 홈을 동적으로 구성합니다. (혜택 사용자·가족 데이터·시니어·약정 만료·비로그인)'},
+      {num:'02',title:'고객 해석 기반 UI',desc:'서비스 이용 성향(분석형·가치 체감형·관계 중심형·혜택 중심형)에 따라 요금제 비교 방식을 차별화합니다.'},
+      {num:'03',title:'진입 의도에 알맞는 여정',desc:'채널별 주요 세그먼트 특성과 방문 목적에 맞춰 각 진입 의도에 최적화된 여정으로 안내합니다.'}
+    ]},
+  'CV03': { code:'CV03', en:'Frictionless Lead', driver:'Task & Info Readable',
+    def:'의사결정과 행동이 막히지 않도록 간결하고 명확한 흐름을 설계합니다.',
+    outcomes:[
+      {num:'01',title:'안심의 톤으로 신뢰 형성',desc:'결정 전 결과 정보를 먼저 제시해 안심 기반의 실행을 유도합니다. 위약금·혜택 변동 등을 선제 안내합니다.'},
+      {num:'02',title:'체감 가치 증명',desc:'고객 맥락에 맞는 혜택과 체감 가치를 수치·시뮬레이션으로 즉각 제시합니다.'},
+      {num:'03',title:'고객 응대·셀프처리 지원',desc:'맥락 감지 기반 AI 상담 보조와 고객 직접 처리형 셀프 업무 가이드를 단계별로 제공합니다.'},
+      {num:'04',title:'차근차근 안내되는 경험',desc:'긴 절차가 필요한 여정에서도 단계별 태스크 모듈로 이탈 없이 완료까지 이어줍니다.'}
+    ]},
+  'CV04': { code:'CV04', en:'Engaging Experience', driver:'Relationship Readable',
+    def:'고객의 이용 맥락과 관계 수준에 따라, 지속적으로 반응하고 참여하게 되는 경험을 설계합니다.',
+    outcomes:[
+      {num:'01',title:'장기 고객 가치 체감',desc:'장기 고객에게 추가 혜택을 제안하고, 누적된 결합 혜택 가치를 화면 곳곳에서 가시화해 신뢰를 형성합니다.'},
+      {num:'02',title:'선제적 결합 기회 확산',desc:'고객 관계망 기반으로 AI가 결합 기회를 제안하고, 타 통신사 지인까지 그룹 단위로 자연스럽게 유입됩니다.'},
+      {num:'03',title:'관계 기반 인게이지먼트 확장',desc:'위치 기반 혜택 공유·구독 파티 등 개인 소비를 관계 기반으로 확장해 멤버십 사용률과 참여를 높입니다.'}
+    ]}
+};
+
+function cvOpen(cvCode) {
+  var data = CV_CONTENT[cvCode];
+  if (!data) return;
+  var tkPnl = document.getElementById('tkPnl');
+  if (tkPnl) { tkPnl.classList.remove('open'); var tkOvl = document.getElementById('tkOvl'); if (tkOvl) tkOvl.classList.remove('open'); }
+  var head = document.getElementById('cvPanelHead');
+  var body = document.getElementById('cvPanelBody');
+  head.innerHTML = '<div><div class="cv-pcode">' + data.code + '</div><div class="cv-pname">' + data.en + '</div><span class="cv-driver-badge">' + data.driver + '</span></div>' +
+    '<button class="cv-panel-close" id="cvCloseBtn">\xd7</button>';
+  document.getElementById('cvCloseBtn').addEventListener('click', cvClose);
+  var html = '<div class="cv-def-box">' + data.def + '</div><div class="cv-ko-label">Key Outcomes</div>';
+  data.outcomes.forEach(function(o) {
+    html += '<div class="cv-outcome"><div class="cv-outcome-num">KO \xb7 ' + o.num + '</div><div class="cv-outcome-title">' + o.title + '</div><div class="cv-outcome-desc">' + o.desc + '</div></div>';
+  });
+  body.innerHTML = html;
+  document.getElementById('cvOvl').classList.add('open');
+  document.getElementById('cvPnl').classList.add('open');
+}
+
+function cvClose() {
+  document.getElementById('cvOvl').classList.remove('open');
+  document.getElementById('cvPnl').classList.remove('open');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.cv-tag').forEach(function(tag) {
+    tag.addEventListener('click', function() {
+      var cls = Array.from(tag.classList).find(function(c) { return /^cv-0[1234]$/.test(c); });
+      if (cls) cvOpen('CV0' + cls.slice(-1));
+    });
+  });
+  var cvOvl = document.getElementById('cvOvl');
+  if (cvOvl) cvOvl.addEventListener('click', function(e) { if (e.target === this) cvClose(); });
+
+  var searchWrap = document.getElementById('searchWrap');
+  var searchField = document.getElementById('searchField');
+  var searchCounter = document.getElementById('searchCounter');
+  var searchPrevBtn = document.getElementById('searchPrev');
+  var searchNextBtn = document.getElementById('searchNext');
+  var searchXBtn = document.getElementById('searchXBtn');
+  var searchBtn = document.getElementById('searchBtn');
+  var _matches = [], _cur = -1;
+  function collectRanges(node, q, out) {
+    if (node.nodeType === 3) {
+      var txt = node.nodeValue.toLowerCase(), idx = 0, r;
+      while ((idx = txt.indexOf(q, idx)) !== -1) {
+        r = new Range(); r.setStart(node, idx); r.setEnd(node, idx + q.length);
+        out.push(r); idx += q.length;
+      }
+    } else if (node.nodeType === 1 && !({SCRIPT:1,STYLE:1}[node.tagName])) {
+      Array.from(node.childNodes).forEach(function(c) { collectRanges(c, q, out); });
+    }
+  }
+  function applyHL() {
+    CSS.highlights.clear();
+    if (!_matches.length) return;
+    var rest = _matches.filter(function(_, i) { return i !== _cur; });
+    if (rest.length) CSS.highlights.set('search-mark', new Highlight(...rest));
+    if (_cur >= 0 && _matches[_cur]) CSS.highlights.set('search-mark-cur', new Highlight(_matches[_cur]));
+  }
+  function updateCtr() {
+    if (!_matches.length) { searchCounter.textContent = ''; return; }
+    searchCounter.textContent = (_cur + 1) + '/' + _matches.length;
+  }
+  function goTo(idx) {
+    if (!_matches.length) return;
+    _cur = ((idx % _matches.length) + _matches.length) % _matches.length;
+    updateCtr(); applyHL();
+    var el = _matches[_cur].startContainer.parentElement;
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function doSearch(q) {
+    CSS.highlights.clear(); _matches = []; _cur = -1;
+    if (!q.trim()) { updateCtr(); return; }
+    document.querySelectorAll('.pattern-card').forEach(function(c) { collectRanges(c, q.toLowerCase(), _matches); });
+    if (_matches.length) goTo(0); else updateCtr();
+  }
+  function openSrch() { searchWrap.classList.add('open'); setTimeout(function() { searchField.focus(); }, 320); }
+  function closeSrch() { searchWrap.classList.remove('open'); searchField.value = ''; doSearch(''); }
+  if (searchBtn) searchBtn.addEventListener('click', function() {
+    searchWrap.classList.contains('open') ? closeSrch() : openSrch();
+  });
+  if (searchXBtn) searchXBtn.addEventListener('click', closeSrch);
+  if (searchPrevBtn) searchPrevBtn.addEventListener('click', function() { goTo(_cur - 1); });
+  if (searchNextBtn) searchNextBtn.addEventListener('click', function() { goTo(_cur + 1); });
+  if (searchField) {
+    searchField.addEventListener('input', function() { doSearch(this.value); });
+    searchField.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') { e.preventDefault(); e.shiftKey ? goTo(_cur - 1) : goTo(_cur + 1); }
+    });
+  }
+  document.addEventListener('keydown', function(e) { if (e.key === 'Escape') { cvClose(); closeSrch(); } });
+});
+</script>
+</body>
+</html>

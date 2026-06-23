@@ -1,0 +1,551 @@
+/* module-key = 'com.atlassian.confluence.plugins.confluence-ui-components:space-picker', location = '/css/space-picker.less' */
+form.aui .aui-select2-container.space-picker-container{border:1px solid var(--ds-border, #c1c7d0)}form.aui .aui-select2-container.space-picker-container .select2-choices{border:none}form.aui .aui-select2-container.space-picker-container .select2-choices:before{content:initial}
+/* module-key = 'com.atlassian.auiplugin:split_aui.component.form.date-select', location = 'aui.component.form.date-select.css' */
+/*! AUI Date Picker, using jQuery UI Date Picker */.aui-datepicker-dialog{max-width:255px}.aui-datepicker-dialog .aui-datepicker-hint{background:var(--aui-datepicker-panel-bg-color);border-bottom:1px solid var(--aui-datepicker-panel-divider-color);border-radius:3.01px;box-shadow:0 4px 8px -2px var(--aui-shadow2),0 0 1px var(--aui-shadow2);color:var(--aui-datepicker-hint-text-color);font-size:14px;padding:2px 5px}@supports (-ms-accelerator:true) or (-ms-ime-align:auto){.aui-datepicker-dialog .aui-datepicker-hint{box-shadow:0 4px 8px -2px var(--aui-shadow2),0 0 1px var(--aui-shadow1),1px 0 1px var(--aui-shadow1),-1px 0 1px var(--aui-shadow1),0 -1px 1px var(--aui-shadow1)}}html:not(html:not([data-theme]),html[data-color-mode=light][data-theme~="light:original"],html[data-color-mode=dark][data-theme~="dark:original"]) .aui-datepicker-dialog .aui-datepicker-hint{box-shadow:var(--ds-shadow-overlay,0 4px 8px -2px #091e4240,0 0 1px #091e424f)}.aui-datepicker-dialog[x-placement*=bottom],html:not(html:not([data-theme]),html[data-color-mode=light][data-theme~="light:original"],html[data-color-mode=dark][data-theme~="dark:original"])[data-color-mode=light] .aui-datepicker-dialog[x-placement*=bottom]{--aui-inline-dialog-bg-color:var(--aui-datepicker-heading-bg-color)}.aui-datepicker-dialog .aui-inline-dialog-contents,.aui-datepicker-dialog .contents{padding:0}.aui-datepicker-dialog .arrow.aui-css-arrow:not(.aui-bottom-arrow):after,.aui-datepicker-dialog .aui-inline-dialog-arrow.aui-css-arrow:not(.aui-bottom-arrow):after{border-bottom-color:var(--aui-datepicker-panel-bg-color);top:2px}.aui-datepicker-dialog .ui-datepicker{background:inherit;color:inherit;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;padding:0}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header{background:var(--aui-datepicker-heading-bg-color);height:14px;margin:0;padding:10px;position:relative}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-title{color:var(--aui-datepicker-heading-text-color);font-size:14px;font-weight:700;height:14px;line-height:14px;margin:0;padding:0;text-align:center}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar{border-spacing:0;margin:0;table-layout:fixed;width:100%}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar thead{background:var(--aui-datepicker-heading-bg-color)}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar tbody{background:var(--aui-datepicker-panel-bg-color);padding-bottom:5px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar th{color:var(--aui-datepicker-heading-weekdays-text-color);font-size:11px;font-weight:600;letter-spacing:0;line-height:15px;line-height:1.45454545;text-transform:uppercase}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar th{cursor:default;padding:0;width:35px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td span{border:1px solid #0000;border-radius:3.01px;box-sizing:border-box;display:block;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen,Ubuntu,Fira Sans,Droid Sans,Helvetica Neue,sans-serif;font-size:14px;line-height:25px;padding:0;text-align:center}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a{background:var(--aui-datepicker-option-bg-color);color:var(--aui-datepicker-option-text-color);text-align:center;text-decoration:none}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a:active,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a:focus,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td a:hover{background:var(--aui-datepicker-option-focus-bg-color);border-color:var(--aui-datepicker-option-focus-bg-color);color:var(--aui-datepicker-option-focus-text-color)}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day a{color:var(--aui-datepicker-option-selected-text-color)}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day a,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day a:focus,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar td.ui-datepicker-current-day a:hover{background:var(--aui-datepicker-option-selected-bg-color);border-color:var(--aui-datepicker-option-selected-bg-color)}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-today{font-weight:700;text-decoration:underline;text-decoration-width:2px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-unselectable{background-color:var(--aui-datepicker-option-unselectable-bg-color);color:var(--aui-datepicker-option-unselectable-text-color)}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-other-month.ui-datepicker-unselectable{background-color:var(--aui-datepicker-option-bg-color)}.aui-datepicker-dialog .ui-widget-header{font-weight:400}.aui-datepicker-dialog .ui-widget-content,.aui-datepicker-dialog .ui-widget-header{border:none}.aui-datepicker-dialog .ui-datepicker td a,.aui-datepicker-dialog .ui-datepicker td a:active,.aui-datepicker-dialog .ui-datepicker td a:focus,.aui-datepicker-dialog .ui-datepicker td a:hover,.aui-datepicker-dialog .ui-datepicker td span,.aui-datepicker-dialog .ui-datepicker td span:active,.aui-datepicker-dialog .ui-datepicker td span:focus,.aui-datepicker-dialog .ui-datepicker td span:hover{text-decoration:none}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-next,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-next-hover,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-prev,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-prev-hover{border-width:0;cursor:default;height:100%;line-height:35px;padding:0;position:absolute;text-align:center;top:0;width:40px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-next span,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-next-hover span,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-prev span,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-prev-hover span{bottom:0;display:block;left:0;margin:0;position:absolute;right:0;text-indent:0;top:0;width:100%}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-prev,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-prev-hover{left:0}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-next,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-next-hover{right:0}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-next.ui-state-disabled,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-next.ui-state-disabled:active,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-next.ui-state-disabled:focus,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-next.ui-state-disabled:hover,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-prev.ui-state-disabled,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-prev.ui-state-disabled:active,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-prev.ui-state-disabled:focus,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-header .ui-datepicker-prev.ui-state-disabled:hover{color:var(--aui-datepicker-disabled-text-color)}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>thead>tr>th{border-bottom:1px solid var(--aui-datepicker-panel-divider-color);padding-bottom:5px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>tbody>tr>td:first-child,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>thead>tr>th:first-child{padding-left:5px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>tbody>tr>td:last-child,.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>thead>tr>th:last-child{padding-right:5px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>tbody>tr:first-child>td{padding-top:5px}.aui-datepicker-dialog .ui-datepicker .ui-datepicker-calendar>tbody>tr:last-child>td{padding-bottom:5px}.aui-calendar-widget{display:inline-flex;flex-direction:column}
+/* module-key = 'com.atlassian.confluence.plugins.confluence-ui-components:space-page-picker', location = '/css/space-page-picker.css' */
+.space-page-picker-drop .item-text{padding-left:20px;background-position:left center}.space-page-picker-drop .space-name{font-size:11px;padding-left:20px;overflow:hidden;text-overflow:ellipsis;display:block}.space-page-picker-drop .space-page-picker-result-label-with-icon .space-name{color:var(--ds-text-accent-gray,#666)}.space-page-picker-drop .select2-highlighted .space-page-picker-result-label-with-icon .space-name{color:var(--ds-text-subtlest,#626f86)}.space-page-picker-drop .select2-result-space-page-separator{height:1px;line-height:1px}.space-page-picker-container .item-text{padding-left:20px}.space-page-picker-container .space-page-picker-selected-item{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:16px}.space-page-picker-container .content-not-found,.space-page-picker-drop .content-not-found{opacity:.5;-ms-filter:"alpha(opacity=50)";*display:inline-block}.space-page-picker-container .content-type-space-category,.space-page-picker-drop .content-type-space-category{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAMAAAAoLQ9TAAAAHlBMVEX///9vb29vb29vb29vb29vb29vb29vb29vb29vb29iaA79AAAACnRSTlMAESIzZoiZqsz/6xKC/QAAADxJREFUeNqNylkKACAMA9HUreb+F1ZQCFUQ5y+P4KfCWYMitwhyDkImCx+uJO0h9RIc4ojSDZK9VaUbvhquIwMSfzVGNwAAAABJRU5ErkJggg==);background-repeat:no-repeat}.space-page-picker-container .select2-search-choice{max-width:90%}
+/* module-key = 'com.atlassian.confluence.plugins.confluence-ui-components:user-group-select2', location = '/css/user-group-select2.less' */
+form.aui .aui-select2-container.users-autocomplete{border:1px solid var(--ds-border, #c1c7d0)}form.aui .aui-select2-container.users-autocomplete .select2-choices{border:none}form.aui .aui-select2-container.users-autocomplete .select2-choices:before{content:initial}
+/* module-key = 'com.atlassian.confluence.plugins.confluence-ui-components:cql', location = 'css/cql/cql-filter-field.css' */
+.cql-filter .aui-iconfont-remove,.cql-type-date .aui-nav a{cursor:pointer}.aui-datepicker-dialog{z-index:4000}.cql-filter .absolute-date-pickers{padding:10px 0 7px 10px;display:inline-block}.cql-filter .from-date-picker.text{margin-right:7px}.cql-filter .to-date-picker.text{margin-left:7px}#macro-browser-dialog .macro-input-fields .absolute-date-pickers input{max-width:96px}
+/* module-key = 'com.atlassian.confluence.plugins.confluence-ui-components:cql', location = 'css/cql/cql-component.css' */
+.cql-error-container .aui-message{margin-bottom:10px}.cql-filter:first-child .aui-nav-heading{padding-top:0;border-top:0}.cql-filter .aui-iconfont-remove{display:inline-block;float:right;margin-top:2px;background:transparent;color:inherit;border-radius:1px}.cql-render-heading{margin-top:2em}.cql-render-heading button{float:right;margin-top:-5px}.cql-add-filter-container{padding:10px 0 0 0}
+/* module-key = 'com.atlassian.confluence.plugins.confluence-create-content-plugin:user-select2', location = 'user-select2/user-select2.less' */
+form.aui .aui-select2-container.users-autocomplete {
+  border: 2px solid var(--ds-border, #cccccc);
+}
+form.aui .aui-select2-container.users-autocomplete .select2-choices {
+  border-radius: 0;
+  border: none;
+}
+form.aui .aui-select2-container.users-autocomplete .select2-choices .select2-search-field input.select2-active {
+  background-color: var(--ds-background-input, #ffffff) !important;
+}
+
+/* module-key = 'com.atlassian.confluence.plugins.confluence-frontend:split_table-styles-editor', location = 'table-styles-editor.css' */
+/* Neutrals */
+/* Colors */
+/* Miscellaneous */
+/*
+    Mixin for the main clickable area on a split button
+ */
+/*
+    Split buttons (and their drop-downs) require all sorts of custom styling.
+    These buttons have IDs on them but we nest the rules beneath #rte-toolbar
+    so that they have enough specificity to override the 'default' styles
+    applied in editor-toolbar.less.
+ */
+#rte-toolbar #color-picker-control {
+  float: none;
+}
+#rte-toolbar #color-picker-control .aui-button {
+  background-color: transparent;
+  margin-right: 0;
+  border-radius: 3px 0 0 3px;
+  margin-left: 0;
+  padding-right: 3px;
+  transition: background-color 0.1s ease-out;
+}
+#rte-toolbar #color-picker-control:hover .aui-button {
+  background-color: var(--aui-button-default-hover-bg-color, rgba(9, 30, 66, 0.08));
+}
+#rte-toolbar #color-picker-control:active .aui-button {
+  background-color: var(--ds-background-selected, #deebff);
+}
+#rte-toolbar #color-picker-control:active .aui-button .aui-icon {
+  color: var(--ds-icon-selected, #0052cc);
+}
+#rte-toolbar #color-picker-control .aui-dd-parent a.toolbar-trigger {
+  border-color: transparent;
+  border-width: 1px;
+  border-left-style: solid;
+  border-radius: 0 3px 3px 0;
+  width: 15px;
+  margin-right: 1px;
+}
+#rte-toolbar #color-picker-control .aui-dd-parent a.toolbar-trigger:after {
+  right: -1px;
+}
+#rte-toolbar #color-picker-control .aui-dd-parent a.toolbar-trigger span {
+  width: 9px;
+}
+#rte-toolbar #color-picker-control .aui-dd-parent.active a.toolbar-trigger,
+#rte-toolbar #color-picker-control .dd-allocated.active a.toolbar-trigger {
+  background-color: var(--ds-background-selected, #344563);
+}
+#rte-toolbar #color-picker-control .color-picker-container {
+  position: absolute;
+  left: -18px;
+}
+#rte-toolbar #color-picker-control div.color-picker {
+  left: -11px;
+  position: absolute;
+  overflow: auto;
+  padding: 6px;
+  width: 220px;
+}
+#rte-toolbar #color-picker-control div.color-picker ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#rte-toolbar #color-picker-control div.color-picker ul li {
+  display: inline;
+  float: left;
+  height: 16px;
+  line-height: 16px;
+  padding: 2px;
+  width: 16px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+#rte-toolbar #color-picker-control div.color-picker ul li a {
+  border: 1px solid var(--ds-border, #ddd);
+  border-radius: 2px;
+  display: block;
+  height: 14px;
+  line-height: 14px;
+  padding: 0px;
+  text-align: justify;
+  width: 14px;
+}
+#rte-toolbar #color-picker-control div.color-picker ul li:hover {
+  border: 1px solid var(--ds-border-focused, #ddd);
+}
+#rte-toolbar #table-highlight-group {
+  background-color: inherit;
+}
+#rte-toolbar #table-highlight-group .aui-button {
+  background-color: transparent;
+  margin-right: 0;
+  border-radius: 3px 0 0 3px;
+  margin-left: 0;
+  padding-right: 3px;
+  transition: background-color 0.1s ease-out;
+}
+#rte-toolbar #table-highlight-group:hover .aui-button {
+  background-color: var(--aui-button-default-hover-bg-color, rgba(9, 30, 66, 0.08));
+}
+#rte-toolbar #table-highlight-group:active .aui-button {
+  background-color: var(--ds-background-selected, #deebff);
+}
+#rte-toolbar #table-highlight-group:active .aui-button .aui-icon {
+  color: var(--ds-icon-selected, #0052cc);
+}
+#rte-toolbar #table-highlight-group .aui-dd-parent a.toolbar-trigger {
+  border-color: transparent;
+  border-width: 1px;
+  border-left-style: solid;
+  border-radius: 0 3px 3px 0;
+  width: 15px;
+  margin-right: 1px;
+}
+#rte-toolbar #table-highlight-group .aui-dd-parent a.toolbar-trigger:after {
+  right: -1px;
+}
+#rte-toolbar #table-highlight-group .aui-dd-parent a.toolbar-trigger span {
+  width: 9px;
+}
+#rte-toolbar #table-highlight-group .aui-dd-parent.active a.toolbar-trigger,
+#rte-toolbar #table-highlight-group .dd-allocated.active a.toolbar-trigger {
+  background-color: var(--ds-background-selected, #344563);
+}
+#rte-toolbar #table-highlight-group .aui-button {
+  vertical-align: top;
+}
+#rte-toolbar #table-highlight-group .aui-button .icon {
+  height: 20px;
+}
+#rte-toolbar #table-highlight-group .aui-button .highlight-indicator {
+  position: absolute;
+  padding: 0;
+  width: 16px;
+  height: 3px;
+  margin: 15px 0 0 -17px;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour {
+  float: none;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour .toolbar-trigger {
+  width: 15px;
+  box-sizing: border-box;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour .toolbar-trigger::after {
+  margin-left: -11px;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour .aui-dropdown {
+  overflow: auto;
+  padding: 4px;
+  width: 198px;
+  min-width: 0;
+  /* CONFDEV-8832 - On default sets a min-width of 150px - wtf! */
+  left: -27px;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour ul.table-highlight-picker {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour ul.table-highlight-picker li {
+  display: inline;
+  float: left;
+  height: 16px;
+  line-height: 16px;
+  padding: 2px;
+  width: 16px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour ul.table-highlight-picker li a {
+  border: 1px solid var(--ds-border, #ccc);
+  border-radius: 2px;
+  display: block;
+  height: 14px;
+  line-height: 14px;
+  padding: 0px;
+  text-align: justify;
+  width: 14px;
+}
+#rte-toolbar #table-highlight-group #table-highlight-colour ul.table-highlight-picker li:hover {
+  border: 1px solid var(--ds-border-focused, #ddd);
+}
+#table-highlight-group .highlight-indicator {
+  background-color: var(--ds-background-accent-gray-subtlest, #dfe1e6);
+}
+#table-highlight-group .table-highlight-picker a {
+  background-color: var(--ds-background-accent-gray-subtlest, #f4f5f7);
+}
+#table-highlight-group.highlight-\#bf2600 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#bf2600 {
+  background-color: var(--ds-background-accent-red-bolder-pressed, #bf2600);
+}
+#table-highlight-group.highlight-\#de350b .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#de350b {
+  background-color: var(--ds-background-accent-red-bolder-hovered, #de350b);
+}
+#table-highlight-group.highlight-\#ff5630 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ff5630 {
+  background-color: var(--ds-background-accent-red-bolder, #ff5630);
+}
+#table-highlight-group.highlight-\#ff7452 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ff7452 {
+  background-color: var(--ds-chart-red-bolder, #ff7452);
+}
+#table-highlight-group.highlight-\#ff8f73 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ff8f73 {
+  background-color: var(--ds-background-accent-red-subtler-pressed, #ff8f73);
+}
+#table-highlight-group.highlight-\#ffbdad .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ffbdad {
+  background-color: var(--ds-background-accent-red-subtlest-hovered, #ffbdad);
+}
+#table-highlight-group.highlight-\#ffebe6 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ffebe6 {
+  background-color: var(--ds-background-accent-red-subtlest, #ffebe6);
+}
+#table-highlight-group.highlight-\#ff8b00 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ff8b00 {
+  background-color: var(--ds-text-accent-yellow-bolder, #ff8b00);
+}
+#table-highlight-group.highlight-\#ff991f .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ff991f {
+  background-color: var(--ds-chart-yellow-bolder-hovered, #ff991f);
+}
+#table-highlight-group.highlight-\#ffab00 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ffab00 {
+  background-color: var(--ds-background-accent-yellow-bolder, #ffab00);
+}
+#table-highlight-group.highlight-\#ffc400 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ffc400 {
+  background-color: var(--ds-chart-yellow-bold, #ffc400);
+}
+#table-highlight-group.highlight-\#ffe380 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ffe380 {
+  background-color: var(--ds-background-accent-yellow-subtler-pressed, #ffe380);
+}
+#table-highlight-group.highlight-\#fff0b3 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#fff0b3 {
+  background-color: var(--ds-background-accent-yellow-subtlest-hovered, #fff0b3);
+}
+#table-highlight-group.highlight-\#fffae6 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#fffae6 {
+  background-color: var(--ds-background-accent-yellow-subtlest, #fffae6);
+}
+#table-highlight-group.highlight-\#702e00 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#702e00 {
+  background-color: var(--ds-background-accent-orange-bolder-pressed, #702e00);
+}
+#table-highlight-group.highlight-\#a54800 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#a54800 {
+  background-color: var(--ds-background-accent-orange-bolder-hovered, #a54800);
+}
+#table-highlight-group.highlight-\#c25100 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#c25100 {
+  background-color: var(--ds-background-accent-orange-bolder, #c25100);
+}
+#table-highlight-group.highlight-\#e56910 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#e56910 {
+  background-color: var(--ds-chart-orange-bold, #e56910);
+}
+#table-highlight-group.highlight-\#fea362 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#fea362 {
+  background-color: var(--ds-background-accent-orange-subtler-pressed, #fea362);
+}
+#table-highlight-group.highlight-\#fedec8 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#fedec8 {
+  background-color: var(--ds-background-accent-orange-subtlest-hovered, #fedec8);
+}
+#table-highlight-group.highlight-\#fff3eb .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#fff3eb {
+  background-color: var(--ds-background-accent-orange-subtlest, #fff3eb);
+}
+#table-highlight-group.highlight-\#006644 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#006644 {
+  background-color: var(--ds-background-accent-green-bolder-pressed, #006644);
+}
+#table-highlight-group.highlight-\#00875a .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#00875a {
+  background-color: var(--ds-background-accent-green-bolder-hovered, #00875a);
+}
+#table-highlight-group.highlight-\#36b37e .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#36b37e {
+  background-color: var(--ds-background-accent-green-bolder, #36b37e);
+}
+#table-highlight-group.highlight-\#57d9a3 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#57d9a3 {
+  background-color: var(--ds-chart-green-bold, #57d9a3);
+}
+#table-highlight-group.highlight-\#79f2c0 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#79f2c0 {
+  background-color: var(--ds-background-accent-green-subtler-pressed, #79f2c0);
+}
+#table-highlight-group.highlight-\#abf5d1 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#abf5d1 {
+  background-color: var(--ds-background-accent-green-subtlest-hovered, #abf5d1);
+}
+#table-highlight-group.highlight-\#e3fcef .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#e3fcef {
+  background-color: var(--ds-background-accent-green-subtlest, #e3fcef);
+}
+#table-highlight-group.highlight-\#008da6 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#008da6 {
+  background-color: var(--ds-background-accent-teal-bolder-pressed, #008da6);
+}
+#table-highlight-group.highlight-\#00a3bf .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#00a3bf {
+  background-color: var(--ds-background-accent-teal-bolder-hovered, #00a3bf);
+}
+#table-highlight-group.highlight-\#00b8d9 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#00b8d9 {
+  background-color: var(--ds-background-accent-teal-bolder, #00b8d9);
+}
+#table-highlight-group.highlight-\#00c7e6 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#00c7e6 {
+  background-color: var(--ds-chart-teal-bold, #00c7e6);
+}
+#table-highlight-group.highlight-\#79e2f2 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#79e2f2 {
+  background-color: var(--ds-background-accent-teal-subtler-pressed, #79e2f2);
+}
+#table-highlight-group.highlight-\#b3f5ff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#b3f5ff {
+  background-color: var(--ds-background-accent-teal-subtlest-hovered, #b3f5ff);
+}
+#table-highlight-group.highlight-\#e6fcff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#e6fcff {
+  background-color: var(--ds-background-accent-teal-subtlest, #e6fcff);
+}
+#table-highlight-group.highlight-\#0747a6 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#0747a6 {
+  background-color: var(--ds-background-accent-blue-bolder-pressed, #0747a6);
+}
+#table-highlight-group.highlight-\#0052cc .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#0052cc {
+  background-color: var(--ds-background-accent-blue-bolder-hovered, #0052cc);
+}
+#table-highlight-group.highlight-\#0065ff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#0065ff {
+  background-color: var(--ds-background-accent-blue-bolder, #0065ff);
+}
+#table-highlight-group.highlight-\#2684ff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#2684ff {
+  background-color: var(--ds-chart-blue-bold, #2684ff);
+}
+#table-highlight-group.highlight-\#4c9aff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#4c9aff {
+  background-color: var(--ds-background-accent-blue-subtler-pressed, #4c9aff);
+}
+#table-highlight-group.highlight-\#b3d4ff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#b3d4ff {
+  background-color: var(--ds-background-accent-blue-subtlest-hovered, #b3d4ff);
+}
+#table-highlight-group.highlight-\#deebff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#deebff {
+  background-color: var(--ds-background-accent-blue-subtlest, #deebff);
+}
+#table-highlight-group.highlight-\#50253f .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#50253f {
+  background-color: var(--ds-background-accent-magenta-bolder-pressed, #50253f);
+}
+#table-highlight-group.highlight-\#943d73 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#943d73 {
+  background-color: var(--ds-background-accent-magenta-bolder-hovered, #943d73);
+}
+#table-highlight-group.highlight-\#ae4787 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ae4787 {
+  background-color: var(--ds-background-accent-magenta-bolder, #ae4787);
+}
+#table-highlight-group.highlight-\#da62ac .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#da62ac {
+  background-color: var(--ds-chart-magenta-bold, #da62ac);
+}
+#table-highlight-group.highlight-\#e774bb .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#e774bb {
+  background-color: var(--ds-background-accent-magenta-subtle, #e774bb);
+}
+#table-highlight-group.highlight-\#fdd0ec .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#fdd0ec {
+  background-color: var(--ds-background-accent-magenta-subtlest-hovered, #fdd0ec);
+}
+#table-highlight-group.highlight-\#ffecf8 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#ffecf8 {
+  background-color: var(--ds-background-accent-magenta-subtlest, #ffecf8);
+}
+#table-highlight-group.highlight-\#403294 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#403294 {
+  background-color: var(--ds-background-accent-purple-bolder-pressed, #403294);
+}
+#table-highlight-group.highlight-\#5243aa .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#5243aa {
+  background-color: var(--ds-background-accent-purple-bolder-hovered, #5243aa);
+}
+#table-highlight-group.highlight-\#6554c0 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#6554c0 {
+  background-color: var(--ds-background-accent-purple-bolder, #6554c0);
+}
+#table-highlight-group.highlight-\#8777d9 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#8777d9 {
+  background-color: var(--ds-chart-purple-bold, #8777d9);
+}
+#table-highlight-group.highlight-\#998dd9 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#998dd9 {
+  background-color: var(--ds-background-accent-purple-subtler-pressed, #998dd9);
+}
+#table-highlight-group.highlight-\#c0b6f2 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#c0b6f2 {
+  background-color: var(--ds-background-accent-purple-subtlest-hovered, #c0b6f2);
+}
+#table-highlight-group.highlight-\#eae6ff .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#eae6ff {
+  background-color: var(--ds-background-accent-purple-subtlest, #eae6ff);
+}
+#table-highlight-group.highlight-\#000000 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#000000 {
+  background-color: var(--ds-background-accent-gray-bolder-pressed, #000000);
+}
+#table-highlight-group.highlight-\#172b4d .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#172b4d {
+  background-color: var(--ds-background-accent-gray-bolder-hovered, #172b4d);
+}
+#table-highlight-group.highlight-\#42526e .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#42526e {
+  background-color: var(--ds-background-accent-gray-bolder, #42526e);
+}
+#table-highlight-group.highlight-\#7a869a .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#7a869a {
+  background-color: var(--ds-chart-gray-bold, #7a869a);
+}
+#table-highlight-group.highlight-\#c1c7d0 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#c1c7d0 {
+  background-color: var(--ds-background-accent-gray-subtlest-pressed, #c1c7d0);
+}
+#table-highlight-group.highlight-\#f4f5f7 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#f4f5f7 {
+  background-color: var(--ds-surface-hovered, #f4f5f7);
+}
+#table-highlight-group.highlight-\#091e42 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#091e42 {
+  background-color: var(--ds-elevation-surface, #091e42);
+}
+#table-highlight-group.highlight-\#000000 .highlight-indicator,
+#table-highlight-group .table-highlight-picker a.highlight-\#000000 {
+  background-color: var(--ds-background-accent-gray-bolder-pressed, #000000);
+}
+#table-highlight-group[data-remove-highlight='true'] .highlight-indicator,
+#table-highlight-group .table-highlight-picker a[data-remove-highlight='true'] {
+  background-color: transparent;
+}
+
+@media only screen and (max-width: 1024px) {
+  .contenteditor #draft-status {
+    display: none !important;
+  }
+}
+#toolbar {
+  /* 'insert' section of the toolbar should group its buttons closer together,
+        two IDs required so that styles are preserved on hover */
+}
+#toolbar li.toolbar-item,
+#toolbar #rte-button-color,
+#toolbar #rte-button-more,
+#toolbar #rte-button-link,
+#toolbar #rte-button-insert-table,
+#toolbar #rte-button-insert,
+#toolbar #rte-button-pagelayout,
+#toolbar #rte-button-pagelayout-2,
+#toolbar #rte-button-insert-template {
+  padding: 0 6px;
+}
+#toolbar #rte-button-more .icon-dropdown {
+  margin-left: 3px;
+}
+#toolbar #insert-menu-options {
+  left: -6px;
+}
+#toolbar #rte-button-link .trigger-text,
+#toolbar #confluence-insert-files > .trigger-text,
+#toolbar #insert-table-dropdown .dropdown-text,
+#toolbar #insert-menu .dropdown-text,
+#toolbar #rte-button-insert-template .dropdown-text {
+  display: none;
+}
+#toolbar #rte-button-link .icon-dropdown,
+#toolbar #insert-table-dropdown .icon-dropdown,
+#toolbar #insert-menu .icon-dropdown,
+#toolbar #rte-button-pagelayout .icon-dropdown,
+#toolbar #rte-button-insert-template .icon-dropdown {
+  width: 22px;
+  margin-left: 0;
+  padding-right: 0;
+}
+#toolbar #rte-button-pagelayout .icon-layout {
+  margin-top: 2px;
+}
+#toolbar #rte-button-insert,
+#toolbar #rte-button-link {
+  margin: 0 -6px;
+}
+#toolbar li#insert-table-dropdown,
+#toolbar #pagelayout-menu,
+#toolbar #page-layout-2,
+#toolbar #table-highlight-colour,
+#toolbar #format-dropdown,
+#toolbar #template-menu {
+  padding: 0;
+}
+#toolbar #rte-toolbar-row-default .aui-button,
+#toolbar #rte-button-cancel.shared-drafts {
+  /* button.aui-button height is 28px with default styles */
+  height: 26px;
+  padding: 0 6px;
+}
+
+
+/* module-key = 'com.atlassian.confluence.editor:panel-components', location = 'css/file-item.css' */
+.confluence-icon-size-48{width:48px;height:48px;background-size:48px}
+/* module-key = 'com.atlassian.auiplugin:split_aui.component.progressbar', location = 'aui.component.progressbar.css' */
+aui-progressbar{display:block}.aui-progress-indicator{background:var(--aui-progressbar-track-color);border-radius:3px;height:6px;overflow:hidden;position:relative;width:100%}.aui-progress-indicator-value{animation:progressSlide 5s ease-in-out infinite;background:var(--aui-progressbar-color);border-radius:3px;display:block;height:6px;position:absolute;transition:none;width:10%}@keyframes progressSlide{0%{left:0}50%{left:90%}to{left:0}}.aui-progress-indicator[data-value] .aui-progress-indicator-value{animation:none;background:var(--aui-progressbar-color);border-radius:3px;left:0;transition:width .5s}.aui-progress-indicator-static[data-value] .aui-progress-indicator-value{animation:none;left:0;transition:none}
+/* module-key = 'com.atlassian.confluence.plugins.drag-and-drop:support', location = 'css/drag-and-drop.less' */
+#upload-statuses{list-style:none;margin:0;padding:0}#upload-statuses li{padding:9px 20px 10px 20px;border-top:1px solid var(--ds-chart-neutral, #ccc)}#upload-statuses li:first-child{border-top:0;padding-top:10px}#upload-statuses li .file-status-item{margin-bottom:10px}#upload-statuses li .aui-message{margin-top:0px}#upload-statuses li label{display:block}#upload-statuses .cancel-or-success-placeholder{color:var(--ds-text-success, #707070);border:none;background:none;display:table-cell;padding:0 0 0 10px;width:16px;height:16px}#upload-statuses .cancel-or-success-placeholder .aui-iconfont-remove:hover{cursor:pointer}#upload-statuses .cancel-or-success-placeholder .aui-icon{margin-top:2px}#upload-statuses .file-upload-progress-block{overflow:hidden;display:table;width:100%}#upload-statuses .ui-widget-header{border:0;background:var(--ds-background-neutral, #ccc) url('/s/52aap4/9114/1q424x5/19.2.53/_/download/resources/com.atlassian.confluence.plugins.drag-and-drop:support/../../resources/com.atlassian.confluence.plugins.drag-and-drop/images/ui-bg_highlight-soft_75_cccccc_1x100.png') 50% 50% repeat-x}#upload-statuses .ui-widget-content{border:1px solid var(--ds-chart-neutral, #ccc);background:var(--ds-background-neutral, #f5f5f5) url('/s/52aap4/9114/1q424x5/19.2.53/_/download/resources/com.atlassian.confluence.plugins.drag-and-drop:support/../../resources/com.atlassian.confluence.plugins.drag-and-drop/images/ui-bg_flat_75_ffffff_40x100.png') 50% 50% repeat-x}#upload-statuses .ui-progressbar{height:18px;text-align:left}#upload-statuses .ui-progressbar .ui-progressbar-value{margin:-1px 0;height:100%}#upload-statuses .ui-widget{font-family:Arial,sans-serif}#upload-statuses .ui-corner-tl{border-top-left-radius:3px}#upload-statuses .ui-corner-tr{border-top-right-radius:3px}#upload-statuses .ui-corner-bl{border-bottom-left-radius:3px}#upload-statuses .ui-corner-br{border-bottom-right-radius:3px}#upload-statuses .ui-corner-top{border-top-left-radius:3px;border-top-right-radius:3px}#upload-statuses .ui-corner-bottom{border-bottom-left-radius:3px;border-bottom-right-radius:3px}#upload-statuses .ui-corner-right{border-top-right-radius:3px;border-bottom-right-radius:3px}#upload-statuses .ui-corner-left{border-top-left-radius:3px;border-bottom-left-radius:3px}#upload-statuses .ui-corner-all{border-radius:3px}#drag-and-drop-disabled .panel-body,#drag-and-drop-message-dialog .panel-body{color:var(--ds-text-disabled, #666);font-size:10pt}#drag-and-drop-message-dialog .panel-body p,#drag-and-drop-disabled .panel-body p{color:var(--ds-text-disabled, #666);font-size:10pt;margin-top:1em}#drag-and-drop-disabled div{padding:5px}#drag-and-drop-cue{position:absolute;top:50%;left:50%;width:26em;height:1em;margin-top:-0.5em;margin-left:-13em;background-color:var(--ds-surface, #fff);z-index:2900;padding:10px}#drag-and-drop-progress-dialog .panel-body{padding:0}
+/* module-key = 'com.atlassian.confluence.plugins.drag-and-drop:support', location = 'css/drop-zone.less' */
+.attachments-drop-zone{border-radius:10px;border:3px dashed var(--ds-border, #e9e9e9);color:var(--ds-chart-neutral, #707070);font-size:18px;height:124px;padding:25px;text-align:center;width:420px}.attachments-drop-zone .drop-zone-image{background-image:url('/s/52aap4/9114/1q424x5/19.2.53/_/download/resources/com.atlassian.confluence.plugins.drag-and-drop:support/../../resources/com.atlassian.confluence.plugins.drag-and-drop/images/arrow.gif');width:55px;height:55px;margin:10px auto}.attachments-drop-zone .drop-zone-text{margin:0 auto;padding-top:6px;width:240px}.drop-zone-on-hover{background-color:var(--ds-background-neutral-hovered, #f5f5f5)}#attached-images .attached-image .drop-zone-on-hover{background-color:var(--ds-background-neutral-hovered, #f5f5f5)}#attached-images .attached-image .image-dialog-drop-zone-container{border-radius:10px;border:3px dashed var(--ds-border, #e9e9e9);line-height:1em}#attached-images .attached-image .image-dialog-drop-zone-container .drop-zone-image{background-image:url('/s/52aap4/9114/1q424x5/19.2.53/_/download/resources/com.atlassian.confluence.plugins.drag-and-drop:support/../../resources/com.atlassian.confluence.plugins.drag-and-drop/images/arrow.gif');width:55px;height:55px;margin:13px auto 0}#attached-images .attached-image .image-dialog-drop-zone-container .drop-zone-text{font-weight:bold;color:var(--ds-text, #bbb);margin-top:5px}

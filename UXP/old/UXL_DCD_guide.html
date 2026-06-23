@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_DCD — 결정 · AI Governance Guide v1.0</title>
+<style>
+/* ─── RESET & BASE ─────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --c-blue:   #1557B0;
+  --c-green:  #1B6B3A;
+  --c-red:    #B71C1C;
+  --c-amber:  #7D5300;
+  --c-purple: #5B2E99;
+  --c-mono:   #1E3A5F;
+
+  --bg-blue:   #EEF4FF;
+  --bg-green:  #F0FAF4;
+  --bg-red:    #FFF0F0;
+  --bg-amber:  #FFFAF0;
+  --bg-purple: #F7F0FF;
+  --bg-rule:   #F4F8FF;
+  --bg-code:   #F5F7FA;
+  --bg-schema: #FAFBFC;
+  --bg-meta:   #F0F2F5;
+
+  --border:    #D4D8E0;
+  --border-light: #E8EAEE;
+  --text:      #1A1A1A;
+  --meta:      #5A6270;
+  --label:     #3A4251;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'D2Coding', 'Courier New', monospace;
+
+  --r: 6px;
+  --r-sm: 3px;
+}
+
+html { font-size: 13.5px; }
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text);
+  background: #FFFFFF;
+  line-height: 1.6;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 40px 80px;
+}
+
+/* ─── TYPOGRAPHY ────────────────────────────────────────────────────── */
+h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; }
+h2 { font-size: 1.18rem; font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 1.0rem; font-weight: 600; }
+h4 { font-size: 0.88rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+p  { font-size: 0.9rem; line-height: 1.7; }
+li { font-size: 0.9rem; line-height: 1.7; }
+code, .mono {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  border-radius: var(--r-sm);
+  padding: 1px 5px;
+}
+
+/* ─── LAYOUT UTILITIES ──────────────────────────────────────────────── */
+.row    { display: flex; gap: 12px; }
+.col    { flex: 1; min-width: 0; }
+.col-2  { flex: 2; }
+.divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+.mt-4  { margin-top: 4px; }
+.mt-8  { margin-top: 8px; }
+.mt-16 { margin-top: 16px; }
+.mt-24 { margin-top: 24px; }
+.mt-32 { margin-top: 32px; }
+.mb-0  { margin-bottom: 0; }
+
+/* ─── DOCUMENT HEADER ───────────────────────────────────────────────── */
+.doc-header {
+  border-bottom: 3px solid var(--c-blue);
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+}
+
+.doc-header .badge-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.badge-jc { background: var(--c-blue); color: #fff; }
+.badge-ver { background: var(--bg-meta); color: var(--meta); border: 1px solid var(--border); }
+.badge-type { background: var(--bg-blue); color: var(--c-blue); border: 1px solid #BDD0F5; }
+
+.doc-header h1 { color: var(--c-blue); margin-bottom: 8px; }
+.doc-header .desc { color: var(--meta); font-size: 0.88rem; max-width: 680px; }
+
+.doc-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-top: 20px;
+}
+.doc-meta-item {
+  padding: 10px 14px;
+  border-right: 1px solid var(--border);
+  background: var(--bg-schema);
+}
+.doc-meta-item:last-child { border-right: none; }
+.doc-meta-item .key {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--meta);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 3px;
+}
+.doc-meta-item .val {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+/* ─── PATTERN INDEX ─────────────────────────────────────────────────── */
+.pattern-index {
+  background: var(--bg-schema);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 20px;
+  margin-bottom: 36px;
+}
+.pattern-index h4 { color: var(--meta); margin-bottom: 12px; }
+.pattern-index-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.pattern-index-list li {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.88rem;
+}
+.pattern-index-list .pid {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--c-blue);
+  font-weight: 600;
+  min-width: 110px;
+}
+.pattern-index-list .pname { color: var(--text); font-weight: 500; }
+.pattern-index-list .pstype {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--meta);
+  margin-left: auto;
+}
+
+/* ─── PATTERN BLOCK ─────────────────────────────────────────────────── */
+.pattern-block {
+  margin-bottom: 60px;
+  page-break-inside: avoid;
+}
+
+.pattern-header {
+  background: var(--c-blue);
+  color: #fff;
+  border-radius: var(--r) var(--r) 0 0;
+  padding: 16px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pattern-header .pid-tag {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 600;
+  background: rgba(255,255,255,0.2);
+  padding: 3px 9px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+.pattern-header h2 { font-size: 1.05rem; font-weight: 600; }
+.pattern-header .screen-type {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  color: rgba(255,255,255,0.7);
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.pattern-body {
+  border: 1px solid var(--border);
+  border-top: none;
+  border-radius: 0 0 var(--r) var(--r);
+  padding: 24px;
+}
+
+/* ─── SCHEMA BLOCK ──────────────────────────────────────────────────── */
+.schema-block {
+  background: var(--bg-schema);
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+.schema-block-title {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--c-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.schema-block-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 12px;
+  background: var(--c-blue);
+  border-radius: 2px;
+}
+
+.schema-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.83rem;
+}
+.schema-table th {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--meta);
+  font-weight: 600;
+  padding: 6px 10px;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  background: transparent;
+}
+.schema-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid var(--border-light);
+  vertical-align: top;
+}
+.schema-table tr:last-child td { border-bottom: none; }
+.schema-table .field { font-family: var(--font-mono); font-size: 0.8rem; color: var(--c-mono); }
+.schema-table .op    { font-family: var(--font-mono); font-size: 0.78rem; color: var(--c-purple); }
+.schema-table .val   { font-family: var(--font-mono); font-size: 0.8rem; color: var(--c-amber); }
+.schema-table .req   { font-family: var(--font-mono); font-size: 0.75rem; }
+.req-true  { color: var(--c-red); }
+.req-false { color: var(--meta); }
+.source-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--bg-meta);
+  border: 1px solid var(--border);
+  color: var(--meta);
+}
+.output-comp { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--c-blue); }
+.output-slot { font-family: var(--font-mono); font-size: 0.78rem; color: var(--meta); }
+.output-state {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 1px 7px;
+  border-radius: 10px;
+  background: var(--bg-blue);
+  border: 1px solid #BDD0F5;
+  color: var(--c-blue);
+}
+
+/* ─── CONTEXT BLOCK ─────────────────────────────────────────────────── */
+.context-block {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+.context-item {
+  padding: 12px 14px;
+  border-radius: var(--r);
+  border: 1px solid var(--border-light);
+}
+.ctx-behavior { background: #FAFAFA; }
+.ctx-problem  { background: #FFF8F8; border-color: #F5D0D0; }
+.ctx-target   { background: #F5FAFF; border-color: #C5DCF5; }
+
+.context-item .ctx-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+.ctx-behavior .ctx-label { color: var(--meta); }
+.ctx-problem  .ctx-label { color: var(--c-red); }
+.ctx-target   .ctx-label { color: var(--c-blue); }
+.context-item p { font-size: 0.83rem; line-height: 1.6; color: var(--label); }
+
+/* ─── RULE BLOCK ────────────────────────────────────────────────────── */
+.rule-block {
+  border: 1px solid var(--border);
+  border-left: 4px solid var(--c-blue);
+  border-radius: 0 var(--r) var(--r) 0;
+  margin-bottom: 16px;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+
+.rule-header {
+  background: var(--bg-rule);
+  padding: 11px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border-bottom: 1px solid var(--border-light);
+}
+.rule-id {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 700;
+  color: var(--c-blue);
+  background: var(--bg-blue);
+  border: 1px solid #BDD0F5;
+  padding: 2px 8px;
+  border-radius: 10px;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+.rule-statement { font-size: 0.9rem; font-weight: 600; color: var(--text); line-height: 1.5; }
+
+.rule-body { padding: 14px 16px; display: flex; flex-direction: column; gap: 12px; }
+
+/* IF/THEN条件 */
+.ifthen-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.ifthen-item {
+  display: flex;
+  align-items: baseline;
+  gap: 0;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  padding: 4px 8px;
+  border-radius: var(--r-sm);
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+}
+.kw-if   { color: var(--c-purple); font-weight: 700; margin-right: 6px; }
+.kw-then { color: var(--c-blue);   font-weight: 700; margin-left: 8px; margin-right: 6px; }
+.kw-else { color: var(--c-amber);  font-weight: 700; margin-right: 6px; }
+.cond    { color: var(--c-mono); }
+.action  { color: #1A5C38; }
+
+/* DO / DON'T */
+.do-dont-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.do-block, .dont-block, .fallback-block {
+  padding: 12px 14px;
+  border-radius: var(--r);
+  font-size: 0.85rem;
+}
+
+.do-block {
+  background: var(--bg-green);
+  border: 1px solid #B2DCC2;
+}
+.dont-block {
+  background: var(--bg-red);
+  border: 1px solid #F0BABA;
+}
+.fallback-block {
+  background: var(--bg-amber);
+  border: 1px solid #E8C97A;
+}
+
+.block-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 7px;
+}
+.do-block    .block-label { color: var(--c-green); }
+.dont-block  .block-label { color: var(--c-red); }
+.fallback-block .block-label { color: var(--c-amber); }
+
+.do-block ul, .dont-block ul, .fallback-block ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.do-block li::before   { content: '✓ '; color: var(--c-green); font-weight: 700; }
+.dont-block li::before { content: '✗ '; color: var(--c-red);   font-weight: 700; }
+.fallback-block li::before { content: '↩ '; color: var(--c-amber); font-weight: 700; }
+
+/* DON'T Table (trigger → rejection → fallback) */
+.dont-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.82rem;
+  margin-top: 4px;
+}
+.dont-table th {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--c-red);
+  font-weight: 700;
+  padding: 5px 8px;
+  border-bottom: 1px solid #F0BABA;
+  text-align: left;
+}
+.dont-table th.fb-h { color: var(--c-amber); border-bottom-color: #E8C97A; }
+.dont-table td {
+  padding: 6px 8px;
+  border-bottom: 1px solid #FCCECE;
+  vertical-align: top;
+}
+.dont-table tr:last-child td { border-bottom: none; }
+.dont-table .trigger-cell { color: var(--c-red); font-style: italic; }
+.dont-table .reject-cell  { color: var(--meta); text-decoration: line-through; font-family: var(--font-mono); font-size: 0.78rem; }
+.dont-table .fallback-cell { color: var(--c-amber); font-family: var(--font-mono); font-size: 0.78rem; }
+
+/* ─── COPY TEMPLATE BLOCK ───────────────────────────────────────────── */
+.copy-block {
+  background: var(--bg-purple);
+  border: 1px solid #D5C0F5;
+  border-radius: var(--r);
+  padding: 14px 16px;
+  margin-top: 4px;
+}
+.copy-block .block-label { color: var(--c-purple); font-family: var(--font-mono); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 10px; }
+
+.copy-item { margin-bottom: 8px; }
+.copy-item:last-child { margin-bottom: 0; }
+.copy-key {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--c-purple);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.copy-value {
+  font-size: 0.85rem;
+  color: var(--text);
+  line-height: 1.5;
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.6);
+  border: 1px solid #D5C0F5;
+  border-radius: var(--r-sm);
+}
+.var { color: var(--c-blue); font-family: var(--font-mono); font-size: 0.82rem; font-weight: 600; }
+
+/* ─── FALLBACK BEHAVIOR ─────────────────────────────────────────────── */
+.fallback-spec {
+  background: var(--bg-amber);
+  border: 1px solid #E8C97A;
+  border-radius: var(--r);
+  padding: 10px 14px;
+  margin-top: 4px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.85rem;
+}
+.fallback-spec .fb-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--c-amber);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  white-space: nowrap;
+  margin-top: 1px;
+}
+.fb-cond { color: var(--c-red); font-family: var(--font-mono); font-size: 0.82rem; }
+.fb-arrow { color: var(--meta); margin: 0 6px; }
+.fb-render { color: var(--c-amber); font-family: var(--font-mono); font-size: 0.82rem; }
+
+/* ─── SCENARIO BLOCK ────────────────────────────────────────────────── */
+.scenario-block {
+  margin-top: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.scenario-header {
+  background: var(--bg-meta);
+  padding: 9px 14px;
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--meta);
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  border-bottom: 1px solid var(--border);
+}
+.scenario-grid {
+  display: grid;
+  gap: 0;
+}
+.scenario-col-2 { grid-template-columns: 1fr 1fr; }
+.scenario-col-3 { grid-template-columns: 1fr 1fr 1fr; }
+.scenario-col-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.scenario-item {
+  padding: 14px;
+  border-right: 1px solid var(--border-light);
+}
+.scenario-item:last-child { border-right: none; }
+
+.scen-trigger {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  color: var(--meta);
+  background: var(--bg-code);
+  border: 1px solid var(--border-light);
+  padding: 3px 7px;
+  border-radius: var(--r-sm);
+  margin-bottom: 8px;
+  display: inline-block;
+}
+.scen-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.scen-copy {
+  font-size: 0.8rem;
+  color: var(--label);
+  line-height: 1.5;
+  margin-bottom: 8px;
+  font-style: italic;
+}
+.scen-cta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--c-blue);
+  margin-bottom: 8px;
+}
+
+.img-placeholder {
+  background: var(--bg-meta);
+  border: 1.5px dashed #A0AABB;
+  border-radius: var(--r);
+  padding: 16px;
+  text-align: center;
+  margin-top: 8px;
+}
+.img-placeholder .img-id {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--meta);
+  margin-bottom: 4px;
+}
+.img-placeholder .img-desc {
+  font-size: 0.78rem;
+  color: #8A9AB0;
+}
+.img-placeholder .img-components {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #9EB0C8;
+  margin-top: 6px;
+}
+
+/* ─── SECTION DIVIDER ───────────────────────────────────────────────── */
+.section-label {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  font-weight: 600;
+  color: var(--meta);
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-light);
+}
+
+/* ─── PRINT ─────────────────────────────────────────────────────────── */
+@page {
+  size: A4;
+  margin: 18mm 16mm;
+}
+@media print {
+  body { max-width: 100%; padding: 0; font-size: 12px; }
+  .rule-block, .pattern-block, .schema-block, .scenario-item { page-break-inside: avoid; }
+  .pattern-block { page-break-before: always; }
+  .pattern-block:first-of-type { page-break-before: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- DOCUMENT HEADER                                                     -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<header class="doc-header">
+  <div class="badge-row">
+    <span class="badge badge-jc">JOURNEY: DCD</span>
+    <span class="badge badge-type">screen_type: decision_compare</span>
+    <span class="badge badge-ver">v1.0 · 2026-04-29</span>
+  </div>
+  <h1>UXL_DCD — 결정 (Decision)</h1>
+  <p class="desc mt-4">
+    요금제 사용량·데이터 패턴·단말 상태 등 개인별 이용 데이터를 종합 분석하여
+    최적안을 선제 제안하고, 고객이 즉시 판단할 수 있는 근거 기반 비교 구조를 제공합니다.
+    <br><strong>본 문서는 AI Screen Generator의 Single Source of Truth입니다.
+    모든 규칙은 IF/THEN 형식의 결정 가능(decidable) 구문으로 작성됩니다.</strong>
+  </p>
+
+  <div class="doc-meta-grid">
+    <div class="doc-meta-item">
+      <div class="key">pattern_file</div>
+      <div class="val" style="font-family:var(--font-mono);">UXL_DCD</div>
+    </div>
+    <div class="doc-meta-item">
+      <div class="key">journey_code</div>
+      <div class="val" style="font-family:var(--font-mono);">DCD</div>
+    </div>
+    <div class="doc-meta-item">
+      <div class="key">patterns_count</div>
+      <div class="val">2 patterns · 7 rules</div>
+    </div>
+    <div class="doc-meta-item">
+      <div class="key">controlled_vocab</div>
+      <div class="val" style="font-size:0.8rem; color:var(--c-red);">추상어 금지 · 결정 가능 구문만 허용</div>
+    </div>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PATTERN INDEX                                                        -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="pattern-index">
+  <h4>Pattern Index</h4>
+  <ul class="pattern-index-list">
+    <li>
+      <span class="pid">UXL_DCD_1</span>
+      <span class="pname">데이터 기반 최적안 도출</span>
+      <span class="pstype">screen: decision_compare · rules: 2</span>
+    </li>
+    <li>
+      <span class="pid">UXL_DCD_2</span>
+      <span class="pname">근거 기반 비교 제공</span>
+      <span class="pstype">screen: decision_compare · rules: 3</span>
+    </li>
+  </ul>
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PATTERN 1: UXL_DCD_1                                               -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="pattern-block" data-pattern-id="UXL_DCD_1">
+
+  <div class="pattern-header">
+    <span class="pid-tag">UXL_DCD_1</span>
+    <h2>데이터 기반 최적안 도출</h2>
+    <span class="screen-type">screen_type: decision_compare</span>
+  </div>
+
+  <div class="pattern-body">
+
+    <!-- ── Schema ── -->
+    <div class="section-label">Machine Schema</div>
+
+    <!-- TRIGGER -->
+    <div class="schema-block">
+      <div class="schema-block-title">trigger_data — 이 패턴이 활성화되는 조건</div>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th style="width:42%">field</th>
+            <th style="width:16%">operator</th>
+            <th>value</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="field">user.usage_pattern</span></td>
+            <td><span class="op">is_not_null</span></td>
+            <td><span class="val">—</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- INPUTS -->
+    <div class="schema-block">
+      <div class="schema-block-title">inputs — 화면 렌더링에 필요한 데이터</div>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th style="width:28%">key</th>
+            <th style="width:26%">source</th>
+            <th style="width:12%">required</th>
+            <th>description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="field">usage_pattern</span></td>
+            <td><span class="source-tag">user_profile</span></td>
+            <td><span class="req req-true">true</span></td>
+            <td>데이터 소진 패턴, 요금제 사용 이력</td>
+          </tr>
+          <tr>
+            <td><span class="field">contract_status</span></td>
+            <td><span class="source-tag">user_profile</span></td>
+            <td><span class="req req-true">true</span></td>
+            <td>현재 요금제, 약정 잔여일, 위약금 여부</td>
+          </tr>
+          <tr>
+            <td><span class="field">device_status</span></td>
+            <td><span class="source-tag">user_profile</span></td>
+            <td><span class="req req-false">false</span></td>
+            <td>단말 상태 (기기 변경 연동 시 사용)</td>
+          </tr>
+          <tr>
+            <td><span class="field">family_group_usage</span></td>
+            <td><span class="source-tag">user_profile</span></td>
+            <td><span class="req req-false">false</span></td>
+            <td>가족 구성원 사용 현황 (결합 상품 시 사용)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- OUTPUTS -->
+    <div class="schema-block">
+      <div class="schema-block-title">outputs — 렌더링되어야 하는 컴포넌트</div>
+      <table class="schema-table">
+        <thead>
+          <tr>
+            <th style="width:28%">component</th>
+            <th style="width:24%">slot</th>
+            <th style="width:26%">condition</th>
+            <th>state</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="output-comp">OptimalPlanCard</span></td>
+            <td><span class="output-slot">decision_primary</span></td>
+            <td><code>usage_pattern IS NOT NULL</code></td>
+            <td><span class="output-state">single_recommendation</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Context ── -->
+    <div class="section-label mt-24">Human Context</div>
+    <div class="context-block">
+      <div class="context-item ctx-behavior">
+        <div class="ctx-label">Behavior</div>
+        <p>고객은 요금제·혜택·단말 상태를 각각 확인하며 스스로 최적안을 찾기 위해 여러 화면을 반복 탐색합니다.</p>
+      </div>
+      <div class="context-item ctx-problem">
+        <div class="ctx-label">Problem (AS-IS)</div>
+        <p>데이터가 존재함에도 종합 해석이 없어 개인화 제안이 부재합니다. 고객이 직접 계산해야 하는 부담이 발생합니다.</p>
+      </div>
+      <div class="context-item ctx-target">
+        <div class="ctx-label">Target (TO-BE)</div>
+        <p>사용 패턴·상황·데이터를 입체 해석해 단일 최적안을 선제 제시합니다. 절감액 등 실질 가치 근거와 함께 즉시 판단 가능한 상태를 만듭니다.</p>
+      </div>
+    </div>
+
+    <!-- ── Rules ── -->
+    <div class="section-label mt-8">Rules</div>
+
+    <!-- RULE 1 -->
+    <div class="rule-block" data-rule-id="DCD_1_R1">
+      <div class="rule-header">
+        <span class="rule-id">DCD_1_R1</span>
+        <div class="rule-statement">고객 데이터를 기반으로 <u>단일 최적안</u>을 선별해 제안해야 합니다. 복수 옵션 나열 금지.</div>
+      </div>
+      <div class="rule-body">
+        <!-- IF/THEN -->
+        <div>
+          <div class="section-label">IF / THEN</div>
+          <ul class="ifthen-list">
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">usage_pattern AND contract_status resolved</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render single OptimalPlanCard; suppress option list</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">plan_change_penalty == 0</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">append NoPenaltyLabel to OptimalPlanCard</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">saving_amount > 0</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render SavingLabel showing concrete monthly/annual value</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">device_change == true AND bundle_complex == true</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render single pre-configured BundleRecommendationCard (not a list)</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- DO / DON'T -->
+        <div class="do-dont-row">
+          <div class="do-block">
+            <div class="block-label">✓ DO</div>
+            <ul>
+              <li>고객 사용 패턴·상황·데이터를 반영해 결과를 우선 제시하고 고객 판단을 유도합니다.</li>
+              <li>조건이 복잡한 요금제 변경 시, 데이터 기반 단일 최적 옵션을 먼저 제시합니다.</li>
+              <li>단말기 변경과 같이 결합이 복잡한 경우, 한눈에 이해 가능한 최적 구성을 제공합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-block">
+            <div class="block-label">✗ DON'T</div>
+            <table class="dont-table">
+              <thead>
+                <tr>
+                  <th>trigger (금지 상황)</th>
+                  <th>rejection (금지 출력)</th>
+                  <th class="fb-h">fallback (대체 출력)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="trigger-cell">복수 플랜 옵션 존재</td>
+                  <td class="reject-cell">render equal-weight option list</td>
+                  <td class="fallback-cell">render single OptimalPlanCard with rationale</td>
+                </tr>
+                <tr>
+                  <td class="trigger-cell">추천 결과 표시</td>
+                  <td class="reject-cell">omit saving_amount or benefit_delta</td>
+                  <td class="fallback-cell">always include concrete value basis</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /RULE 1 -->
+
+    <!-- RULE 2 -->
+    <div class="rule-block" data-rule-id="DCD_1_R2">
+      <div class="rule-header">
+        <span class="rule-id">DCD_1_R2</span>
+        <div class="rule-statement">판단 결과를 이해할 수 있는 <u>데이터 기반 근거</u>가 반드시 함께 제공되어야 합니다.</div>
+      </div>
+      <div class="rule-body">
+        <div>
+          <div class="section-label">IF / THEN</div>
+          <ul class="ifthen-list">
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">plan_recommendation shown</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render: saving_amount_label + usage_fit_label + benefit_delta_label</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">benefit_value_type == "abstract"</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">convert to concrete_value_expression (e.g. "커피 1잔", "영화 티켓 2매")</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">plan_change_no_penalty == true</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render NoPenaltyBadge with copy: "바로 변경해도 위약금이 발생하지 않아요."</span>
+            </li>
+          </ul>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-block">
+            <div class="block-label">✓ DO</div>
+            <ul>
+              <li>절감 금액, 혜택 변화 등 정량 근거를 포함합니다.</li>
+              <li>가치 판단이 필요한 경우 실질 금액 또는 공감 표현으로 변환합니다.</li>
+              <li>고객이 충분히 이해하고 선택을 증명하는 맞춤 안내를 명확히 제공합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-block">
+            <div class="block-label">✗ DON'T</div>
+            <table class="dont-table">
+              <thead>
+                <tr><th>trigger</th><th>rejection</th><th class="fb-h">fallback</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="trigger-cell">추천 결과 표시</td>
+                  <td class="reject-cell">근거 없이 결과만 제시</td>
+                  <td class="fallback-cell">saving_amount + usage_fit 필드 포함 필수</td>
+                </tr>
+                <tr>
+                  <td class="trigger-cell">혜택 가치 표시</td>
+                  <td class="reject-cell">abstract descriptor ("좋은 혜택")</td>
+                  <td class="fallback-cell">구체 금액 또는 일상 용어로 변환</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /RULE 2 -->
+
+    <!-- ── Copy Template ── -->
+    <div class="section-label mt-8">Copy Template</div>
+    <div class="copy-block">
+      <div class="block-label">📝 copy_template</div>
+      <div class="copy-item">
+        <div class="copy-key">optimal_recommendation</div>
+        <div class="copy-value">"어머니는 매달 20일쯤 데이터가 소진되는 패턴이라, 요금제 변경 시 선물 없이도 충분히 사용할 수 있어요. <span class="var">${plan_name}</span> 요금제를 추천드리며, 결합 혜택에도 일부 변화가 있어요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">bundle_recommendation</div>
+        <div class="copy-value">"<span class="var">${user.name}</span>님의 패턴에 맞게 최적 옵션을 설정해뒀어요. 딱 맞는 옵션들로 제가 한 번에 세팅해 드릴게요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">no_penalty_label</div>
+        <div class="copy-value">"바로 변경해도 위약금이 발생하지 않아요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">saving_label</div>
+        <div class="copy-value">"추가 비용이 없는 이유: <span class="var">${saving_explanation}</span>"</div>
+      </div>
+    </div>
+
+    <!-- ── Fallback Behavior ── -->
+    <div class="section-label mt-8">Fallback Behavior</div>
+    <div class="fallback-spec">
+      <span class="fb-label">FALLBACK</span>
+      <span class="fb-cond">usage_pattern == null</span>
+      <span class="fb-arrow">→</span>
+      <span class="fb-render">render plan_selection_list + usage_input_prompt</span>
+    </div>
+
+    <!-- ── Scenario ── -->
+    <div class="section-label mt-16">Scenario Variants</div>
+    <div class="scenario-block">
+      <div class="scenario-header">Scenario · UXL_DCD_1</div>
+      <div class="scenario-grid scenario-col-2">
+
+        <div class="scenario-item">
+          <div class="scen-trigger">usage_pattern.data_exhaustion_day &lt; 25</div>
+          <div class="scen-title">요금제 변경 권고</div>
+          <div class="scen-copy">"어머니는 매달 20일쯤 데이터가 소진되는 패턴이라 ${plan_name} 요금제를 추천드려요."</div>
+          <div class="scen-cta">CTA → "요금제 변경하기" (OptimalPlanCard)</div>
+          <div class="img-placeholder">
+            <div class="img-id">IMAGE_REQUIRED: DCD_1_scenario_plan_recommendation</div>
+            <div class="img-desc">OptimalPlanCard + SavingLabel + NoPenaltyBadge</div>
+            <div class="img-components">components: [OptimalPlanCard, SavingLabel, NoPenaltyBadge, AgentRationaleChip]</div>
+          </div>
+        </div>
+
+        <div class="scenario-item">
+          <div class="scen-trigger">cart.has_device AND cart.has_plan AND bundle_complex == true</div>
+          <div class="scen-title">복잡한 단말+요금 결합 추천</div>
+          <div class="scen-copy">"${user.name}님의 패턴에 맞게 최적 옵션을 설정해뒀어요. 딱 맞는 옵션들로 한 번에 세팅해 드릴게요."</div>
+          <div class="scen-cta">CTA → "한 번에 세팅하기" (BundleRecommendationCard)</div>
+          <div class="img-placeholder">
+            <div class="img-id">IMAGE_REQUIRED: DCD_1_scenario_device_bundle_recommendation</div>
+            <div class="img-desc">BundleRecommendationCard + BundleBreakdownTable</div>
+            <div class="img-components">components: [BundleRecommendationCard, BundleBreakdownTable, NoPenaltyBadge]</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /pattern-body -->
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- PATTERN 2: UXL_DCD_2                                               -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<section class="pattern-block" data-pattern-id="UXL_DCD_2">
+
+  <div class="pattern-header">
+    <span class="pid-tag">UXL_DCD_2</span>
+    <h2>근거 기반 비교 제공</h2>
+    <span class="screen-type">screen_type: decision_compare</span>
+  </div>
+
+  <div class="pattern-body">
+
+    <!-- ── Schema ── -->
+    <div class="section-label">Machine Schema</div>
+
+    <div class="schema-block">
+      <div class="schema-block-title">trigger_data</div>
+      <table class="schema-table">
+        <thead>
+          <tr><th style="width:42%">field</th><th style="width:18%">operator</th><th>value</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="field">comparison.items</span></td>
+            <td><span class="op">gt</span></td>
+            <td><span class="val">1</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-block-title">inputs</div>
+      <table class="schema-table">
+        <thead>
+          <tr><th style="width:28%">key</th><th style="width:26%">source</th><th style="width:12%">required</th><th>description</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="field">current_contract</span></td>
+            <td><span class="source-tag">user_profile</span></td>
+            <td><span class="req req-true">true</span></td>
+            <td>현재 요금제·혜택·금액 (비교 기준선)</td>
+          </tr>
+          <tr>
+            <td><span class="field">candidate_options</span></td>
+            <td><span class="source-tag">real_time_api</span></td>
+            <td><span class="req req-true">true</span></td>
+            <td>변경 후보 요금제/상품 목록</td>
+          </tr>
+          <tr>
+            <td><span class="field">user_segment</span></td>
+            <td><span class="source-tag">user_profile</span></td>
+            <td><span class="req req-true">true</span></td>
+            <td>가치체감형 / 분석형 / 관계중심형 / 시니어</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="schema-block">
+      <div class="schema-block-title">outputs</div>
+      <table class="schema-table">
+        <thead>
+          <tr><th style="width:28%">component</th><th style="width:24%">slot</th><th style="width:26%">condition</th><th>state</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="output-comp">ComparisonView</span></td>
+            <td><span class="output-slot">decision_compare_area</span></td>
+            <td><code>always</code></td>
+            <td><span class="output-state">delta_focused</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ── Context ── -->
+    <div class="section-label mt-24">Human Context</div>
+    <div class="context-block">
+      <div class="context-item ctx-behavior">
+        <div class="ctx-label">Behavior</div>
+        <p>고객은 요금제와 상품이 나열된 상태에서 각 항목을 직접 계산하고 기억하며 판단합니다. 반복 탐색과 재확인이 발생합니다.</p>
+      </div>
+      <div class="context-item ctx-problem">
+        <div class="ctx-label">Problem (AS-IS)</div>
+        <p>동일한 나열 구조로 인해 고객이 스스로 비교 기준을 만들어야 합니다. 현재 상태 대비 변화를 파악하기 어려워 결정이 지연됩니다.</p>
+      </div>
+      <div class="context-item ctx-target">
+        <div class="ctx-label">Target (TO-BE)</div>
+        <p>현재 계약 기준으로 변화되는 핵심 요소만 대조합니다. 고객은 '무엇이 어떻게 달라지는지'만 확인하고 즉시 결정합니다.</p>
+      </div>
+    </div>
+
+    <!-- ── Rules ── -->
+    <div class="section-label mt-8">Rules</div>
+
+    <!-- RULE 1 -->
+    <div class="rule-block" data-rule-id="DCD_2_R1">
+      <div class="rule-header">
+        <span class="rule-id">DCD_2_R1</span>
+        <div class="rule-statement">비교 결과는 개별 항목 나열이 아닌 <u>직관적 대조(delta) 형태</u>로 제공해야 합니다.</div>
+      </div>
+      <div class="rule-body">
+        <div>
+          <div class="section-label">IF / THEN</div>
+          <ul class="ifthen-list">
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">comparison required</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render delta_view showing change_amount + change_direction (not raw absolute values)</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">data_allowance increases</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render DeltaLabel: "데이터 +{data_delta}GB"</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">monthly_cost decreases</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render DeltaLabel: "월 -{saving_amount}원 절약"</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">complex_conditions == true</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">render key_change_summary alongside full ComparisonView</span>
+            </li>
+          </ul>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-block">
+            <div class="block-label">✓ DO</div>
+            <ul>
+              <li>현재 대비 변화값(delta)을 중심으로 즉시 이해 가능하게 표현합니다.</li>
+              <li>복잡한 조건 비교 시 변경되는 핵심 정보만 요약한 구조를 병행 제공합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-block">
+            <div class="block-label">✗ DON'T</div>
+            <table class="dont-table">
+              <thead>
+                <tr><th>trigger</th><th>rejection</th><th class="fb-h">fallback</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="trigger-cell">비교 화면 렌더링</td>
+                  <td class="reject-cell">raw absolute values만 나열</td>
+                  <td class="fallback-cell">delta_view + change_direction label 렌더링</td>
+                </tr>
+                <tr>
+                  <td class="trigger-cell">비교 화면 렌더링</td>
+                  <td class="reject-cell">고객이 직접 계산/해석 유도</td>
+                  <td class="fallback-cell">시스템이 계산한 delta 표시 필수</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /RULE 1 -->
+
+    <!-- RULE 2 -->
+    <div class="rule-block" data-rule-id="DCD_2_R2">
+      <div class="rule-header">
+        <span class="rule-id">DCD_2_R2</span>
+        <div class="rule-statement">의사결정에 필요한 <u>핵심 정보만 선별</u>해 제공합니다. 불필요한 세부 정보는 숨깁니다.</div>
+      </div>
+      <div class="rule-body">
+        <div>
+          <div class="section-label">IF / THEN</div>
+          <ul class="ifthen-list">
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">full_spec_item_count > critical_info_threshold</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">surface only: cost_delta, data_delta, benefit_delta; hide: full_terms, footnotes</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">user requests detail</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">progressively reveal full_spec on user action (not by default)</span>
+            </li>
+          </ul>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-block">
+            <div class="block-label">✓ DO</div>
+            <ul>
+              <li>의사결정에 필요한 핵심 정보만 선별해 제공합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-block">
+            <div class="block-label">✗ DON'T</div>
+            <table class="dont-table">
+              <thead>
+                <tr><th>trigger</th><th>rejection</th><th class="fb-h">fallback</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="trigger-cell">비교 화면 초기 렌더링</td>
+                  <td class="reject-cell">불필요 세부 조건 전체 노출</td>
+                  <td class="fallback-cell">핵심 3종(비용/데이터/혜택 변화)만 선별 표시</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /RULE 2 -->
+
+    <!-- RULE 3 -->
+    <div class="rule-block" data-rule-id="DCD_2_R3">
+      <div class="rule-header">
+        <span class="rule-id">DCD_2_R3</span>
+        <div class="rule-statement"><u>user_segment에 따라 비교 방식을 다르게</u> 구성해야 합니다. 동일 구조 일괄 적용 금지.</div>
+      </div>
+      <div class="rule-body">
+        <div>
+          <div class="section-label">IF / THEN</div>
+          <ul class="ifthen-list">
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">user_segment == "value_type"</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">lead ComparisonView with benefit_upgrade_description; show concrete value gain first</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">user_segment == "analysis_type"</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">lead ComparisonView with data_driven_rationale; show saving_reason before saving_amount</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">user_segment == "relationship_type"</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">lead ComparisonView with group_benefit_changes; highlight family impact</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">user_segment == "senior"</span>
+              <span class="kw-then">THEN</span>
+              <span class="action">use simplified_language_template; show single data_delta label only; suppress benefit_list</span>
+            </li>
+            <li class="ifthen-item">
+              <span class="kw-if">IF</span>
+              <span class="cond">user_segment == null</span>
+              <span class="kw-else">ELSE</span>
+              <span class="action">default to "value_type" presentation</span>
+            </li>
+          </ul>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-block">
+            <div class="block-label">✓ DO</div>
+            <ul>
+              <li>user_segment 별로 비교 방식과 리드 카피를 다르게 구성합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-block">
+            <div class="block-label">✗ DON'T</div>
+            <table class="dont-table">
+              <thead>
+                <tr><th>trigger</th><th>rejection</th><th class="fb-h">fallback</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="trigger-cell">모든 user_segment</td>
+                  <td class="reject-cell">동일한 ComparisonView 일괄 적용</td>
+                  <td class="fallback-cell">segment_based_comparison_variant 적용 필수</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div><!-- /RULE 3 -->
+
+    <!-- ── Copy Template ── -->
+    <div class="section-label mt-8">Copy Template</div>
+    <div class="copy-block">
+      <div class="block-label">📝 copy_template</div>
+      <div class="copy-item">
+        <div class="copy-key">value_type_headline</div>
+        <div class="copy-value">"<span class="var">${user.name}</span>님이 실제로 더 잘 쓰게 될 혜택부터 보여드릴게요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">analysis_type_headline</div>
+        <div class="copy-value">"왜 요금제 변경이 필요한지 알려드릴게요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">relationship_type_headline</div>
+        <div class="copy-value">"달라지는 그룹혜택만 정리해봤어요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">senior_headline</div>
+        <div class="copy-value">"안녕하세요, 어머님. 저는 T 에이전트입니다. 민선님께서 어머님께 맞는 요금제로 변경을 요청하셨어요. 데이터가 <span class="var">${data_delta}</span>GB 늘어 영상통화나 인터넷도 더 여유롭게 이용하실 수 있어요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">delta_saving_label</div>
+        <div class="copy-value">"매달 <span class="var">${saving_amount}</span>원 절약"</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">delta_data_label</div>
+        <div class="copy-value">"데이터 <span class="var">${data_delta}</span>GB 늘어요"</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">change_summary</div>
+        <div class="copy-value">"달라지는 점만 정리해봤어요."</div>
+      </div>
+    </div>
+
+    <!-- ── Fallback Behavior ── -->
+    <div class="section-label mt-8">Fallback Behavior</div>
+    <div class="fallback-spec">
+      <span class="fb-label">FALLBACK</span>
+      <span class="fb-cond">current_contract == null</span>
+      <span class="fb-arrow">→</span>
+      <span class="fb-render">render full product_specification_list without delta</span>
+    </div>
+
+    <!-- ── Scenario ── -->
+    <div class="section-label mt-16">Scenario Variants</div>
+    <div class="scenario-block">
+      <div class="scenario-header">Scenario · UXL_DCD_2 — user_segment별 비교 방식</div>
+      <div class="scenario-grid scenario-col-4">
+
+        <div class="scenario-item">
+          <div class="scen-trigger">user_segment == "value_type"</div>
+          <div class="scen-title">가치 체감형</div>
+          <div class="scen-copy">"지훈님이 실제로 더 잘 쓰게 될 혜택부터 보여드릴게요."</div>
+          <div class="scen-cta">CTA → "새 혜택으로 변경하기"</div>
+          <div class="img-placeholder">
+            <div class="img-id">IMAGE_REQUIRED: DCD_2_value_type</div>
+            <div class="img-components">BenefitUpgradeCard + DeltaLabel</div>
+          </div>
+        </div>
+
+        <div class="scenario-item">
+          <div class="scen-trigger">user_segment == "analysis_type"</div>
+          <div class="scen-title">분석형</div>
+          <div class="scen-copy">"왜 요금제 변경이 필요한지 알려드릴게요. 예상 절감액 ${saving_amount}원."</div>
+          <div class="scen-cta">CTA → "변경 권장 근거 보기"</div>
+          <div class="img-placeholder">
+            <div class="img-id">IMAGE_REQUIRED: DCD_2_analysis_type</div>
+            <div class="img-components">RationaleCard + SavingBreakdown</div>
+          </div>
+        </div>
+
+        <div class="scenario-item">
+          <div class="scen-trigger">user_segment == "relationship_type"</div>
+          <div class="scen-title">관계 중심형</div>
+          <div class="scen-copy">"달라지는 그룹혜택만 정리해봤어요. 요금제를 변경해도 온가족 결합 유지."</div>
+          <div class="scen-cta">CTA → "그룹 혜택 확인하기"</div>
+          <div class="img-placeholder">
+            <div class="img-id">IMAGE_REQUIRED: DCD_2_relationship_type</div>
+            <div class="img-components">GroupBenefitDeltaCard</div>
+          </div>
+        </div>
+
+        <div class="scenario-item">
+          <div class="scen-trigger">user_segment == "senior"</div>
+          <div class="scen-title">시니어</div>
+          <div class="scen-copy">"데이터가 ${data_delta}GB 늘어 영상통화나 인터넷도 더 여유롭게 이용하실 수 있어요."</div>
+          <div class="scen-cta">발화 CTA → "변경"</div>
+          <div class="img-placeholder">
+            <div class="img-id">IMAGE_REQUIRED: DCD_2_senior</div>
+            <div class="img-components">SimplifiedDeltaCard (single metric)</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /scenario -->
+
+  </div><!-- /pattern-body -->
+</section>
+
+
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<!-- DOCUMENT FOOTER                                                      -->
+<!-- ══════════════════════════════════════════════════════════════════ -->
+<footer style="margin-top:48px; padding-top:20px; border-top:1px solid var(--border);">
+  <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.78rem; color:var(--meta);">
+    <div>
+      <strong style="font-family:var(--font-mono); color:var(--c-blue);">UXL_DCD</strong>
+      &nbsp;·&nbsp; AI Governance Guide v1.0
+      &nbsp;·&nbsp; journey_code: DCD
+      &nbsp;·&nbsp; patterns: 2 &nbsp;·&nbsp; rules: 7
+    </div>
+    <div style="font-family:var(--font-mono);">2026-04-29</div>
+  </div>
+  <div style="margin-top:8px; font-size:0.77rem; color:#9AAABB;">
+    ⚠ 이 문서의 모든 copy_template 값의 <code>${variable}</code>은 런타임 데이터로 대체되어야 합니다.
+    IMAGE_REQUIRED 마커가 있는 모든 시나리오 영역은 원본 Figma 소스에서 PNG/SVG 자산으로 교체되어야 합니다.
+    추상 형용사(자연스럽게, 직관적, 균형 있게, 최적화) 사용 금지 — 위반 시 AI 재현 결과가 결정 불가(undecidable) 상태가 됩니다.
+  </div>
+</footer>
+
+</body>
+</html>

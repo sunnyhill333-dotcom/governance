@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_TCP — 완료 | UX Principle Guide</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer:  #E8E8E8;
+  --gray-card:   #F5F5F5;
+  --white:       #FFFFFF;
+  --border:      rgba(0,0,0,0.07);
+
+  /* 원본 디자인 배지 */
+  --badge-do:    #2E7D32;
+  --badge-dont:  #C62828;
+  --badge-rule:  #1A1A1A;
+  --badge-beh:   #3C3C3C;
+  --badge-asis:  #C62828;
+  --badge-tobe:  #5135C8;
+  --badge-pat:   #E0E0E0;
+
+  /* Human / AI 배지 */
+  --human-bg:    #3C3C3C;
+  --ai-bg:       #5135C8;
+
+  /* AI 메타 블록 */
+  --ai-bg-block: #F0EDFF;
+  --ai-border:   #7C57FF;
+  --ai-key-col:  #5135C8;
+
+  /* 동적 변수 하이라이트 */
+  --var-color:   #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0;
+  padding: 0;
+}
+
+/* ────────────────────────────────
+   문서 헤더 이미지
+──────────────────────────────── */
+.doc-header img { display: block; width: 100%; }
+
+/* ────────────────────────────────
+   패턴 섹션 래퍼
+──────────────────────────────── */
+.pattern-wrap { padding: 20px 36px; }
+
+.pattern-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ────────────────────────────────
+   패턴 메타 (텍스트 섹션)
+──────────────────────────────── */
+.section-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  padding: 24px 36px 0;
+}
+
+.meta-block { padding: 16px 36px 0; }
+
+.pattern-badge {
+  display: inline-block;
+  background: var(--badge-pat);
+  color: #333;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.pattern-heading {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.pattern-desc {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  max-width: 96%;
+}
+
+/* BEHAVIOR / AS-IS / TO-BE */
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row strong { color: var(--text); font-weight: 700; }
+
+.obadge {
+  display: inline-block;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 5px;
+  padding: 3px 7px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.obadge.beh  { background: var(--badge-beh); }
+.obadge.asis { background: var(--badge-asis); }
+.obadge.tobe { background: var(--badge-tobe); }
+
+/* ────────────────────────────────
+   패턴 AI 메타 블록 (메타 섹션 하단)
+──────────────────────────────── */
+.pattern-ai-meta {
+  margin: 0 36px 24px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+
+/* ────────────────────────────────
+   Human / AI 레이어 배지
+──────────────────────────────── */
+.lbadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: white;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 2px;
+  min-width: 34px;
+}
+.lbadge.h { background: var(--human-bg); }
+.lbadge.a { background: var(--ai-bg); }
+
+/* ────────────────────────────────
+   레이어 블록 공통
+──────────────────────────────── */
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+
+/* 동적 변수 하이라이트 */
+.v { color: var(--var-color); font-weight: 600; }
+
+/* AI 메타 블록 (인라인) */
+.ai-blk {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  flex: 1;
+}
+.ai-ln {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+
+/* 패턴 AI 메타용 (넓은 key) */
+.pattern-ai-meta .ai-ln { font-size: 11.5px; }
+.pattern-ai-meta .ai-k  { min-width: 130px; }
+
+/* 와이어프레임 AI 어노테이션 */
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; }
+.wire-ann .ai-ln  { font-size: 10.5px; }
+.wire-ann .ai-k   { min-width: 90px; }
+
+/* ────────────────────────────────
+   RULE 섹션
+──────────────────────────────── */
+.rule-section {
+  background: var(--gray-card);
+  border-top: 1px solid var(--border);
+}
+
+.rule-header { padding: 22px 36px 0; }
+
+.rule-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--badge-rule);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* DO / DON'T 그리드 */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  margin-top: 18px;
+}
+
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col   { background: #FAFFFE; }
+.dont-col { background: #FFFAFA; }
+
+.do-badge, .dont-badge {
+  display: inline-flex;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+
+/* 폰 이미지 */
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+
+/* 이미지 클립 (상단 텍스트 제거용) */
+.clip { overflow: hidden; }
+.clip img { display: block; width: 100%; }
+.clip-t200 img { margin-top: -200px; }
+.clip-t80  img { margin-top: -80px; }
+
+/* ────────────────────────────────
+   Scenario 섹션
+──────────────────────────────── */
+.scen-section {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+.scen-heading {
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 20px 36px 0;
+  margin-bottom: 0;
+}
+
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+
+/* 시나리오 어노테이션 (2 or 4 컬럼) */
+.scen-anns {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.scen-anns.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-anns.col2 { grid-template-columns: 1fr 1fr; }
+
+.scen-ann {
+  background: var(--white);
+  padding: 18px 22px;
+}
+
+.scen-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  background: #EBEBEB;
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════
+  문서 헤더
+═══════════════════════════════════════════ -->
+<div class="doc-header">
+  <img src="assets/TCP_header.png"
+       alt="UXL_TCP — 완료의 고객 경험 원칙 정의 | 종합적인 처리 결과 안내 / 핵심 정보 시각화 / 사후 가이드 제공">
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+  UXL_TCP_1 — 종합적인 처리 결과 안내
+═══════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_TCP_1</div>
+    <h2 class="pattern-heading">6-1. 종합적인 처리 결과 안내</h2>
+    <p class="pattern-desc">여러 단계를 거쳐 진행된 개별 태스크들을 하나의 완성된 흐름으로 연결해 안내함으로써, 고객이 처리 내역을 직관적으로 인지하도록 해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 여러 단계를 거쳐 과업을 완료한 뒤에도 <strong>각각의 처리 결과를 개별적으로 확인</strong>하며 전체 상태를 재구성하려 합니다. 결과가 분절되어 제공되기 때문에 전체 변화 맥락을 스스로 조합해야 하며, 완료 이후에도 이해를 위한 추가 탐색이 발생합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>단계별 완료 메시지가 나열되어 있어 <strong>전체 변화 맥락을 조합</strong>해야 하며, 완료 이후에도 이해를 위한 추가 탐색이 발생합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>시스템이 모든 처리 결과를 하나의 결과 흐름으로 재구성하여 제공함으로써, 고객이 <strong>완료 상태를 직관적으로 인지</strong>하도록 만들어야 합니다. 이는 단계 단위가 아닌 <strong>'결과 단위'로 정보를 통합</strong>해야 한다는 의미입니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_TCP_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">task_complete</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">task.completion_status == 'completed'</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">TaskCompletionSummary → slot: completion_primary, state: result_unified</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">completed_task_type (session_state), task_result_summary (real_time_api)</span></div>
+    <div class="ai-ln"><span class="ai-k">suppressed_when</span>  <span class="ai-v">task_result_summary unavailable → fallback: generic_completion_message with task_type label</span></div>
+  </div>
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>여러 단계를 거쳐도 처리 결과는 <strong>하나의 완료 화면</strong>으로 통합해 보여줍니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>    <span class="ai-v">UXL_TCP_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">TaskCompletionSummary</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">task.completion_status == 'completed'</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>     <span class="ai-v">slot: completion_primary, state: result_unified (단일 통합 요약 — 단계별 나열 금지)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>태스크 유형에 따라 핵심 결과 항목을 <strong>단일 요약 카드</strong>로 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">component</span>      <span class="ai-v">TaskCompletionSummary (단일 통합 뷰)</span></div>
+              <div class="ai-ln"><span class="ai-k">render_rule</span>    <span class="ai-v">IF multi-step → consolidate all step results into single unified summary</span></div>
+              <div class="ai-ln"><span class="ai-k">slot</span>           <span class="ai-v">completion_primary</span></div>
+              <div class="ai-ln"><span class="ai-k">data_required</span>  <span class="ai-v">[task_type, task_result_summary, completed_task_meta]</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/TCP_1_rule1_do.png"
+             alt="DO — TaskCompletionSummary: 체크 아이콘 + 단일 완료 상태 + 요약 정보 블록 (통합 뷰)">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 체크 아이콘</span> <span class="ai-v">TaskCompletionSummary — 완료 상태 단일 시각 표시</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 퍼플 블록</span>   <span class="ai-v">result_summary_card — 태스크 유형별 핵심 정보 통합 렌더링</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>단계별 완료 메시지를 <strong>순서대로 나열하지 않습니다.</strong></p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span>  <span class="ai-v">per_step_completion_messages — 단계별 완료 메시지 순차 나열</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>   <span class="ai-v">multi-step task completed (언제든 통합 제공 필수)</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>    <span class="ai-v">task_result_summary unavailable → generic_completion_message with task_type label</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/TCP_1_rule1_dont.png"
+             alt="DON'T — 3개의 개별 체크 메시지 나열: 고객이 전체 흐름을 스스로 조합해야 함">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">per_step_list — 단계별 체크 메시지 3개 병렬 나열</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">전체 결과 맥락 부재 → 고객이 흐름 재조합 필요 → 인지 부담 증가</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 1 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+    <div class="scen-strip">
+      <img src="assets/TCP_1_scen_strip.png"
+           alt="시나리오 4종: 요금제 변경 / 데이터 선물 / 포인트 요금 납부 예약 / T Agent 폰 예약">
+    </div>
+    <div class="scen-anns col4">
+      <!-- ① 요금제 변경 -->
+      <div class="scen-ann">
+        <span class="scen-label">요금제 변경</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">O 청년 10GB</span>로 요금제가 변경됐어요."<br>요약: 신규 요금제명 + 월 요금 + 선택약정 + 공유데이터</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">task_type == 'plan_change' AND task.completion_status == 'completed'</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>       <span class="ai-v">"{new_plan_name}으로 요금제가 변경됐어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">summary</span>    <span class="ai-v">[new_plan_name, new_monthly_fee, data_allowance, included_benefits]</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">TaskCompletionSummary → state: plan_change_complete</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ② 데이터 선물 -->
+      <div class="scen-ann">
+        <span class="scen-label">데이터 선물</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">1GB</span> 데이터 선물을 완료했어요."<br>이번달 선물 횟수 잔여 안내 포함</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">task_type == 'data_gift' AND task.completion_status == 'completed'</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>       <span class="ai-v">"{data_amount}GB 데이터 선물을 완료했어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">summary</span>    <span class="ai-v">[recipient_name, gifted_data_amount, remaining_gift_count_this_month]</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">TaskCompletionSummary → state: data_gift_complete</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ③ 포인트 요금 납부 예약 -->
+      <div class="scen-ann">
+        <span class="scen-label">포인트 요금 납부 예약</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"포인트 납부 예약이 완료됐어요."<br>예약 포인트 + 자동납부 종료 예정일 요약</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">task_type == 'point_payment_schedule' AND task.completion_status == 'completed'</span></div>
+              <div class="ai-ln"><span class="ai-k">summary</span>    <span class="ai-v">[target_member, target_plan, scheduled_point_amount, schedule_end_date]</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">TaskCompletionSummary → state: point_payment_complete</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ④ T Agent 폰 예약 -->
+      <div class="scen-ann">
+        <span class="scen-label">T Agent 폰 예약</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"T Agent 폰 예약을 요청했어요."<br>요청 확인 + 처리 대기 항목 표시</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">task_type == 'agent_task_request' AND task.completion_status == 'completed'</span></div>
+              <div class="ai-ln"><span class="ai-k">summary</span>    <span class="ai-v">[request_confirmation, pending_items] — 납부 방식 + 월 요금 변경 정보</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">TaskCompletionSummary → state: agent_request_pending</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card TCP_1 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ═══════════════════════════════════════════
+  UXL_TCP_2 — 핵심 정보 시각화
+═══════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_TCP_2</div>
+    <h2 class="pattern-heading">6-2. 핵심 정보 구조화</h2>
+    <p class="pattern-desc">복잡한 설명이나 텍스트 나열을 최소화하고, 고객이 알아야 할 혜택 변화와 주요 수치를 중심으로 시각화하여 고민 없이 변화된 가치를 파악하도록 제공해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 완료 후 제공된 정보가 나열된 형태로 제공되면서 <strong>핵심 지표를 선별하고 해석하는 부담</strong>이 발생하고, 이는 의사결정의 피로로 이어집니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>수치 나열과 설명 중심 문장으로 인해 <strong>고객이 직접 해석 과정을 거쳐야</strong> 합니다. 이로 인해 핵심 가치 전달 실패 및 추가 문의가 발생합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객의 판단이 아닌 <strong>시스템의 해석 결과를 시각화</strong>하는 구조로, 고객이 실제로 체감할 수 있는 가치(비용 변화, 혜택 증감 등)와 핵심 정보만 <strong>구조적으로 시각화</strong>해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_TCP_2</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">task_complete</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">task.completion_status == 'completed'</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">UsageVisualization → slot: completion_data_section / BenefitDeltaCard → slot: completion_benefit_section</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">usage_data, benefit_delta, comparison_data (all real_time_api, optional)</span></div>
+    <div class="ai-ln"><span class="ai-k">suppressed_when</span>  <span class="ai-v">visualization_data unavailable → render text-based completion summary without chart</span></div>
+  </div>
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객이 숫자를 직접 해석하지 않아도 되도록, 수치는 <strong>차트나 비교 이미지로 변환</strong>해 제공합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>          <span class="ai-v">UXL_TCP_2_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span>        <span class="ai-v">UsageVisualization OR BenefitDeltaCard</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">usage_data IS NOT NULL OR benefit_delta IS NOT NULL OR comparison_data IS NOT NULL</span></div>
+            <div class="ai-ln"><span class="ai-k">prohibited_format</span><span class="ai-v">explanatory_text_block — 수치 나열 또는 설명 중심 문장 사용 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>데이터 사용 패턴은 <strong>차트</strong>로, 혜택 변화는 <strong>금액 단위 카드</strong>로, 기기 변경은 <strong>납부액 이미지 비교</strong>로 각각 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">chart_type</span>     <span class="ai-v">bar / donut segmented by usage_category (content_OTT, social, communication)</span></div>
+              <div class="ai-ln"><span class="ai-k">comparison</span>     <span class="ai-v">image-based before/after device or plan comparison (structured table 허용)</span></div>
+              <div class="ai-ln"><span class="ai-k">delta_convert</span>  <span class="ai-v">benefit_delta → concrete_value: "매달 {N}원 아낄 수 있어요"</span></div>
+              <div class="ai-ln"><span class="ai-k">data_required</span>  <span class="ai-v">usage_data OR benefit_delta OR comparison_data (하나라도 존재 시 렌더링)</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/TCP_2_rule1_do.png"
+             alt="DO — UsageVisualization: 도넛 차트 + 카테고리별 범례 / BenefitDeltaCard: 이미지 비교">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 도넛 차트</span>   <span class="ai-v">UsageVisualization — usage_category별 시각화 (퍼센트 + 절대량)</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 이미지 블록</span>  <span class="ai-v">BenefitDeltaCard or comparison_image — 혜택 변화 직관적 표현</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>수치와 설명을 <strong>문장 목록으로 나열하지 않습니다.</strong></p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span>   <span class="ai-v">text_number_list — 항목별 수치를 설명 문장으로 나열</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>    <span class="ai-v">usage_data IS NOT NULL → 반드시 시각화 형태로 제공</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>     <span class="ai-v">visualization_data unavailable → text-based completion summary (차트 없이)</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/TCP_2_rule1_dont.png"
+             alt="DON'T — text_number_list: 항목별 설명 문장 나열, 고객이 직접 해석해야 함">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">text_description_block — 설명 중심 문장 + 수치 나열</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">고객 자체 해석 필요 → 인지 부담 → 핵심 가치 전달 실패</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 2 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+    <div class="scen-strip">
+      <img src="assets/TCP_2_scen_strip.png"
+           alt="시나리오 4종: 데이터 사용량/빈도 차트 / 주간 평균 사용 시간 / 요금제 혜택 비교 / 단말기 납부액 비교">
+    </div>
+    <div class="scen-anns col2">
+      <!-- ① 데이터 사용량/빈도 + 주간 사용 시간 -->
+      <div class="scen-ann">
+        <span class="scen-label">데이터 사용량 / 주간 서비스 사용 시간</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"콘텐츠/OTT <span class="v">31.3GB</span>, 주간 평균 사용 시간 <span class="v">N시간</span>"<br>서비스별 사용 패턴을 도넛/막대 차트로 즉시 파악</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>      <span class="ai-v">usage_data IS NOT NULL</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>    <span class="ai-v">UsageVisualization → chart_type: donut/bar</span></div>
+              <div class="ai-ln"><span class="ai-k">segments</span>     <span class="ai-v">content_OTT, social, communication (카테고리별 분류)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>         <span class="ai-v">"콘텐츠/OTT {usage_pct}%, 주간평균사용시간 {weekly_avg_hours}시간"</span></div>
+              <div class="ai-ln"><span class="ai-k">insight</span>      <span class="ai-v">"넷플릭스 볼 때 데이터를 가장 많이 쓰시니까 이 요금제가 훨씬 합리적이에요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ② 요금제 혜택 비교 + 단말기 납부액 비교 -->
+      <div class="scen-ann">
+        <span class="scen-label">요금제 혜택 조합 / 단말기 납부액 비교</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"갤럭시 <span class="v">S25</span> <span class="v">256GB</span>와 지금 사용 중인 휴대폰의 납부액을 자세히 비교해 드릴게요."<br>이미지 기반 비교로 변경 전·후 차이 직관적 인지</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>      <span class="ai-v">comparison_data IS NOT NULL</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>    <span class="ai-v">BenefitDeltaCard OR device_comparison_image</span></div>
+              <div class="ai-ln"><span class="ai-k">format</span>       <span class="ai-v">image-based before/after OR structured comparison table</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>         <span class="ai-v">"갤럭시 {model_name} {storage}GB와 지금 사용 중인 휴대폰의 납부액을 자세히 비교해 드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card TCP_2 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ═══════════════════════════════════════════
+  UXL_TCP_3 — 사후 가이드 제공
+═══════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_TCP_3</div>
+    <h2 class="pattern-heading">6-3. 사후 가이드 제공</h2>
+    <p class="pattern-desc">완료 후에도 필요한 후속 조치나 유의사항을 선제적으로 안내하여, 불필요한 재탐색 없이 경험을 마무리해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 과업 완료 이후 <strong>필요한 후속 행동이나 주의사항을 확인하기 위해 다시 탐색</strong>하거나 문의합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>완료 이후의 상태 변화에 대한 안내가 부족하여 <strong>고객이 다음 행동을 스스로 판단해야</strong> 하며, 이로 인해 불필요한 재탐색이 발생합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객의 의도를 다시 읽고 다음 태스크를 이어서 <strong>시스템이 선제적으로 안내</strong>해야 합니다. 고객이 특정 태스크를 수행한 경우, 이후 진행하면 좋은 다음 단계를 고객이 인지하지 못하는 상황이 없도록 해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_TCP_3</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">task_complete</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">task.completion_status == 'completed'</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">FollowUpActionList → slot: completion_followup, state: proactive</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">completed_task_type (session_state), followup_actions (real_time_api, required)</span></div>
+    <div class="ai-ln"><span class="ai-k">suppressed_when</span>  <span class="ai-v">followup_actions unavailable → render completion page without followup section</span></div>
+  </div>
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>완료 후 필요한 다음 행동을 고객이 찾기 전에 <strong>시스템이 먼저 제시</strong>합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_TCP_3_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">FollowUpActionList</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">followup_actions IS NOT NULL AND task.completion_status == 'completed'</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">slot: completion_followup, state: proactive — 완료 화면 하단 자동 노출</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>완료된 태스크 맥락을 기반으로 <strong>다음에 해야 할 행동</strong>을 완료 화면 하단에 자동으로 안내합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">component</span>      <span class="ai-v">FollowUpActionList — 상황별 후속 태스크 자동 연결</span></div>
+              <div class="ai-ln"><span class="ai-k">render_when</span>    <span class="ai-v">followup_actions IS NOT NULL (완료 화면 하단 자동 추가)</span></div>
+              <div class="ai-ln"><span class="ai-k">context_basis</span>  <span class="ai-v">completed_task_type + customer_state → next_task 선택</span></div>
+              <div class="ai-ln"><span class="ai-k">auto_link</span>      <span class="ai-v">resolved_state 기준으로 후속 태스크 자동 연결 제공</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/TCP_3_rule1_do.png"
+             alt="DO — FollowUpActionList: 완료 화면 + 다음 단계 후속 행동 2개 자동 노출 (체크리스트 형태)">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">좌측 폰</span>    <span class="ai-v">TaskCompletionSummary (체크 아이콘 + 결과 요약)</span></div>
+            <div class="ai-ln"><span class="ai-k">화살표 →</span>   <span class="ai-v">FollowUpActionList → 퍼플 블록: 후속 태스크 2개 자동 표시</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>완료 메시지만 보여주고 <strong>이후 행동 안내를 생략하지 않습니다.</strong></p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span>  <span class="ai-v">completion_only_view — 완료 메시지만 표시, FollowUpActionList 미노출</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>   <span class="ai-v">followup_actions IS NOT NULL → 반드시 노출 필수</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>    <span class="ai-v">followup_actions unavailable → completion page without followup section (단, 데이터 있으면 항상 표시)</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/TCP_3_rule1_dont.png"
+             alt="DON'T — completion_only_view: 단일 완료 메시지만 노출, 후속 행동 안내 없음">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">completion_only — 완료 체크 + 정적 메시지만, 후속 행동 없음</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">고객이 다음 행동 스스로 탐색 필요 → 재탐색/재문의 발생</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 3 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+    <div class="scen-strip">
+      <img src="assets/TCP_3_scen_strip.png"
+           alt="시나리오: 개통 완료 후 서비스 연동 안내 / 데이터 선물 완료 후 요금제 추천">
+    </div>
+    <div class="scen-anns col2">
+      <!-- ① 개통 완료 후 -->
+      <div class="scen-ann">
+        <span class="scen-label">개통 완료 후 후속 안내</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"가입이 완료됐어요. 이어서 <span class="v">유튜브 프리미엄</span> 계정 연동이 필요해요."<br>CTA: "연동하러 가기" / "사진·연락처 새 폰으로 옮기기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>       <span class="ai-v">task_type == 'device_activation' AND account_link_required == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>          <span class="ai-v">"가입이 완료됐어요. 이어서 {service_name} 계정 연동이 필요해요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta_1</span>         <span class="ai-v">"연동하러 가기" → action: service_account_link</span></div>
+              <div class="ai-ln"><span class="ai-k">cta_2</span>         <span class="ai-v">"사진, 연락처, 데이터를 새 휴대폰으로 한 번에 옮겨볼까요?" → action: data_migration_flow</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>     <span class="ai-v">FollowUpActionList → state: proactive, context: device_activation</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- ② 데이터 선물 완료 후 -->
+      <div class="scen-ann">
+        <span class="scen-label">데이터 선물 완료 후 요금제 추천</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"이번 달에 <span class="v">현숙</span>님께 데이터를 두 차례 전송하셨어요. <span class="v">어머니</span> 사용 패턴에 맞는 요금제를 추천해드릴까요?"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>       <span class="ai-v">task_type == 'data_gift' AND recipient_usage_high == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>          <span class="ai-v">"이번 달에 {recipient_name}님께 데이터를 두 차례 전송하셨어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">followup</span>      <span class="ai-v">"데이터 사용량이 많으신 경우, 상위 요금제로 변경을 고려해 보세요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>           <span class="ai-v">"어머니 사용 패턴에 맞는 요금제를 추천해드릴까요?" → action: plan_recommendation_for_member</span></div>
+              <div class="ai-ln"><span class="ai-k">target</span>        <span class="ai-v">{recipient.member_id} — 수혜자 기준 요금제 추천</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card TCP_3 -->
+</div><!-- /pattern-wrap -->
+
+<div style="height:40px;"></div>
+
+</body>
+</html>

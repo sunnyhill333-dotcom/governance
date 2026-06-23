@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_ETR_1 — 보완 템플릿 | Priority + Variable Map</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer:  #E8E8E8;
+  --gray-card:   #F5F5F5;
+  --white:       #FFFFFF;
+  --border:      rgba(0,0,0,0.07);
+
+  --badge-pat:   #E0E0E0;
+  --badge-beh:   #3C3C3C;
+  --badge-asis:  #C62828;
+  --badge-tobe:  #5135C8;
+  --badge-rule:  #1A1A1A;
+  --badge-do:    #2E7D32;
+  --badge-dont:  #C62828;
+
+  --human-bg:    #3C3C3C;
+  --ai-bg:       #5135C8;
+
+  --ai-bg-block: #F0EDFF;
+  --ai-border:   #7C57FF;
+  --ai-key-col:  #5135C8;
+
+  /* 보완 블록 — 충돌/우선순위 */
+  --pri-bg:      #FFF8EC;
+  --pri-border:  #E8A000;
+  --pri-key:     #7D5300;
+
+  /* 보완 블록 — 변수 맵 */
+  --var-bg:      #F0FFF4;
+  --var-border:  #2E7D32;
+  --var-key:     #1B5E3B;
+  --var-color:   #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── 래퍼 ── */
+.pattern-wrap { padding: 20px 36px; }
+.pattern-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ── 메타 ── */
+.section-label { font-size: 13px; color: var(--text-dim); padding: 24px 36px 0; }
+.meta-block { padding: 16px 36px 0; }
+.pattern-badge {
+  display: inline-block;
+  background: var(--badge-pat); color: #333;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 12px; border-radius: 8px; margin-bottom: 12px;
+}
+.pattern-heading { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px; }
+.pattern-desc { font-size: 13.5px; color: var(--text-sub); line-height: 1.7; margin-bottom: 20px; }
+
+/* BEHAVIOR/AS-IS/TO-BE */
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row strong { color: var(--text); font-weight: 700; }
+.obadge {
+  display: inline-block; color: white;
+  font-size: 10px; font-weight: 700; letter-spacing: 0.04em;
+  border-radius: 5px; padding: 3px 7px; white-space: nowrap;
+  flex-shrink: 0; margin-top: 2px;
+}
+.obadge.beh  { background: var(--badge-beh); }
+.obadge.asis { background: var(--badge-asis); }
+.obadge.tobe { background: var(--badge-tobe); }
+
+/* ── AI 메타 블록 (패턴 상단) ── */
+.pattern-ai-meta {
+  margin: 0 36px 24px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.pattern-ai-meta .ai-ln { font-size: 11.5px; }
+.pattern-ai-meta .ai-k  { min-width: 140px; }
+
+/* ── AI 인라인 블록 ── */
+.ai-blk {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px; flex: 1;
+}
+.ai-ln {
+  display: flex; gap: 8px;
+  font-size: 11px; line-height: 1.65;
+  font-family: var(--mono);
+}
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+
+/* ── Human / AI 배지 ── */
+.lbadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 9px; font-weight: 800; letter-spacing: 0.05em;
+  color: white; padding: 2px 7px; border-radius: 4px; margin-top: 2px; min-width: 34px;
+}
+.lbadge.h { background: var(--human-bg); }
+.lbadge.a { background: var(--ai-bg); }
+
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+.v { color: var(--var-color); font-weight: 600; }
+
+/* ── RULE 섹션 ── */
+.rule-section { background: var(--gray-card); border-top: 1px solid var(--border); }
+.rule-header { padding: 22px 36px 0; }
+.rule-badge {
+  display: inline-flex; align-items: center;
+  background: var(--badge-rule); color: white;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 6px; margin-bottom: 10px;
+}
+
+/* DO/DON'T */
+.do-dont {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border); margin-top: 18px;
+}
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col   { background: #FAFFFE; }
+.dont-col { background: #FFFAFA; }
+.do-badge, .dont-badge {
+  display: inline-flex; color: white;
+  font-size: 12px; font-weight: 700;
+  padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; }
+.wire-ann .ai-ln  { font-size: 10.5px; }
+.wire-ann .ai-k   { min-width: 90px; }
+
+/* ── Scenario 섹션 ── */
+.scen-section { background: var(--white); border-top: 1px solid var(--border); }
+.scen-heading { font-size: 13.5px; font-weight: 700; padding: 20px 36px 0; }
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+.scen-anns {
+  display: grid; gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-ann { background: var(--white); padding: 18px 22px; }
+.scen-label {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  color: #555; background: #EBEBEB; border-radius: 20px;
+  padding: 3px 12px; margin-bottom: 12px;
+}
+
+/* ══════════════════════════════════════
+   보완 블록 1 — Priority (충돌 해소)
+══════════════════════════════════════ */
+.pri-blk {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--pri-bg);
+  border-left: 3px solid var(--pri-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px; flex: 1;
+}
+.pri-blk .ai-ln { font-size: 11px; font-family: var(--mono); }
+.pri-blk .ai-k  { color: var(--pri-key); font-weight: 700; min-width: 140px; }
+.pri-blk .ai-v  { color: #3D2800; }
+
+/* 패턴 메타용 (넓은 블록) */
+.pattern-pri-meta {
+  margin: 0 36px 0;
+  background: var(--pri-bg);
+  border-left: 3px solid var(--pri-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+  margin-bottom: 14px;
+}
+.pattern-pri-meta .ai-ln { font-size: 11.5px; font-family: var(--mono); }
+.pattern-pri-meta .ai-k  { color: var(--pri-key); font-weight: 700; min-width: 150px; }
+.pattern-pri-meta .ai-v  { color: #3D2800; }
+
+/* priority 배지 */
+.pri-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--pri-border);
+  color: white;
+  font-size: 9px; font-weight: 800;
+  padding: 2px 8px; border-radius: 4px;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ══════════════════════════════════════
+   보완 블록 2 — Variable Map (스키마 연결)
+══════════════════════════════════════ */
+.var-map-blk {
+  display: flex; flex-direction: column; gap: 0;
+  background: var(--var-bg);
+  border-left: 3px solid var(--var-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  margin-top: 6px;
+}
+.var-map-blk .ai-ln { font-size: 10.5px; font-family: var(--mono); line-height: 1.8; }
+.var-map-blk .ai-k  { color: var(--var-key); font-weight: 700; min-width: 160px; }
+.var-map-blk .ai-v  { color: #1A3020; }
+
+.vm-badge {
+  display: inline-block;
+  font-size: 9px; font-weight: 800;
+  background: var(--var-border); color: white;
+  padding: 2px 7px; border-radius: 4px;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  margin-bottom: 5px;
+}
+
+/* ── 보완 설명 배너 (섹션 안내) ── */
+.supplement-banner {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 36px;
+  background: #FFFBF0;
+  border-bottom: 1px solid var(--border);
+}
+.supplement-badge {
+  display: inline-block;
+  font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
+  color: white; background: var(--pri-border);
+  padding: 2px 8px; border-radius: 4px;
+  flex-shrink: 0; margin-top: 1px;
+}
+.supplement-banner p { font-size: 12px; color: #5A4200; line-height: 1.6; }
+
+.supplement-banner2 {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 36px;
+  background: #F4FFF7;
+  border-bottom: 1px solid var(--border);
+}
+.supplement-badge2 {
+  display: inline-block;
+  font-size: 9px; font-weight: 800; letter-spacing: 0.06em;
+  color: white; background: var(--var-border);
+  padding: 2px 8px; border-radius: 4px;
+  flex-shrink: 0; margin-top: 1px;
+}
+.supplement-banner2 p { font-size: 12px; color: #1A3020; line-height: 1.6; }
+
+/* 구분선 */
+.divider { height: 1px; background: var(--border); margin: 0 36px; }
+</style>
+</head>
+<body>
+
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_1</div>
+    <h2 class="pattern-heading">1-1. 상태 기반 선제적 대응</h2>
+    <p class="pattern-desc">진입 시점의 고객 데이터를 기반으로 상태를 진단해, 당장 확인이 필요한 알림이나 개인화된 맞춤 태스크를 최우선으로 노출해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 앱 진입 시 전체 메뉴를 탐색하기보다 <strong>당장 필요한 기능이나 상태 확인</strong>부터 시도합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>진입 시 일반화된 홈 구조로 인해 <strong>고객은 자신의 상황과 무관한 정보</strong> 속에서 필요한 행동을 다시 찾아야 합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>C360 및 행동/의도 데이터 기반으로 현재 상황을 즉시 해석하고, <strong>고객별로 다른 우선순위의 마이크로 태스크를 선제적으로 노출</strong>해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 기존 AI 패턴 메타 -->
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_ETR_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">home_entry</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">session.start == true AND customer_data.available == true</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">ProactiveMicroTaskCard → slot: home_primary, max_count: 1</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">customer_status, pending_event, recent_action_trigger</span></div>
+    <div class="ai-ln"><span class="ai-k">suppressed_when</span>  <span class="ai-v">customer_data.available == false → fallback: static_home_layout</span></div>
+  </div>
+
+  <!-- ★ 보완 1: 충돌 해소 규칙 (패턴 레벨) -->
+  <div class="supplement-banner">
+    <span class="supplement-badge">SUPPLEMENT 1</span>
+    <p>복수 시나리오의 trigger가 동시에 만족될 경우, 아래 우선순위 규칙으로 단일 카드를 선택합니다. <strong>max_count: 1</strong> 제약과 함께 적용됩니다.</p>
+  </div>
+
+  <div class="pattern-pri-meta">
+    <div class="ai-ln"><span class="ai-k">conflict_resolution</span> <span class="ai-v">highest-priority-wins — 동시 충족 시 priority 값이 낮은 시나리오 1개만 렌더링</span></div>
+    <div class="ai-ln"><span class="ai-k">priority_order</span>      <span class="ai-v">1. family_data_request.pending  →  2. contract.days_until_expiry ≤ 7  →  3. payment.status == pending</span></div>
+    <div class="ai-ln"><span class="ai-k">tie_break</span>           <span class="ai-v">동일 priority 충돌 시 → pending_since 최신순 (가장 최근 발생 이벤트 우선)</span></div>
+    <div class="ai-ln"><span class="ai-k">re_evaluate_on</span>      <span class="ai-v">session.resume OR customer_data.refresh (재진입·데이터 갱신 시 재평가)</span></div>
+  </div>
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객의 현재 상태를 해석해 실행 가능한 태스크를 <strong>선제적으로 제안</strong>합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_ETR_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">ProactiveMicroTaskCard</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">session.start == true AND customer_data.available == true</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">slot: home_primary, max_count: 1</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객 데이터 기반으로 상태를 파악하고, <strong>실행 가능한 태스크 카드 1개</strong>로 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">component</span>     <span class="ai-v">ProactiveMicroTaskCard</span></div>
+              <div class="ai-ln"><span class="ai-k">slot</span>          <span class="ai-v">home_primary</span></div>
+              <div class="ai-ln"><span class="ai-k">max_count</span>     <span class="ai-v">1 — 복수 카드 동시 렌더링 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">data_required</span> <span class="ai-v">[customer_status, pending_action, recent_event]</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ETR_rule1_do_phone.png" alt="DO — ProactiveMicroTaskCard 1개">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 퍼플 블록</span> <span class="ai-v">ProactiveMicroTaskCard — 메시지 + CTA 1개</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 회색 블록</span> <span class="ai-v">secondary_content (dimmed) — 인터랙션 비활성</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객 상황과 무관한 콘텐츠를 <strong>개인화 없이 동등하게 나열하지 않습니다.</strong></p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">static_home_layout — 고정 타일·범용 배너 동등 가중치 나열</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">customer_data.available == false OR pending_action == null</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>   <span class="ai-v">ProactiveMicroTaskCard 미표시 → static_home_layout 렌더링</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ETR_rule1_dont_phone.png" alt="DON'T — static_tile_list">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">static_tile_list — 동등 가중치 카드 구조</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">고객 데이터 미반영 → 우선순위 없음 → 탐색 부담 증가</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+
+    <!-- ★ 보완 2: 변수 맵 설명 배너 -->
+    <div class="supplement-banner2" style="margin: 0;">
+      <span class="supplement-badge2">SUPPLEMENT 2</span>
+      <p>각 시나리오 카피의 <strong style="color:var(--var-key)">변수(녹색)</strong>는 variable_map에 정의된 API 필드와 1:1 매핑됩니다. fallback이 <code style="font-family:var(--mono);font-size:0.9em">null</code>인 변수가 미존재하면 해당 카드 전체를 렌더링하지 않습니다.</p>
+    </div>
+
+    <div class="scen-strip">
+      <img src="assets/ETR_rule1_scen_strip.png" alt="시나리오 3종">
+    </div>
+
+    <div class="scen-anns col3">
+
+      <!-- ① 요청받은 데이터 선물 -->
+      <div class="scen-ann">
+        <span class="scen-label">요청받은 데이터 선물</span>
+
+        <!-- priority 배지 -->
+        <div class="layer-row" style="margin-bottom:10px;">
+          <span class="pri-badge">PRIORITY 1</span>
+          <div class="pri-blk" style="margin-top:0;">
+            <div class="ai-ln"><span class="ai-k" style="color:var(--pri-key);">선택 이유</span><span class="ai-v" style="color:#3D2800;">가족 요청은 명시적 수신 이벤트 — 고객이 이미 인지한 상태이므로 응답 우선</span></div>
+          </div>
+        </div>
+
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">자녀</span>가 데이터 요청을 보냈어요."<br>CTA: "지금 바로 선물하기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">family_data_request.pending == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"{family.name}이(가) 데이터 요청을 보냈어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>      <span class="ai-v">"지금 바로 선물하기" → action: data_gift_flow</span></div>
+              <div class="ai-ln"><span class="ai-k">target</span>   <span class="ai-v">{family.member_id}</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ★ variable_map -->
+        <div class="vm-badge">VARIABLE MAP</div>
+        <div class="var-map-blk">
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:140px;">{family.name}</span>
+            <span class="ai-v" style="color:#1A3020;">api: family_api → members[0].name &nbsp;|&nbsp; type: string &nbsp;|&nbsp; fallback: "가족"</span>
+          </div>
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:140px;">{family.member_id}</span>
+            <span class="ai-v" style="color:#1A3020;">api: family_api → members[0].id &nbsp;|&nbsp; type: string &nbsp;|&nbsp; fallback: null → 카드 미표시</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 약정 만료 임박 -->
+      <div class="scen-ann">
+        <span class="scen-label">약정 만료 임박</span>
+
+        <div class="layer-row" style="margin-bottom:10px;">
+          <span class="pri-badge">PRIORITY 2</span>
+          <div class="pri-blk" style="margin-top:0;">
+            <div class="ai-ln"><span class="ai-k" style="color:var(--pri-key);">선택 이유</span><span class="ai-v" style="color:#3D2800;">기간 제한 이벤트 — 만료 7일 이내 시간 민감도 높음</span></div>
+          </div>
+        </div>
+
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"약정 만료 <span class="v">7일</span> 전, VIP <span class="v">민선님</span>은 지금 기기 변경하면 최대 <span class="v">55만 원</span> 할인받아요."<br>CTA: "기기변경비교하기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">contract.days_until_expiry ≤ 7</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"약정 만료 {contract.days_until_expiry}일 전, {user.grade} {user.name}님은 지금 기기 변경하면 최대 {benefit.max_discount}원 할인받아요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>      <span class="ai-v">"기기변경비교하기" → action: device_change_comparison</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ★ variable_map -->
+        <div class="vm-badge">VARIABLE MAP</div>
+        <div class="var-map-blk">
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:200px;">{contract.days_until_expiry}</span>
+            <span class="ai-v" style="color:#1A3020;">api: contract_api → current.days_until_expiry &nbsp;|&nbsp; type: integer &nbsp;|&nbsp; fallback: null → 카드 미표시</span>
+          </div>
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:200px;">{user.grade}</span>
+            <span class="ai-v" style="color:#1A3020;">api: customer_api → profile.grade &nbsp;|&nbsp; type: string &nbsp;|&nbsp; fallback: "" (생략)</span>
+          </div>
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:200px;">{user.name}</span>
+            <span class="ai-v" style="color:#1A3020;">api: customer_api → profile.name &nbsp;|&nbsp; type: string &nbsp;|&nbsp; fallback: "고객"</span>
+          </div>
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:200px;">{benefit.max_discount}</span>
+            <span class="ai-v" style="color:#1A3020;">api: benefit_api → device_change.max_discount &nbsp;|&nbsp; type: integer &nbsp;|&nbsp; fallback: null → 금액 문구 생략</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ 혜택 사용 -->
+      <div class="scen-ann">
+        <span class="scen-label">혜택 사용</span>
+
+        <div class="layer-row" style="margin-bottom:10px;">
+          <span class="pri-badge">PRIORITY 3</span>
+          <div class="pri-blk" style="margin-top:0;">
+            <div class="ai-ln"><span class="ai-k" style="color:var(--pri-key);">선택 이유</span><span class="ai-v" style="color:#3D2800;">맥락 기반 실시간 이벤트 — 결제 대기 상태가 해소되면 자동 소멸</span></div>
+          </div>
+        </div>
+
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"지금 <span class="v">파리바게뜨</span> 결제 대기 중이신가요? 적립혜택 놓치지 마세요."<br>CTA: "바코드 열기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">payment.status == pending AND nearby_benefit.applicable == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"지금 {nearby_benefit.partner_name} 결제 대기 중이신가요? 적립혜택 놓치지 마세요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>      <span class="ai-v">"바코드 열기" → action: benefit_barcode_open</span></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ★ variable_map -->
+        <div class="vm-badge">VARIABLE MAP</div>
+        <div class="var-map-blk">
+          <div class="ai-ln">
+            <span class="ai-k" style="color:var(--var-key);min-width:200px;">{nearby_benefit.partner_name}</span>
+            <span class="ai-v" style="color:#1A3020;">api: benefit_api → nearby.partner_name &nbsp;|&nbsp; type: string &nbsp;|&nbsp; fallback: null → 카드 미표시</span>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /scen-anns -->
+  </div><!-- /scen-section -->
+
+</div><!-- /pattern-card -->
+</div><!-- /pattern-wrap -->
+
+<div style="height:40px;"></div>
+
+</body>
+</html>

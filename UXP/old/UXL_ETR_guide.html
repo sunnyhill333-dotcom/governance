@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_ETR — 진입 | UX Principle Guide</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+
+  --bg-outer:   #E8E8E8;
+  --bg-card:    #FFFFFF;
+  --bg-section: #F5F5F5;
+  --bg-dark:    #2C2C2C;
+
+  --badge-behavior: #3C3C3C;
+  --badge-asis:     #C62828;
+  --badge-tobe:     #5135C8;
+  --badge-pattern:  #EBEBEB;
+
+  --purple:   #7C57FF;
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+
+  --border:   rgba(0,0,0,0.07);
+}
+
+html { font-size: 15px; }
+
+body {
+  font-family: var(--font);
+  background: var(--bg-outer);
+  color: var(--text);
+  line-height: 1.65;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── 헤더 이미지 (원본 그대로) ── */
+.doc-header img {
+  display: block;
+  width: 100%;
+}
+
+/* ── 패턴 섹션 외곽 ── */
+.pattern-wrap {
+  padding: 24px 40px;
+}
+
+.pattern-card {
+  background: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ── UX Principle Details 상단 ── */
+.section-label {
+  padding: 28px 40px 0;
+  font-size: 13px;
+  color: var(--text-dim);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+}
+
+/* ── 텍스트 메타 블록 ── */
+.meta-block {
+  padding: 20px 40px 0;
+}
+
+.pattern-badge {
+  display: inline-block;
+  background: var(--badge-pattern);
+  color: #333;
+  border-radius: 8px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+}
+
+.pattern-heading {
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+
+.pattern-desc {
+  font-size: 14px;
+  color: var(--text-sub);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  max-width: 900px;
+}
+
+/* ── BEHAVIOR / AS-IS / TO-BE 뱃지 행 ── */
+.badge-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.badge-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  line-height: 1.65;
+}
+
+.badge {
+  display: inline-block;
+  color: white;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 6px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.badge.behavior { background: var(--badge-behavior); }
+.badge.asis     { background: var(--badge-asis); }
+.badge.tobe     { background: var(--badge-tobe); }
+
+.badge-row p { color: var(--text-sub); }
+.badge-row strong { color: var(--text); font-weight: 700; }
+
+/* ── AI 메타데이터 블록 (신규) ── */
+.ai-meta {
+  margin: 0 40px 28px;
+  background: #F0F4FF;
+  border-left: 3px solid #7C57FF;
+  border-radius: 0 8px 8px 0;
+  padding: 10px 16px;
+  font-size: 12px;
+  color: #3A3A5C;
+  line-height: 1.8;
+}
+.ai-meta-row {
+  display: flex;
+  gap: 8px;
+}
+.ai-key {
+  font-weight: 700;
+  color: #5135C8;
+  min-width: 110px;
+  flex-shrink: 0;
+}
+.ai-val code {
+  font-family: 'Menlo', 'Consolas', monospace;
+  font-size: 11.5px;
+  background: rgba(93,71,204,0.1);
+  border-radius: 4px;
+  padding: 1px 5px;
+}
+
+/* ── 비주얼 이미지 (RULE + Scenario) ── */
+.visual-block img {
+  display: block;
+  width: 100%;
+}
+
+/* ── 섹션 구분선 ── */
+.section-divider {
+  height: 2px;
+  background: var(--bg-outer);
+}
+
+/* ── 반응형 ── */
+@media (max-width: 900px) {
+  .pattern-wrap { padding: 16px 20px; }
+  .meta-block, .section-label { padding-left: 24px; padding-right: 24px; }
+  .ai-meta { margin-left: 24px; margin-right: 24px; }
+  .pattern-heading { font-size: 22px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════
+  문서 헤더 (원본 이미지 그대로)
+════════════════════════════════════════════ -->
+<div class="doc-header">
+  <img src="assets/ETR_header.png" alt="UXL_ETR 헤더 — 진입의 고객 경험 원칙 정의">
+</div>
+
+
+<!-- ════════════════════════════════════════════
+  UXL_ETR_1 — 상태 기반 선제적 대응
+════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_1</div>
+    <h2 class="pattern-heading">1-1. 상태 기반 선제적 대응</h2>
+    <p class="pattern-desc">
+      진입 시점의 고객 데이터를 기반으로 상태를 진단해, 당장 확인이 필요한 알림이나 개인화된 맞춤 태스크를 최우선으로 노출해야 합니다.
+    </p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="badge behavior">BEHAVIOR</span>
+        <p>고객은 앱 진입 시 전체 메뉴를 탐색하기보다 <strong>당장 필요한 기능이나 상태 확인</strong>부터 시도합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="badge asis">AS-IS</span>
+        <p>진입 시 일반화된 홈 구조로 인해 <strong>고객은 자신의 상황과 무관한 정보</strong> 속에서 필요한 행동을 다시 찾아야 합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="badge tobe">TO-BE</span>
+        <p>C360 및 행동/의도 데이터 기반으로 현재 상황(이벤트, 사용 상태, 행동 트리거)을 즉시 해석하고, <strong>고객별로 다른 우선순위의 마이크로 태스크를 선제적으로 노출</strong>해야 합니다. 이는 '<strong>고객의 의도를 기반으로 UX를 동적으로 재구성</strong>'하는 구조로 이어져야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 메타데이터 -->
+  <div class="ai-meta">
+    <div class="ai-meta-row"><span class="ai-key">pattern_id</span>    <span class="ai-val"><code>UXL_ETR_1</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">screen_type</span>   <span class="ai-val"><code>home_entry</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">trigger</span>        <span class="ai-val"><code>session.start</code> AND <code>customer_data.available == true</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">output_component</span><span class="ai-val"><code>ProactiveMicroTaskCard</code> → slot: <code>home_primary</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">input_data</span>     <span class="ai-val">customer_status, pending_event, recent_action_trigger</span></div>
+    <div class="ai-meta-row"><span class="ai-key">suppressed_when</span><span class="ai-val"><code>customer_data.available == false</code> → fallback: static_home_layout</span></div>
+  </div>
+
+  <!-- 비주얼 블록: RULE 1 + DO/DON'T 프레임 + Scenario (원본 이미지) -->
+  <div class="visual-block">
+    <img src="assets/ETR_etr1_visual.png"
+         alt="UXL_ETR_1 RULE 및 시나리오 — Do: 고객 상태 기반 단일 태스크 노출 / Don't: 상황 무관 콘텐츠 동일 구조 노출 / Scenario: 요청받은 데이터 선물, 약정 만료 임박, 혜택 사용">
+  </div>
+
+</div><!-- /pattern-card -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ════════════════════════════════════════════
+  UXL_ETR_2 — 끊김 없는 여정 재개
+════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_2</div>
+    <h2 class="pattern-heading">1-2. 끊김 없는 여정 재개</h2>
+    <p class="pattern-desc">
+      이전에 완료하지 못했던 여정(구매, 개통, 혜택 활성화 등)이 있다면, 진입 첫 화면에서 해당 지점으로 바로 이어갈 수 있도록 단일 재개 CTA를 제공해야 합니다.
+    </p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="badge behavior">BEHAVIOR</span>
+        <p>고객은 구매, 개통, 혜택 활성화 등 <strong>중단된 작업을 다시 찾기 위해 여러 화면을 반복 탐색</strong>합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="badge asis">AS-IS</span>
+        <p>이전 행동 맥락이 유지되지 않아 고객이 어디까지 진행했는지 기억에 의존해야 하며, <strong>이탈 가능성이 높아집니다.</strong></p>
+      </div>
+      <div class="badge-row">
+        <span class="badge tobe">TO-BE</span>
+        <p>직전 행동 데이터와 <strong>태스크 단계(탐색-비교-결정-실행)</strong>를 기반으로 중단 지점을 정확히 복원하고, 진입 즉시 이어서 실행할 수 있는 <strong>단일 경로</strong>를 제공해야 합니다. 이는 고객의 흐름을 끊지 않는 <strong>Intent 기반 Action</strong> 설계로 연결되어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 메타데이터 -->
+  <div class="ai-meta">
+    <div class="ai-meta-row"><span class="ai-key">pattern_id</span>    <span class="ai-val"><code>UXL_ETR_2</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">screen_type</span>   <span class="ai-val"><code>home_entry</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">trigger</span>        <span class="ai-val"><code>session.start</code> AND <code>incomplete_task.exists == true</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">output_component</span><span class="ai-val"><code>ResumeBanner</code> → slot: <code>home_top</code> (홈 진입 첫 화면 상단 고정)</span></div>
+    <div class="ai-meta-row"><span class="ai-key">input_data</span>     <span class="ai-val">incomplete_task.type, incomplete_task.step, saved_form_data</span></div>
+    <div class="ai-meta-row"><span class="ai-key">behavior_rule</span>  <span class="ai-val">입력/선택 정보 유지 상태로 중단 단계에서 즉시 재개 — 초기화 금지</span></div>
+    <div class="ai-meta-row"><span class="ai-key">suppressed_when</span><span class="ai-val"><code>incomplete_task.exists == false</code> → ResumeBanner 미표시</span></div>
+  </div>
+
+  <!-- 비주얼 블록: RULE 2 + DO/DON'T 프레임 + Scenario (원본 이미지) -->
+  <div class="visual-block">
+    <img src="assets/ETR_etr2_visual.png"
+         alt="UXL_ETR_2 RULE 및 시나리오 — Do: 중단 태스크를 단일 진입점으로 복원 / Don't: 이전 행동 맥락 삭제/초기화 / Scenario: 이어하기 플로우 3단계, 후속 행동 선제 제안">
+  </div>
+
+</div>
+</div>
+
+
+<!-- ════════════════════════════════════════════
+  UXL_ETR_3 — 구조적 명확성
+════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_3</div>
+    <h2 class="pattern-heading">1-3. 구조적 명확성</h2>
+    <p class="pattern-desc">
+      진입 후 어느 탭으로 전환하더라도 현재 위치와 맥락을 명확히 인지할 수 있도록, GNB 구조와 화면 위계를 일관되게 유지해야 합니다.
+    </p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="badge behavior">BEHAVIOR</span>
+        <p>고객은 탭 이동이나 기능 전환 시 <strong>현재 위치와 맥락을 다시 해석하려고 시도</strong>합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="badge asis">AS-IS</span>
+        <p>구조와 네비게이션이 일관되지 않으면 고객은 매 화면마다 새롭게 이해해야 하며, <strong>인지 부담이 누적</strong>됩니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="badge tobe">TO-BE</span>
+        <p>자산 유형이나 기능이 달라도 <strong>동일한 구조 원리</strong>를 유지하고, <strong>현재 위치·상태·맥락을 항상 명확하게 드러내야</strong> 합니다. 화면마다 해석 없이 위치를 즉시 인지할 수 있는 Frictionless Navigation을 제공해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- AI 메타데이터 -->
+  <div class="ai-meta">
+    <div class="ai-meta-row"><span class="ai-key">pattern_id</span>    <span class="ai-val"><code>UXL_ETR_3</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">screen_type</span>   <span class="ai-val"><code>any_tab</code> (GNB_홈 / GNB_혜택 / GNB_쇼핑 / GNB_나의T)</span></div>
+    <div class="ai-meta-row"><span class="ai-key">trigger</span>        <span class="ai-val"><code>tab_navigation</code> OR <code>feature_transition</code></span></div>
+    <div class="ai-meta-row"><span class="ai-key">output_component</span><span class="ai-val"><code>GNBLayout</code> → 고정 구조: 타이틀 영역 / 콘텐츠 영역 / 퀵메뉴</span></div>
+    <div class="ai-meta-row"><span class="ai-key">layout_rule</span>   <span class="ai-val">모든 탭은 동일한 위계(타이틀→콘텐츠→퀵메뉴)를 유지 — 탭별 커스텀 구조 금지</span></div>
+    <div class="ai-meta-row"><span class="ai-key">state_visible</span> <span class="ai-val">현재 활성 탭 명시 필수 / 이전 컨텍스트 소실 금지</span></div>
+  </div>
+
+  <!-- 비주얼 블록: RULE 3 + DO/DON'T 프레임 + Scenario (원본 이미지) -->
+  <div class="visual-block">
+    <img src="assets/ETR_etr3_visual.png"
+         alt="UXL_ETR_3 RULE 및 시나리오 — Do: 모든 화면 동일 구조 원리 / Don't: 화면마다 다른 UI 구조 / Scenario: GNB_홈, GNB_혜택, GNB_쇼핑 탭 전환 시 타이틀·콘텐츠·퀵메뉴 위계 유지">
+  </div>
+
+</div>
+</div>
+
+
+</body>
+</html>

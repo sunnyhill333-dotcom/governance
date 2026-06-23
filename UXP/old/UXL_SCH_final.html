@@ -1,0 +1,912 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_SCH — 검색 | UX Principle Guide</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer:  #E8E8E8;
+  --gray-card:   #F5F5F5;
+  --white:       #FFFFFF;
+  --border:      rgba(0,0,0,0.07);
+
+  --badge-do:    #2E7D32;
+  --badge-dont:  #C62828;
+  --badge-rule:  #1A1A1A;
+  --badge-beh:   #3C3C3C;
+  --badge-asis:  #C62828;
+  --badge-tobe:  #5135C8;
+  --badge-pat:   #E0E0E0;
+
+  --human-bg:    #3C3C3C;
+  --ai-bg:       #5135C8;
+
+  --ai-bg-block: #F0EDFF;
+  --ai-border:   #7C57FF;
+  --ai-key-col:  #5135C8;
+
+  --var-color:   #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0; padding: 0;
+}
+
+/* ── 문서 헤더 ── */
+.doc-header-css {
+  background: #111111;
+  padding: 48px 60px 44px;
+  color: white;
+}
+.doc-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.doc-eyebrow-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: #AAAAAA; background: rgba(255,255,255,0.08);
+  padding: 3px 10px; border-radius: 6px;
+}
+.doc-eyebrow-sep { color: #444; font-size: 12px; }
+.doc-eyebrow-cat { font-size: 11px; color: #777; font-weight: 500; }
+.doc-header-css h1 {
+  font-size: 32px; font-weight: 800; letter-spacing: -0.035em;
+  line-height: 1.25; margin-bottom: 14px;
+}
+.doc-header-css p {
+  font-size: 14px; color: #AAAAAA; line-height: 1.75;
+  max-width: 620px; margin-bottom: 28px;
+}
+.doc-pattern-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.doc-pattern-chip {
+  font-size: 12px; font-weight: 600; color: #CCCCCC;
+  background: rgba(255,255,255,0.07);
+  padding: 6px 16px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.doc-pattern-chip.active {
+  color: #C4B8FF; background: rgba(81,53,200,0.28);
+  border-color: rgba(81,53,200,0.5);
+}
+
+/* ── 패턴 섹션 래퍼 ── */
+.pattern-wrap { padding: 20px 36px; }
+.pattern-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ── 패턴 메타 ── */
+.section-label { font-size: 13px; color: var(--text-dim); padding: 24px 36px 0; }
+.meta-block { padding: 16px 36px 0; }
+.pattern-badge {
+  display: inline-block; background: var(--badge-pat); color: #333;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 12px; border-radius: 8px; margin-bottom: 12px;
+}
+.pattern-heading {
+  font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px;
+}
+.pattern-desc {
+  font-size: 13.5px; color: var(--text-sub); line-height: 1.7;
+  margin-bottom: 20px; max-width: 96%;
+}
+
+/* BEHAVIOR / AS-IS / TO-BE */
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row p strong { color: var(--text); font-weight: 700; }
+.obadge {
+  display: inline-block; color: white; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.04em; border-radius: 5px; padding: 3px 7px;
+  white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.obadge.beh  { background: var(--badge-beh); }
+.obadge.asis { background: var(--badge-asis); }
+.obadge.tobe { background: var(--badge-tobe); }
+
+/* ── 패턴 레벨 AI 메타 ── */
+.pattern-ai-meta {
+  margin: 0 36px 24px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.pattern-ai-meta .ai-ln { font-size: 11.5px; }
+.pattern-ai-meta .ai-k  { min-width: 130px; }
+
+/* ── Human / AI 배지 ── */
+.lbadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 9px; font-weight: 800; letter-spacing: 0.05em;
+  color: white; padding: 2px 7px; border-radius: 4px; margin-top: 2px; min-width: 34px;
+}
+.lbadge.h { background: var(--human-bg); }
+.lbadge.a { background: var(--ai-bg); }
+
+/* ── 레이어 블록 ── */
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+.v { color: var(--var-color); font-weight: 600; }
+
+/* AI 인라인 블록 */
+.ai-blk {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px; flex: 1;
+}
+.ai-ln { display: flex; gap: 8px; font-size: 11px; line-height: 1.65; font-family: var(--mono); }
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+
+/* 와이어프레임 어노테이션 */
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; }
+.wire-ann .ai-ln  { font-size: 10.5px; }
+.wire-ann .ai-k   { min-width: 90px; }
+
+/* ── RULE 섹션 ── */
+.rule-section { background: var(--gray-card); border-top: 1px solid var(--border); }
+.rule-header { padding: 22px 36px 0; }
+.rule-badge {
+  display: inline-flex; align-items: center; background: var(--badge-rule);
+  color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 6px; margin-bottom: 10px;
+}
+
+/* DO / DON'T */
+.do-dont {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border); margin-top: 18px;
+}
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col   { background: #FAFFFE; }
+.dont-col { background: #FFFAFA; }
+.do-badge, .dont-badge {
+  display: inline-flex; color: white; font-size: 12px; font-weight: 700;
+  padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+.clip { overflow: hidden; }
+.clip img { display: block; width: 100%; }
+
+/* ── Scenario 섹션 ── */
+.scen-section { background: var(--white); border-top: 1px solid var(--border); }
+.scen-heading {
+  font-size: 13.5px; font-weight: 700;
+  padding: 20px 36px 0; margin-bottom: 0;
+}
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+.scen-anns {
+  display: grid; gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.scen-anns.col2 { grid-template-columns: 1fr 1fr; }
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-anns.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.scen-ann { background: var(--white); padding: 18px 22px; }
+.scen-label {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  color: #555; background: #EBEBEB; border-radius: 20px;
+  padding: 3px 12px; margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════
+  문서 헤더
+══════════════════════════════════════════════ -->
+<div class="doc-header-css">
+  <div class="doc-eyebrow">
+    <span class="doc-eyebrow-tag">UXL</span>
+    <span class="doc-eyebrow-sep">·</span>
+    <span class="doc-eyebrow-cat">3. 검색 — 검색 화면의 고객 경험 원칙 정의</span>
+  </div>
+  <h1>UXL_SCH — 검색</h1>
+  <p>고객의 검색 의도를 정확히 이해하고 가장 적합한 결과를 즉시 제시해, 원하는 정보에 최단 경로로 도달하도록 설계합니다.</p>
+  <div class="doc-pattern-chips">
+    <span class="doc-pattern-chip active">의도 분석 탐색</span>
+    <span class="doc-pattern-chip active">맥락 적합 결과 제시</span>
+    <span class="doc-pattern-chip active">검색 내 즉시 행동 유도</span>
+    <span class="doc-pattern-chip active">결과 신뢰성 및 투명성 확보</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_SCH_1 — 의도 중심 검색 해석
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_SCH_1</div>
+    <h2 class="pattern-heading">3-1. 의도 중심 검색 해석</h2>
+    <p class="pattern-desc">키워드 검색 시 단순 문자열 매칭이 아닌 고객의 이용 맥락을 반영하고, 자연어 입력 시 의도가 복수로 해석될 수 있는 쿼리에는 후속 질문이나 추천 검색어를 자연스럽게 제안하여 검색 정확도를 높여야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 키워드를 입력하고 여러 검색 결과를 탐색하며 원하는 정보를 직접 찾아야 합니다. <strong>의도가 명확하지 않은 경우 여러 번 검색을 반복</strong>합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>검색이 순수 문자열 매칭으로만 동작하여 <strong>고객의 상황이나 맥락이 반영되지 않습니다.</strong> 자연어 입력이나 모호한 검색 의도는 정확히 해석되지 못합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객의 이용 맥락과 입력 의도를 함께 해석해 <strong>검색 유형에 맞는 탐색 방식으로 연결</strong>해야 합니다. 의도가 명확하지 않은 경우에는 후속 질문이나 추천 검색어를 통해 의도를 구체화해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_SCH_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">search_result</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>         <span class="ai-v">search.input_text IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>          <span class="ai-v">SearchResultPage → slot: search_primary, state: intent_resolved</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>      <span class="ai-v">search_query (manual), search_type (natural_language | keyword), user_context (profile)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>        <span class="ai-v">search_type unresolvable → keyword_search_result as default</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>검색 입력은 단순 키워드가 아니라 <strong>고객 의도를 기반으로 해석</strong>하고, 검색 유형에 따라 적절한 탐색 방식으로 연결해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>     <span class="ai-v">UXL_SCH_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">condition</span>   <span class="ai-v">search_type == 'natural_language' OR search_type == 'keyword'</span></div>
+            <div class="ai-ln"><span class="ai-k">route_NL</span>    <span class="ai-v">agent_conversation_flow (의도 해석 → 질문 기반 탐색)</span></div>
+            <div class="ai-ln"><span class="ai-k">route_KW</span>    <span class="ai-v">integrated_search_result_page (personalized_ranking + 추천 검색어)</span></div>
+            <div class="ai-ln"><span class="ai-k">ambiguous</span>   <span class="ai-v">search_intent IS ambiguous → followup_question OR recommend_search_terms</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>검색 유형을 구분해 고객 맥락에 맞는 탐색 방향을 제안합니다. 자연어 입력 시 에이전트 흐름으로, 키워드 입력 시 개인화 통합 결과로 연결합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">if NL query</span>   <span class="ai-v">→ agent_conversation_flow (intent clarification)</span></div>
+              <div class="ai-ln"><span class="ai-k">if KW query</span>   <span class="ai-v">→ integrated_search_result + personalized_ranking</span></div>
+              <div class="ai-ln"><span class="ai-k">if ambiguous</span>  <span class="ai-v">→ render clarification_question + recommended_search_terms</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_1_rule1_do_phone.png" alt="DO — intent_resolved: 자연어·키워드 유형별 탐색 경로 연결">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">에이전트 대화 흐름 — 자연어 의도 해석 및 질문 기반 탐색</span></div>
+            <div class="ai-ln"><span class="ai-k">라이트 블록</span><span class="ai-v">개인화 통합 검색 결과 — 맥락 기반 우선순위 정렬</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>검색 유형 구분 없이 동일한 방식으로 처리하지 않습니다. 자연어 쿼리에 단순 문자열 매칭을 적용하거나 의도가 모호한 경우 결과 없음 화면만 반환하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>      <span class="ai-v">NL query에 keyword string-matching 적용 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>      <span class="ai-v">ambiguous query → zero-result page without alternatives 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>    <span class="ai-v">→ agent_conversation_flow / clarification_question 제공</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_1_rule1_dont_phone.png" alt="DON'T — string_match_only: 맥락 무관 문자열 매칭 결과">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">단순 키워드 매칭 결과 — 개인 맥락·의도 미반영</span></div>
+            <div class="ai-ln"><span class="ai-k">단절 상태</span><span class="ai-v">모호한 쿼리에 대한 후속 안내 없이 결과만 나열</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1: 자연어 검색 / 키워드 검색 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 검색 유형별 탐색 경로 연결</p>
+    <div class="scen-strip">
+      <img src="assets/SCH_1_rule1_scen_strip.png" alt="SCH_1 Rule1 시나리오: 자연어 검색 → 에이전트 흐름 / 키워드 검색 → 통합결과">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">자연어 검색</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"기기 바꾸고 싶은데 최대 할인 받으려면?" 같은 자연어 입력 시, 에이전트 대화 흐름으로 연결해 질문 기반 탐색과 실행을 지원합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">search_type == 'natural_language'</span></div>
+              <div class="ai-ln"><span class="ai-k">route</span>      <span class="ai-v">agent_conversation_flow</span></div>
+              <div class="ai-ln"><span class="ai-k">example</span>    <span class="ai-v">"기기 바꾸고 싶은데 최대 할인 받으려면?"</span></div>
+              <div class="ai-ln"><span class="ai-k">output</span>     <span class="ai-v">intent clarification questions → 맥락 기반 추천 실행</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">키워드 검색</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"아이폰 21" 같은 키워드 입력 시, 개인화 순위가 적용된 통합 검색 결과 화면으로 연결하되 추천 검색어를 함께 제시해 이탈을 방지합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">search_type == 'keyword'</span></div>
+              <div class="ai-ln"><span class="ai-k">route</span>      <span class="ai-v">integrated_search_result_page</span></div>
+              <div class="ai-ln"><span class="ai-k">ranking</span>    <span class="ai-v">personalized_ranking (user_context 기반)</span></div>
+              <div class="ai-ln"><span class="ai-k">supplement</span> <span class="ai-v">추천 검색어 카드 + 관련 질문 제안</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card SCH_1 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_SCH_2 — 맞춤화된 결과 제시
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_SCH_2</div>
+    <h2 class="pattern-heading">3-2. 맥락 적합 결과 제시</h2>
+    <p class="pattern-desc">동일 키워드라도 고객마다 최적화된 결과와 순서를 제공하며, 검색 결과가 없거나 부족할 때도 대안 경로를 함께 제공해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 동일한 검색어에 대해 모든 결과를 확인하며 <strong>자신에게 맞는 정보를 직접 선별</strong>합니다. 결과가 없거나 부족한 경우 다시 검색하거나 이탈합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>검색 결과가 모든 고객에게 동일하게 제공되어 <strong>개인 상황에 맞지 않는 정보가 포함</strong>됩니다. 결과가 없을 경우 대안이 없어 탐색이 단절됩니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객의 이용 이력과 맥락에 따라 <strong>결과와 순서를 개인화</strong>해야 합니다. 결과가 없거나 부족한 경우에도 <strong>대안 경로를 함께 제공</strong>해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_SCH_2</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">search_result</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>         <span class="ai-v">search.query IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>          <span class="ai-v">PersonalizedSearchResult → slot: search_results, state: personalized</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>      <span class="ai-v">search_query, user_history (profile), user_context (profile)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>        <span class="ai-v">user_history unavailable → platform_ranked_result_list</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>검색 결과는 <strong>고객의 상황과 맥락에 맞춰 개인화된 구조</strong>로 제공해야 합니다. 결과가 없을 때도 대안 경로를 함께 제시합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>       <span class="ai-v">UXL_SCH_2_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if result > 0</span> <span class="ai-v">reorder result_list by user_context (usage_history + context)</span></div>
+            <div class="ai-ln"><span class="ai-k">if result == 0</span><span class="ai-v">render alternative_path_card + suggested_search_terms</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>        <span class="ai-v">identical result order for all users 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객의 이용 이력과 상태를 반영해 <strong>결과의 우선순위와 구성을 다르게 제공</strong>해야 합니다. 결과가 없는 경우 이어서 탐색할 수 있는 대안을 함께 제시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">sort</span>        <span class="ai-v">result_position_1 = most_relevant_item (user_context 기반)</span></div>
+              <div class="ai-ln"><span class="ai-k">zero_state</span> <span class="ai-v">alternative_path_card 렌더링 (suggested next steps 포함)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"이어서 검색해보세요" + 추천 검색어 카드</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_2_rule1_do_phone.png" alt="DO — personalized: 맥락 기반 우선순위 결과 재정렬">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">user_context 기반 최우선 결과 — 개인화 순위 적용</span></div>
+            <div class="ai-ln"><span class="ai-k">라이트 블록</span><span class="ai-v">이하 결과 목록 — 이용 이력 반영 정렬</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>모든 고객에게 동일한 결과와 순서를 일괄적으로 노출하지 않습니다. 결과가 없을 경우 대안 없이 빈 화면만 반환하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">platform_ranking 고정 순서 일괄 노출 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">result_count == 0 → empty state without guidance 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_2_rule1_dont_phone.png" alt="DON'T — static_ranking: 맥락 무관 동일 결과 노출">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">모든 고객 동일 순서 — 개인화 미적용</span></div>
+            <div class="ai-ln"><span class="ai-k">단절 상태</span><span class="ai-v">결과 없음 시 대안 경로 미제공</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1: 개인화 결과 / 결과 없음 대안 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 결과 유무별 처리 방식</p>
+    <div class="scen-anns col2" style="border-top:none;">
+      <div class="scen-ann">
+        <span class="scen-label">결과 있음 + 개인화 적용</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>이용 이력과 현재 상태를 기반으로 결과 우선순위를 재구성합니다. 같은 키워드라도 고객마다 상이한 결과 순서를 경험합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">user_history IS NOT NULL AND result_count > 0</span></div>
+              <div class="ai-ln"><span class="ai-k">action</span>    <span class="ai-v">result_list reorder by user.usage_history + user.context</span></div>
+              <div class="ai-ln"><span class="ai-k">position_1</span><span class="ai-v">most_relevant_item (personalized score 최상위)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">결과 없음 — 대안 경로</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>결과가 없을 때 빈 화면 대신 "이어서 검색해보세요"와 추천 검색어 카드를 제공해 탐색이 단절되지 않도록 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">result_count == 0</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">alternative_path_card</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"이어서 검색해보세요" + 추천 검색어 카드</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card SCH_2 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_SCH_3 — 결과 내 즉시 행동 유도
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_SCH_3</div>
+    <h2 class="pattern-heading">3-3. 맥락 내 즉시 행동 유도</h2>
+    <p class="pattern-desc">검색 결과를 단순 나열에 그치지 않고 각 항목에서 바로 실행 가능한 액션을 함께 제공하여, 검색에서 태스크 완료까지의 단계를 최소화해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 검색 결과를 확인한 뒤 <strong>상세 페이지로 이동해 추가 탐색을 수행한 후 행동</strong>합니다. 여러 단계를 거치며 이탈이 발생합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>검색 결과가 <strong>단순 정보 나열에 그쳐 행동까지 이어지지 않습니다.</strong> 고객은 결과 확인 이후 별도의 경로를 통해 다시 이동해야 합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>탐색과 실행 단계를 통합해 <strong>검색 결과에서 바로 실행 가능한 액션</strong>을 제공해야 합니다. 고객은 추가 탐색 없이 결과에서 바로 행동으로 이어질 수 있어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_SCH_3</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">search_result</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>         <span class="ai-v">search_result.item_count > 0</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>          <span class="ai-v">SearchResultItem → slot: search_results, condition: item.action_available == true, state: action_embedded</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>      <span class="ai-v">search_result_items (real_time_api), user_context (profile)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>        <span class="ai-v">action_available == false → render result_item without inline action</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>검색 결과 내에서 <strong>탐색과 실행이 분리되지 않도록</strong> 즉시 행동 가능한 구조를 제공해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>           <span class="ai-v">UXL_SCH_3_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if action_available</span><span class="ai-v">embed inline_action_button within result_item (no page nav)</span></div>
+            <div class="ai-ln"><span class="ai-k">if terminate</span>      <span class="ai-v">show termination_method_selector inline (즉시/예약 선택)</span></div>
+            <div class="ai-ln"><span class="ai-k">if subscribe</span>      <span class="ai-v">show subscription_cta inline + contextual copy</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>            <span class="ai-v">별도 action screen redirect 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>각 결과 항목에서 <strong>바로 실행 가능한 행동을 함께 제공</strong>해 추가 탐색 없이 완료까지 이어지도록 합니다. 결과 영역 내에서 즉시 실행할 수 있도록 구성합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">embed</span>        <span class="ai-v">inline_action_button (result_item 내부 포함)</span></div>
+              <div class="ai-ln"><span class="ai-k">sub_copy</span>     <span class="ai-v">"현재 {current_product}에 매달 {current_price}원 결제 중이에요."</span></div>
+              <div class="ai-ln"><span class="ai-k">offer_copy</span>   <span class="ai-v">"동일한 금액에 {benefit_desc}까지 포함된 구독 상품이 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_3_rule1_do_phone.png" alt="DO — action_embedded: 결과 항목 내 즉시 실행 가능한 인라인 액션">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">인라인 액션 영역 — 별도 화면 이동 없이 결과 내 즉시 실행</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 버튼</span><span class="ai-v">CTA — 해지/가입 등 행동 유도 버튼 result_item 내 포함</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>결과 확인 이후 별도의 화면 이동이나 추가 탐색을 요구하지 않습니다. 행동이 필요한 경우에도 결과 영역 내에서 즉시 처리될 수 있어야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">action required → separate action screen redirect 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">결과 나열 후 행동 진입 경로 미제공 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_3_rule1_dont_phone.png" alt="DON'T — page_redirect: 결과 후 별도 화면 이동 요구">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">결과 목록만 나열 — 인라인 액션 미포함</span></div>
+            <div class="ai-ln"><span class="ai-k">단절 화살표</span><span class="ai-v">별도 상세 페이지 이동 필요 → 이탈 위험</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1: 구독 해지 인라인 / 구독 가입 인라인 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 결과 내 인라인 액션 유형</p>
+    <div class="scen-strip">
+      <img src="assets/SCH_3_rule1_scen_strip.png" alt="SCH_3 Rule1 시나리오: 구독 해지 인라인 선택 / 구독 가입 CTA 인라인">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">구독 해지 검색 결과</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>구독 해지 관련 검색 결과에서, 별도 화면 이동 없이 <strong>즉시해지·예약해지 선택을 인라인으로 제공</strong>합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">result_action == 'terminate_subscription'</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">termination_method_selector (즉시해지 | 예약해지) inline</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>       <span class="ai-v">"즉시해지는 지금 바로 종료되고, 예약해지는 이용 기간이 끝나는 날 해지돼요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">구독 상품 검색 결과</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>구독 상품 검색 결과에서, <strong>가입 CTA와 동일 금액 대비 혜택 비교를 인라인으로 제공</strong>해 탐색 없이 바로 결정할 수 있게 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">result_action == 'subscribe'</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">subscription_cta inline + benefit_comparison</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>       <span class="ai-v">"현재 {current_product}에 매달 {current_price}원 결제 중이에요. 동일한 금액에 {benefit_desc}까지 포함된 구독 상품이 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card SCH_3 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_SCH_4 — 결과 신뢰성 및 투명성 확보
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_SCH_4</div>
+    <h2 class="pattern-heading">3-4. 결과 신뢰성 및 투명성 확보</h2>
+    <p class="pattern-desc">AI 기반 개인화 검색 결과에 대해 고객이 왜 이 결과가 제시되었는지 이해할 수 있도록 근거를 간결하게 노출하고, 결과에 대한 신뢰를 형성해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 검색 결과가 왜 노출되었는지 이해하지 못한 채 <strong>결과를 수용하거나 의심</strong>합니다. 특히 개인화 결과에 대한 신뢰가 낮습니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>개인화 근거가 부족해 <strong>고객이 결과를 신뢰하기 어렵습니다.</strong> 이는 의사결정의 지연으로 이어집니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>결과가 도출된 이유를 간결하게 제공해 <strong>고객이 납득 가능한 구조</strong>를 만들어야 합니다. 결과에 대한 신뢰를 기반으로 행동이 이어지도록 설계합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_SCH_4</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">search_result</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>         <span class="ai-v">search_result.personalization_applied == true</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>          <span class="ai-v">PersonalizationRationale → slot: search_result_meta, state: visible</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>      <span class="ai-v">personalization_reason (real_time_api)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>        <span class="ai-v">personalization_reason unavailable → render result without rationale label</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>검색 결과는 <strong>고객이 납득할 수 있는 근거와 함께 제공</strong>되어야 합니다. 결과가 도출된 이유를 고객의 맥락과 연결해 간결하게 설명합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>            <span class="ai-v">UXL_SCH_4_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if personalized</span>   <span class="ai-v">render brief rationale_label (user_context 연결)</span></div>
+            <div class="ai-ln"><span class="ai-k">if AI_recommend</span>   <span class="ai-v">render reasoning_snippet (usage_history | contract_status 기반)</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>             <span class="ai-v">"recommended for you" 단독 레이블 금지 (구체적 맥락 명시 필수)</span></div>
+            <div class="ai-ln"><span class="ai-k">copy_template</span>     <span class="ai-v">"{user.contract_years}년 장기 고객 기준 최대 {max_discount}원 특별 혜택이 있어요"</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>결과가 제시된 이유를 <strong>고객의 맥락과 연결해 간결하게 설명</strong>합니다. "장기 고객 기준", "이용 이력 기반" 등 구체적 근거를 레이블로 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">rationale</span>   <span class="ai-v">PersonalizationRationale 컴포넌트 → result 상단 레이블</span></div>
+              <div class="ai-ln"><span class="ai-k">context_link</span><span class="ai-v">user_context (contract_years, usage_history) → 레이블 텍스트에 반영</span></div>
+              <div class="ai-ln"><span class="ai-k">example</span>     <span class="ai-v">"SKT 추가 혜택 (장기 고객 {N}년)"</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_4_rule1_do_phone.png" alt="DO — rationale_visible: 개인화 근거 레이블 노출">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 레이블</span><span class="ai-v">PersonalizationRationale — 고객 맥락 기반 추천 근거 표시</span></div>
+            <div class="ai-ln"><span class="ai-k">체크 아이콘</span><span class="ai-v">신뢰 형성 — 고객이 납득할 수 있는 구체적 이유 제공</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>근거 없이 결과만 제시하거나 판단 이유를 숨기지 않습니다. "추천" 레이블만으로 고객이 직접 이유를 추정하게 하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">personalized result에 근거 레이블 미노출 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">opaque "추천" 레이블만 표시 금지 (구체 맥락 명시 필수)</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/SCH_4_rule1_dont_phone.png" alt="DON'T — opaque_result: 근거 없는 결과 나열">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">결과만 나열 — 개인화 근거 미표시</span></div>
+            <div class="ai-ln"><span class="ai-k">불투명 상태</span><span class="ai-v">고객이 왜 이 결과가 노출됐는지 알 수 없음</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1: 장기 고객 / AI 추천 근거 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 개인화 근거 표시 방식</p>
+    <div class="scen-anns col2" style="border-top:none;">
+      <div class="scen-ann">
+        <span class="scen-label">장기 고객 혜택 근거</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>장기 고객 기준으로 개인화된 결과에는 "SKT 추가 혜택 (장기 고객 N년)" 레이블을 표시해 신뢰를 형성합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">personalization_applied == true AND user.contract_years > 0</span></div>
+              <div class="ai-ln"><span class="ai-k">label</span>      <span class="ai-v">"SKT 추가 혜택 (장기 고객 {contract_years}년)"</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>       <span class="ai-v">"{contract_years}년 장기 고객 기준 최대 {max_discount}원 특별 혜택이 있어요"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">AI 맞춤 추천 근거</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>AI 추천 결과에는 사용 이력 기반 추천 이유 스니펫을 표시해 고객이 추천의 근거를 납득할 수 있도록 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">AI_recommendation == true</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">reasoning_snippet (usage_history | contract_status 기반)</span></div>
+              <div class="ai-ln"><span class="ai-k">example</span>    <span class="ai-v">"최근 {product}을 자주 이용하셨는데, 함께 쓰면 {saving}원 절약돼요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card SCH_4 -->
+</div><!-- /pattern-wrap -->
+
+
+</body>
+</html>

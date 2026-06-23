@@ -1,0 +1,7 @@
+
+
+.wiki-content h2 {border-bottom: 1px solid;}
+
+#main > div.pagebody.user-profile > div.tabs-pane.active-pane.aui-tabs-legacy.admin-double.profile-page > div > div.page-item.profile-main > form[name="changepassword"] {  
+		display: none;  
+	}

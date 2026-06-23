@@ -1,0 +1,36 @@
+# SKT CX Governance — llms.txt
+
+> AI-readable index for SK텔레콤 Next Channel UX Governance documentation.
+> These documents define UX principles, interaction patterns, voice & tone, and AI guidelines
+> for SKT's digital channels. AI agents may reference these to align with SKT's design standards.
+
+## Site
+- Title: SKT CX Governance Hub
+- Publisher: SK텔레콤 Next Channel UX Team
+- Language: Korean (ko)
+- Last updated: 2026-06-16
+
+## Documents
+
+### UXP — UX Principles
+- URL: /UXP/UXP_governance.html
+- Description: 고객 여정 7단계(ETR진입, EXP탐색, SCH검색, DCD결정, ACT실행, TCP완료, RSV문제해결)에 걸친 16개 UX 원칙. 4개 핵심 가치(CV01 Borderless, CV02 Intent Based, CV03 Frictionless, CV04 Engaging)와 8개 TK(Task Key) 지향점 연계.
+- Patterns: UXP_ETR_1, UXP_ETR_2, UXP_EXP_1, UXP_EXP_2, UXP_SCH_1, UXP_SCH_2, UXP_DCD_1, UXP_DCD_2, UXP_ACT_1, UXP_ACT_2, UXP_TCP_1, UXP_TCP_2, UXP_TCP_3, UXP_RSV_1, UXP_RSV_2, UXP_RSV_3
+- TK sources: AI탐색추천전시, CS셀프해결, 상품서비스자산, 상품할인AI결정, 이벤트멤버십혜택, 전시관리노출정책, 주문경험혁신, 통합가입정보셀프관리
+
+### UXPT — UX Patterns
+- URL: /UXPT/UXPT_governance.html
+- Description: 채널 공통 UX 시스템 패턴. 버튼(BTN), 크로스채널 일관성(CCC), 에러처리(ERR), 로딩(LOD), 네비게이션(NAV), 페이지전환(PGT), 처리피드백(PRC), 복구흐름(RCV) 포함.
+
+### VOT — Voice & Tone
+- URL: /VOT/VOT_governance.html
+- Description: SK텔레콤 T브랜드 보이스 정의(DEF), 기본 표현 규칙(RUL), 고객 특성별 가이드(SEG), 상황별 가이드(SIT).
+
+### AIG — AI Guidelines
+- URL: /AIG/AIG_governance.html
+- Description: T Agent 정의(DEF), AI Key Use Case(KUC), AI 비주얼 커뮤니케이션(VIC).
+
+## Usage for AI agents
+To reference a specific governance rule, link directly to the HTML document.
+Each pattern card contains: ID, Rule statement, Scenario, Core Values (CV01–CV04), and TK 지향점.
+The documents are structured with semantic HTML and machine-readable class names for easy parsing.

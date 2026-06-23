@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDG_OGN — 1. 단위 기준</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #F8FAFC; color: #1E293B; }
+  .page { max-width: 800px; margin: 0 auto; padding: 48px 32px; }
+
+  .header { margin-bottom: 40px; }
+  .tag { display: inline-block; background: #EDE9FE; color: #6D28D9; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; }
+  h1 { font-size: 24px; font-weight: 700; color: #0F172A; margin-bottom: 6px; }
+  .subtitle { font-size: 13px; color: #64748B; }
+
+  /* ── DIAGRAM ── */
+  .diagram-wrap { background: #fff; border: 1px solid #E2E8F0; border-radius: 16px; padding: 36px; margin-bottom: 40px; }
+
+  /* PAGE shell — muted */
+  .d-page {
+    border: 2px dashed #A7F3D0;
+    border-radius: 14px;
+    padding: 20px;
+    background: rgba(16,185,129,0.02);
+    position: relative;
+  }
+  .d-page-lbl {
+    position: absolute; top: -11px; left: 18px;
+    background: #fff; padding: 0 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    color: #A7F3D0;
+  }
+
+  /* ORGANISM — highlighted */
+  .d-ogn {
+    border: 2px solid #8B5CF6;
+    border-radius: 10px;
+    padding: 16px;
+    background: rgba(139,92,246,0.05);
+    position: relative;
+    margin-bottom: 12px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+    box-shadow: 0 2px 12px rgba(139,92,246,0.12);
+  }
+  .d-ogn-lbl {
+    position: absolute; top: -11px; left: 14px;
+    background: #fff; padding: 0 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+    color: #7C3AED;
+  }
+
+  /* COMPONENT boxes — muted */
+  .d-cmp {
+    background: #F8FAFC;
+    border: 1.5px solid #BFDBFE;
+    border-radius: 7px;
+    padding: 8px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: #60A5FA;
+  }
+
+  .d-page-cmps { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+
+  .legend { display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 7px; font-size: 12px; color: #64748B; }
+  .legend-dot { width: 12px; height: 12px; border-radius: 3px; }
+  .legend-dot.cmp { border: 1.5px solid #BFDBFE; background: #F8FAFC; }
+  .legend-dot.ogn { background: #8B5CF6; }
+  .legend-dot.pag { border: 2px dashed #A7F3D0; background: transparent; }
+  .legend-item strong { color: #1E293B; }
+
+  /* ── RULES ── */
+  .rules { display: flex; flex-direction: column; gap: 24px; }
+  .rule { border-left: 3px solid #DDD6FE; padding-left: 16px; }
+  .rule-id { font-size: 11px; font-weight: 700; color: #C4B5FD; letter-spacing: 0.08em; margin-bottom: 4px; }
+  .rule-text { font-size: 14px; font-weight: 600; color: #1E293B; margin-bottom: 6px; }
+  .rule-desc { font-size: 13px; color: #475569; line-height: 1.6; }
+  .rule-warn { background: #FFFBEB; border: 1px solid #FCD34D; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #92400E; margin-top: 10px; line-height: 1.5; }
+
+  .divider { height: 1px; background: #E2E8F0; margin: 32px 0; }
+
+  .dd { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 24px; }
+  .do-box { background: #F0FDF4; border: 1px solid #86EFAC; border-radius: 8px; padding: 14px; }
+  .dont-box { background: #FFF1F2; border: 1px dashed #FCA5A5; border-radius: 8px; padding: 14px; }
+  .dd-head { font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+  .do-box .dd-head { color: #15803D; }
+  .dont-box .dd-head { color: #B91C1C; }
+  .chip { display: block; font-size: 12px; font-family: monospace; padding: 3px 0; color: #334155; }
+  .chip.x { color: #94A3B8; text-decoration: line-through; }
+  .chip-note { font-size: 11px; color: #64748B; margin-top: 6px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="tag">SDG_OGN</div>
+    <h1>1. 단위 기준</h1>
+    <p class="subtitle">Organism은 여러 Component가 결합된 서비스 기능 단위입니다.</p>
+  </div>
+
+  <!-- DIAGRAM -->
+  <div class="diagram-wrap">
+    <div style="font-size:11px; font-weight:700; color:#94A3B8; letter-spacing:0.08em; margin-bottom:20px;">구조 내 위치</div>
+
+    <div class="d-page">
+      <div class="d-page-lbl">PAGE</div>
+
+      <div class="d-ogn">
+        <div class="d-ogn-lbl">ORGANISM ← 현재 레이어</div>
+        <div class="d-cmp">ProfImage</div>
+        <div class="d-cmp">ProfName</div>
+        <div class="d-cmp">Badge</div>
+        <div class="d-cmp">Button</div>
+      </div>
+
+      <div class="d-ogn">
+        <div class="d-ogn-lbl">ORGANISM</div>
+        <div class="d-cmp">ProductImage</div>
+        <div class="d-cmp">PriceTag</div>
+        <div class="d-cmp">ActionButton</div>
+      </div>
+
+      <div class="d-page-cmps">
+        <div class="d-cmp">Divider</div>
+        <div class="d-cmp">FooterBadge</div>
+      </div>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot ogn"></div><strong>Organism</strong> — 현재 레이어 (다중 CMP 조합)</div>
+      <div class="legend-item"><div class="legend-dot cmp"></div>Component (Organism이 소비)</div>
+      <div class="legend-item"><div class="legend-dot pag"></div>Page (Organism을 소비)</div>
+    </div>
+  </div>
+
+  <!-- RULES -->
+  <div class="rules">
+
+    <div class="rule">
+      <div class="rule-id">SDG_OGN_RULE_1</div>
+      <div class="rule-text">다중 요소로 구성된 Component 단위가 Organism이 됩니다.</div>
+      <div class="rule-desc">둘 이상의 Component가 하나의 서비스 기능을 위해 결합될 때 Organism으로 분류합니다.</div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-id">SDG_OGN_RULE_2</div>
+      <div class="rule-text">Organism은 전체 계층에서 최상위 Component 레벨을 담당합니다.</div>
+      <div class="rule-desc">Foundation → Component → Organism → Page 순서의 계층에서, Organism은 Component를 소비하고 Page에 소비됩니다.</div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-id">SDG_OGN_RULE_3</div>
+      <div class="rule-text">Organism은 단독으로 사용되어야 합니다.</div>
+      <div class="rule-desc">Organism 내 Component가 하위로 구성됩니다. Local_ 연결이 필요한 경우 별도 등록합니다.</div>
+    </div>
+
+    <div class="rule">
+      <div class="rule-id">SDG_OGN_RULE_4 — 주의</div>
+      <div class="rule-text">단일 요소만으로 구성된 경우 Organism으로 분류하지 않습니다.</div>
+      <div class="rule-warn">⚠️ Component 하나만 감싼다고 Organism이 되지 않습니다. 반드시 2개 이상의 Component가 조합되어야 합니다.</div>
+    </div>
+
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="dd">
+    <div class="do-box">
+      <div class="dd-head">✓ DO — 다중 요소 조합</div>
+      <span class="chip">ProfCard</span>
+      <span class="chip">ProductCard</span>
+      <span class="chip">AppList</span>
+      <div class="chip-note">여러 Component → Organism 성립</div>
+    </div>
+    <div class="dont-box">
+      <div class="dd-head">✗ DON'T — 단일 요소</div>
+      <span class="chip x">AppButton 하나만</span>
+      <span class="chip x">AppLocation 하나만</span>
+      <div class="chip-note" style="color:#B91C1C;">단일 Component → Organism 불가</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

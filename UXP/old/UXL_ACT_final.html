@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_ACT — 실행/구매 | UX Principle Guide</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --font: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono: 'Menlo', 'Consolas', 'D2Coding', monospace;
+  --gray-outer: #E8E8E8; --gray-card: #F5F5F5; --white: #FFFFFF; --border: rgba(0,0,0,0.07);
+  --badge-do: #2E7D32; --badge-dont: #C62828; --badge-rule: #1A1A1A;
+  --badge-beh: #3C3C3C; --badge-asis: #C62828; --badge-tobe: #5135C8; --badge-pat: #E0E0E0;
+  --human-bg: #3C3C3C; --ai-bg: #5135C8;
+  --ai-bg-block: #F0EDFF; --ai-border: #7C57FF; --ai-key-col: #5135C8;
+  --var-color: #7C57FF; --text: #1A1A1A; --text-sub: #5A5A5A; --text-dim: #888888;
+}
+html { font-size: 14px; }
+body { font-family: var(--font); background: var(--gray-outer); color: var(--text); line-height: 1.65; margin: 0; padding: 0; }
+.doc-header-css { background: #111111; padding: 48px 60px 44px; color: white; }
+.doc-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.doc-eyebrow-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #AAAAAA; background: rgba(255,255,255,0.08); padding: 3px 10px; border-radius: 6px; }
+.doc-eyebrow-sep { color: #444; font-size: 12px; }
+.doc-eyebrow-cat { font-size: 11px; color: #777; font-weight: 500; }
+.doc-header-css h1 { font-size: 32px; font-weight: 800; letter-spacing: -0.035em; line-height: 1.25; margin-bottom: 14px; }
+.doc-header-css p { font-size: 14px; color: #AAAAAA; line-height: 1.75; max-width: 620px; margin-bottom: 28px; }
+.doc-pattern-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.doc-pattern-chip { font-size: 12px; font-weight: 600; color: #CCCCCC; background: rgba(255,255,255,0.07); padding: 6px 16px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1); }
+.doc-pattern-chip.active { color: #C4B8FF; background: rgba(81,53,200,0.28); border-color: rgba(81,53,200,0.5); }
+.pattern-wrap { padding: 20px 36px; }
+.pattern-card { background: var(--white); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; }
+.section-label { font-size: 13px; color: var(--text-dim); padding: 24px 36px 0; }
+.meta-block { padding: 16px 36px 0; }
+.pattern-badge { display: inline-block; background: var(--badge-pat); color: #333; font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em; padding: 4px 12px; border-radius: 8px; margin-bottom: 12px; }
+.pattern-heading { font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px; }
+.pattern-desc { font-size: 13.5px; color: var(--text-sub); line-height: 1.7; margin-bottom: 20px; max-width: 96%; }
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row p strong { color: var(--text); font-weight: 700; }
+.obadge { display: inline-block; color: white; font-size: 10px; font-weight: 700; letter-spacing: 0.04em; border-radius: 5px; padding: 3px 7px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+.obadge.beh { background: var(--badge-beh); } .obadge.asis { background: var(--badge-asis); } .obadge.tobe { background: var(--badge-tobe); }
+.pattern-ai-meta { margin: 0 36px 24px; background: var(--ai-bg-block); border-left: 3px solid var(--ai-border); border-radius: 0 8px 8px 0; padding: 10px 14px; }
+.pattern-ai-meta .ai-ln { font-size: 11.5px; } .pattern-ai-meta .ai-k { min-width: 130px; }
+.lbadge { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 9px; font-weight: 800; letter-spacing: 0.05em; color: white; padding: 2px 7px; border-radius: 4px; margin-top: 2px; min-width: 34px; }
+.lbadge.h { background: var(--human-bg); } .lbadge.a { background: var(--ai-bg); }
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+.v { color: var(--var-color); font-weight: 600; }
+.ai-blk { display: flex; flex-direction: column; gap: 3px; background: var(--ai-bg-block); border-left: 3px solid var(--ai-border); border-radius: 0 6px 6px 0; padding: 8px 12px; flex: 1; }
+.ai-ln { display: flex; gap: 8px; font-size: 11px; line-height: 1.65; font-family: var(--mono); }
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; } .wire-ann .ai-ln { font-size: 10.5px; } .wire-ann .ai-k { min-width: 90px; }
+.rule-section { background: var(--gray-card); border-top: 1px solid var(--border); }
+.rule-header { padding: 22px 36px 0; }
+.rule-badge { display: inline-flex; align-items: center; background: var(--badge-rule); color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; padding: 4px 10px; border-radius: 6px; margin-bottom: 10px; }
+.do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border-top: 1px solid var(--border); margin-top: 18px; }
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col { background: #FAFFFE; } .dont-col { background: #FFFAFA; }
+.do-badge, .dont-badge { display: inline-flex; color: white; font-size: 12px; font-weight: 700; padding: 4px 14px; border-radius: 20px; margin-bottom: 12px; }
+.do-badge { background: var(--badge-do); } .dont-badge { background: var(--badge-dont); }
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+.scen-section { background: var(--white); border-top: 1px solid var(--border); }
+.scen-heading { font-size: 13.5px; font-weight: 700; padding: 20px 36px 0; margin-bottom: 0; }
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+.scen-anns { display: grid; gap: 1px; background: var(--border); border-top: 1px solid var(--border); }
+.scen-anns.col2 { grid-template-columns: 1fr 1fr; }
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-anns.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.scen-anns.col5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.scen-ann { background: var(--white); padding: 18px 22px; }
+.scen-label { display: inline-block; font-size: 11px; font-weight: 600; color: #555; background: #EBEBEB; border-radius: 20px; padding: 3px 12px; margin-bottom: 12px; }
+</style>
+</head>
+<body>
+
+<div class="doc-header-css">
+  <div class="doc-eyebrow">
+    <span class="doc-eyebrow-tag">UXL</span>
+    <span class="doc-eyebrow-sep">·</span>
+    <span class="doc-eyebrow-cat">5. 실행/구매 — 실행·구매 화면의 고객 경험 원칙 정의</span>
+  </div>
+  <h1>UXL_ACT — 실행/구매</h1>
+  <p>보유한 고객 데이터를 유기적으로 호출해 입력과 선택 단계를 정보 확인의 과정으로 전환하고, 발생 가능한 리스크를 선제적으로 감지해 고객이 심리적 부담 없이 실행을 완료할 수 있도록 설계합니다.</p>
+  <div class="doc-pattern-chips">
+    <span class="doc-pattern-chip active">입력/선택 간소화</span>
+    <span class="doc-pattern-chip active">선제적 리스크 처리</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_ACT_1 — 입력/선택 간소화
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ACT_1</div>
+    <h2 class="pattern-heading">5-1. 입력/선택 간소화</h2>
+    <p class="pattern-desc">보유한 고객 데이터를 유기적으로 호출해 입력과 선택 단계를 정보 확인의 과정으로 전환함으로써, 사용자의 물리적인 수고를 제거하는 '제로 입력' 여정을 구현해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 가입, 변경, 구매 과정에서 <strong>동일한 정보를 반복 입력</strong>하고 각 단계별로 옵션을 직접 선택합니다. 입력 오류와 재확인 과정이 반복되며 진행이 지연되거나 중단됩니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>고객 데이터를 활용하지 않아 <strong>입력과 선택 과정이 유지</strong>되고 있습니다. 이로 인해 물리적 피로와 이탈 가능성이 증가합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객 데이터를 자동 호출하여 입력과 선택 단계를 축소하고, <strong>고객이 정보 확인만으로 진행할 수 있는 구조</strong>로 전환해야 합니다. 입력은 선택이 아닌 시스템이 선제 수행해야 하는 영역이 되어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>    <span class="ai-v">UXL_ACT_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>   <span class="ai-v">checkout_step</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>       <span class="ai-v">checkout.stage IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>        <span class="ai-v">AutoFilledCheckoutForm → slot: checkout_primary, state: pre_filled</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>    <span class="ai-v">user_profile_data, recent_delivery_address, default_payment_method, available_coupons, available_points, nearest_store (real_time_api)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>      <span class="ai-v">user_profile_data unavailable → render empty checkout form with input prompts</span></div>
+  </div>
+
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객 데이터를 자동 반영해 <strong>고객이 확인만으로 진행할 수 있는 구조</strong>를 제공합니다. 이미 가진 정보를 다시 입력하게 하거나 입력 과정을 반복시키지 않습니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>         <span class="ai-v">UXL_ACT_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if personal_info</span> <span class="ai-v">auto-fill from user_profile; set field_state = 'confirmed_editable'</span></div>
+            <div class="ai-ln"><span class="ai-k">if address</span>       <span class="ai-v">auto-select recent_delivery_address; display as '우리집' + edit option</span></div>
+            <div class="ai-ln"><span class="ai-k">if payment</span>       <span class="ai-v">auto-select default_payment_method + edit option</span></div>
+            <div class="ai-ln"><span class="ai-k">if coupon/points</span> <span class="ai-v">auto-apply maximum_discount_combination; render '자동으로 최대 할인이 적용됐어요'</span></div>
+            <div class="ai-ln"><span class="ai-k">if store_pickup</span>  <span class="ai-v">auto-select nearest_store via real_time_api</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>           <span class="ai-v">blank form requiring re-entry of stored data 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>가입 정보, 배송지, 결제수단 등 <strong>기본 정보를 자동으로 채워오거나 최적안을 자동 선택</strong>해 고객의 확인만으로 넘어갈 수 있게 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">pre_fill</span>    <span class="ai-v">user_profile_data → all checkout fields (confirmed_editable)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"아래 정보로 주문을 진행할게요." / "자동으로 최대 할인이 적용됐어요."</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ACT_1_rule1_do_phone.png" alt="DO — pre_filled: 고객 데이터 자동 반영 확인 구조">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">체크 아이콘</span><span class="ai-v">pre_filled 필드 — confirmed_editable 상태, 수정 옵션 포함</span></div>
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">자동 적용된 최대 할인 조합 요약 표시</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>이미 가진 정보를 다시 입력하게 하거나, 입력 과정을 반복시키지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">blank form — stored user_profile 재입력 요구 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">coupon list for manual selection 금지 → auto-apply only</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ACT_1_rule1_dont_phone.png" alt="DON'T — blank_form: 빈 폼 재입력 요구">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">빈 필드</span><span class="ai-v">모든 입력 항목 공란 — 고객 직접 입력 강요</span></div>
+            <div class="ai-ln"><span class="ai-k">키보드</span><span class="ai-v">입력 시작 상태 — 데이터 자동 호출 미적용</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario ACT_1 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 입력 항목별 자동 처리 방식</p>
+    <div class="scen-strip">
+      <img src="assets/ACT_1_rule1_scen_strip.png" alt="ACT_1 시나리오: 가입정보 / 배송지 / 결제수단 / 쿠폰포인트 / 방문매장 자동 처리">
+    </div>
+    <div class="scen-anns col5">
+      <div class="scen-ann">
+        <span class="scen-label">가입 정보</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객 프로필에서 이름·연락처 등 기본 정보를 자동 호출해 확인 가능한 pre-filled 폼으로 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">source</span>  <span class="ai-v">user_profile_data</span></div>
+              <div class="ai-ln"><span class="ai-k">state</span>   <span class="ai-v">confirmed_editable</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"아래 정보로 주문을 진행할게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">배송지</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>최근 배송지를 자동 선택해 "우리집" 레이블로 표시하고, 변경 옵션을 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">source</span>  <span class="ai-v">recent_delivery_address</span></div>
+              <div class="ai-ln"><span class="ai-k">label</span>   <span class="ai-v">"우리집" + edit option</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"아래 주소로 배송해 드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">결제수단</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>기본 결제수단을 자동 선택해 카드명으로 표시하고, 변경 옵션을 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">source</span>  <span class="ai-v">default_payment_method</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"이 결제수단으로 휴대폰 납부가 진행돼요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">쿠폰·포인트</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>최대 할인 조합을 자동으로 적용하고 적용 결과를 요약해 표시합니다. 쿠폰 목록을 직접 고르게 하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">apply</span>   <span class="ai-v">maximum_discount_combination (자동)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"자동으로 최대 할인이 적용됐어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">방문 매장</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>현 위치 기반 최근접 매장을 자동 설정해 매장명과 일시를 pre-filled 상태로 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">source</span>  <span class="ai-v">nearest_store (real_time_api)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"현 위치와 가장 가까운 매장을 설정해 드렸어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card ACT_1 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_ACT_2 — 선제적 리스크 처리
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ACT_2</div>
+    <h2 class="pattern-heading">5-2. 선제적 리스크 처리</h2>
+    <p class="pattern-desc">발생할 수 있는 리스크와 유의 사항을 시스템이 선제적으로 감지해 명확히 안내함으로써, 고객이 심리적 부담 없이 과업을 처리할 수 있도록 설계해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 위약금, 조건 변경, 불이익 등의 <strong>리스크를 사후에 인지하거나 직접 확인</strong>하려고 합니다. 불확실성이 존재할 경우 실행을 보류합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>리스크 정보가 분산되어 있거나 <strong>사전에 안내되지 않아</strong> 고객이 심리적 불안을 느끼고 의사결정을 미루게 됩니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>시스템이 리스크를 사전에 감지하고, <strong>명확한 영향 범위를 선제적으로 안내</strong>해야 합니다. 고객이 불안 없이 즉시 실행할 수 있는 상태를 만들어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>    <span class="ai-v">UXL_ACT_2</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>   <span class="ai-v">checkout_step</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>       <span class="ai-v">action.risk_detected IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>        <span class="ai-v">RiskAlertCard → slot: checkout_pre_action, condition: risk_detected == true / ProcessProgressIndicator → slot: checkout_status, condition: multi_step_process == true</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>    <span class="ai-v">action_type (session), penalty_calculation, refund_calculation, benefit_impact, process_stage_list (real_time_api)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>      <span class="ai-v">risk_calculation unavailable → render confirmation without breakdown; append 'calculating...' label</span></div>
+  </div>
+
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>실행 이전 단계에서 <strong>리스크를 감지해 사전에 안내</strong>해야 합니다. 리스크를 숨기거나 실행 이후에 인지되도록 방치하지 않습니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>           <span class="ai-v">UXL_ACT_2_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if plan_change</span>    <span class="ai-v">billing_impact_breakdown before confirmation (월 중 변경 시)</span></div>
+            <div class="ai-ln"><span class="ai-k">if terminate</span>      <span class="ai-v">refund_breakdown inline before final confirmation</span></div>
+            <div class="ai-ln"><span class="ai-k">if linked_benefits</span><span class="ai-v">linked_benefit_termination_notice 표시</span></div>
+            <div class="ai-ln"><span class="ai-k">if no_penalty</span>     <span class="ai-v">prominently show '위약금 없음' label</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>            <span class="ai-v">risk revealed only after action completion 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>액션 전에 발생 가능한 <strong>리스크와 영향을 미리 식별해 명확히 안내</strong>합니다. 위약금 없음 등 고객에게 유리한 정보도 선제적으로 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">render</span>    <span class="ai-v">RiskAlertCard before confirmation step</span></div>
+              <div class="ai-ln"><span class="ai-k">include</span>   <span class="ai-v">refund_amount + linked_benefit_names + no_penalty_label</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"즉시해지를 선택하면 오늘 구독이 바로 종료돼요. 환불 예상 금액을 먼저 확인해 주세요."</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ACT_2_rule1_do_phone.png" alt="DO — risk_preemptive: 확인 전 리스크 선제 안내">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">느낌표 아이콘</span><span class="ai-v">RiskAlertCard — 확인 버튼 이전에 배치</span></div>
+            <div class="ai-ln"><span class="ai-k">체크 아이콘</span><span class="ai-v">위약금 없음 레이블 — 고객 유리 정보 선제 표시</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>리스크를 숨기거나 실행 이후에 인지되도록 방치하지 않습니다. 고객이 직접 위험 요소를 탐색하게 만들지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">risk revealed only post-action 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">refund/penalty 정보 생략 후 확인 유도 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ACT_2_rule1_dont_phone.png" alt="DON'T — risk_hidden: 리스크 사후 고지">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">느낌표 흐림</span><span class="ai-v">리스크 정보 미표시 — 고객이 직접 확인해야 함</span></div>
+            <div class="ai-ln"><span class="ai-k">빈 화면</span><span class="ai-v">확인 단계에 근거 없음 → 불안 증가·실행 보류</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 리스크 유형별 선제 안내 방식</p>
+    <div class="scen-strip">
+      <img src="assets/ACT_2_rule1_scen_strip.png" alt="ACT_2 Rule1 시나리오: 요금제 변경 조건 변화 / 구독 해지 조건 / 일할계산 환불">
+    </div>
+    <div class="scen-anns col3">
+      <div class="scen-ann">
+        <span class="scen-label">요금제 변경 (월 중)</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>월 중 변경 시 요금과 데이터가 일할 계산됨을 사전에 고지하고, 다음 달 적용 옵션을 제안합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">action.type == 'plan_change' AND billing_cycle_mid == true</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>   <span class="ai-v">billing_impact_breakdown + timing_choice (즉시/다음달)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"월 중 변경 시 요금과 데이터가 일할 계산돼요." / "다음 달 1일부터 적용하는 것을 추천드려요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">구독 즉시 해지</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>환불 예상 금액과 연동 혜택 종료 항목을 확인 전에 인라인으로 표시해 고객이 불안 없이 결정할 수 있게 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">action.type == 'subscription_terminate'</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>   <span class="ai-v">refund_breakdown + linked_benefit_termination_notice inline</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"최종 환불 금액은 {refund_amount}원이고, {benefit_name} 혜택은 함께 종료돼요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">일할/월할 계산 환불</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>이용 기간 차감 계산 방식을 투명하게 표시하고, 최종 환불 금액이 산출된 이유를 고객이 납득할 수 있도록 안내합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">show</span>     <span class="ai-v">total_subscription_price - usage_deduction - coupon_deduction = final_refund</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"이용 기간을 차감 계산된 금액"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- RULE 2 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 2</div>
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>현재 상황을 인지할 수 있도록 <strong>절차를 명확히 드러내야</strong> 합니다. 진행 단계와 상태를 가시화해 고객이 현재 위치를 명확히 이해할 수 있도록 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>            <span class="ai-v">UXL_ACT_2_RULE_2</span></div>
+            <div class="ai-ln"><span class="ai-k">if multi_step</span>      <span class="ai-v">render ProcessProgressIndicator (completed / current / pending stages)</span></div>
+            <div class="ai-ln"><span class="ai-k">stage_labels</span>       <span class="ai-v">해지 신청 접수 → 이용 내역 확인 → 해지 처리</span></div>
+            <div class="ai-ln"><span class="ai-k">on_complete</span>        <span class="ai-v">"즉시해지가 완료됐어요. 환불 금액은 결제수단 계좌로 입금 예정이에요."</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>             <span class="ai-v">process stages hidden from user 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>진행 단계와 현재 상태를 가시화해 <strong>고객이 현재 위치와 남은 단계를 명확히 이해</strong>할 수 있도록 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">render</span>    <span class="ai-v">ProcessProgressIndicator — 완료/현재/대기 단계 구분 표시</span></div>
+              <div class="ai-ln"><span class="ai-k">state</span>     <span class="ai-v">완료: 체크 아이콘 / 현재: 로딩 / 대기: 회색 원</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ACT_2_rule2_do_phone.png" alt="DO — process_visible: 진행 단계 가시화">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">체크 원</span><span class="ai-v">완료 단계 — 진행된 항목 명확히 표시</span></div>
+            <div class="ai-ln"><span class="ai-k">로딩 원</span><span class="ai-v">현재 처리 중 단계 — 진행 상태 실시간 반영</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>절차를 숨기거나 현재 상태를 파악하기 어렵게 구성하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">process stages hidden — 스피너 단독 표시 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">단계 레이블 없는 로딩 상태 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ACT_2_rule2_dont_phone.png" alt="DON'T — process_hidden: 절차 미표시 스피너">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 스피너</span><span class="ai-v">단순 로딩 — 진행 단계·완료 여부 미표시</span></div>
+            <div class="ai-ln"><span class="ai-k">불투명 상태</span><span class="ai-v">고객이 현재 처리 상황 알 수 없음 → 불안 증가</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 2 -->
+
+
+  <!-- Scenario RULE 2 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 다단계 처리 절차 가시화</p>
+    <div class="scen-strip">
+      <img src="assets/ACT_2_rule2_scen_strip.png" alt="ACT_2 Rule2 시나리오: 해지 신청 접수 → 이용 내역 확인 → 해지 처리 완료">
+    </div>
+    <div class="scen-anns col3">
+      <div class="scen-ann">
+        <span class="scen-label">해지 신청 접수</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>해지 신청 접수 단계에서 ProcessProgressIndicator가 활성화되어 현재 첫 번째 단계가 진행 중임을 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">stage</span>    <span class="ai-v">해지 신청 접수 (current: 로딩)</span></div>
+              <div class="ai-ln"><span class="ai-k">next</span>     <span class="ai-v">이용 내역 확인 / 해지 처리 (pending: 회색)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">이용 내역 확인</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>1단계 완료 후 이용 내역 확인 단계로 전환되어, 이전 단계가 체크 아이콘으로 완료됨을 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">stage</span>    <span class="ai-v">해지 신청 접수 (done: 체크) / 이용 내역 확인 (current)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">해지 처리 완료</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>모든 단계 완료 후 입금 예정 안내와 후속 알림 약속으로 마무리합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">all done</span> <span class="ai-v">전 단계 체크 완료</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"즉시해지가 완료됐어요. 환불 금액은 결제수단 계좌로 입금 예정이에요. 입금이 완료되면 다시 알려드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card ACT_2 -->
+</div><!-- /pattern-wrap -->
+
+
+</body>
+</html>

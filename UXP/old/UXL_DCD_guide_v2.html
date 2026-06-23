@@ -1,0 +1,1344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_DCD — 결정 | AI Governance Guide v2</title>
+
+<!--
+  Pretendard 폰트 설명:
+  - 인터넷 연결 시: Pretendard가 CDN에서 불러와집니다 (기존 디자인과 동일).
+  - 오프라인·PDF 변환 시: 자동으로 'Apple SD Gothic Neo'(Mac) 또는 'Malgun Gothic'(Windows)으로 대체됩니다.
+-->
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+/* ━━━ 기본 설정 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:      'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Consolas', 'D2Coding', monospace;
+
+  --blue:        #1557B0;
+  --blue-dark:   #0D3D7A;
+  --blue-light:  #EEF4FF;
+  --blue-mid:    #BDD0F5;
+
+  --green:       #1B5E3B;
+  --green-light: #F0FAF4;
+  --green-mid:   #A8D5B8;
+
+  --red:         #B71C1C;
+  --red-light:   #FFF0F0;
+  --red-mid:     #F0B8B8;
+
+  --amber:       #7D5300;
+  --amber-light: #FFFAF0;
+  --amber-mid:   #E8C97A;
+
+  --purple:      #5B2E99;
+  --purple-light:#F7F0FF;
+  --purple-mid:  #D0B8F0;
+
+  --gray:        #5A6270;
+  --gray-light:  #F5F7FA;
+  --gray-border: #D4D8E0;
+  --gray-faint:  #E8EAEE;
+
+  --text:        #1A1A1A;
+  --text-sub:    #3A4251;
+  --text-muted:  #7A8494;
+}
+
+html { font-size: 13.5px; }
+
+body {
+  font-family: var(--font);
+  color: var(--text);
+  background: #fff;
+  line-height: 1.65;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 44px 44px 100px;
+}
+
+/* ━━━ 타이포그래피 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+h1 { font-size: 1.65rem; font-weight: 800; letter-spacing: -0.03em; }
+h2 { font-size: 1.1rem;  font-weight: 700; letter-spacing: -0.01em; }
+h3 { font-size: 0.95rem; font-weight: 600; }
+h4 { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--text-muted); }
+p  { font-size: 0.9rem;  line-height: 1.7; }
+li { font-size: 0.9rem;  line-height: 1.7; }
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: var(--gray-light);
+  border: 1px solid var(--gray-faint);
+  border-radius: 3px;
+  padding: 1px 5px;
+}
+
+/* ━━━ 유틸 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.badge {
+  display: inline-block;
+  font-size: 0.73rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.03em;
+}
+.badge-blue   { background: var(--blue);  color: #fff; }
+.badge-outline{ background: var(--gray-light); color: var(--gray); border: 1px solid var(--gray-border); }
+.badge-light  { background: var(--blue-light); color: var(--blue); border: 1px solid var(--blue-mid); }
+
+.section-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--gray-faint);
+}
+.mt-12 { margin-top: 12px; }
+.mt-20 { margin-top: 20px; }
+.mt-28 { margin-top: 28px; }
+
+/* ━━━ 문서 헤더 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.doc-header {
+  padding-bottom: 28px;
+  margin-bottom: 32px;
+  border-bottom: 3px solid var(--blue);
+}
+.doc-header .badge-row { display: flex; gap: 7px; align-items: center; margin-bottom: 12px; flex-wrap: wrap; }
+.doc-header h1 { color: var(--blue-dark); margin-bottom: 8px; }
+.doc-header .desc { color: var(--text-sub); font-size: 0.88rem; line-height: 1.65; }
+.doc-header .desc strong { color: var(--red); }
+
+.meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 20px;
+}
+.meta-cell {
+  padding: 11px 15px;
+  background: var(--gray-light);
+  border-right: 1px solid var(--gray-border);
+}
+.meta-cell:last-child { border-right: none; }
+.meta-cell .k { font-size: 0.7rem; color: var(--text-muted); margin-bottom: 3px; font-weight: 600; }
+.meta-cell .v { font-size: 0.88rem; font-weight: 700; }
+
+/* ━━━ 패턴 인덱스 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.pattern-index {
+  background: var(--gray-light);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 40px;
+}
+.pattern-index h4 { margin-bottom: 12px; }
+.pattern-index table { width: 100%; border-collapse: collapse; }
+.pattern-index td {
+  padding: 7px 10px;
+  font-size: 0.87rem;
+  border-bottom: 1px solid var(--gray-faint);
+}
+.pattern-index tr:last-child td { border-bottom: none; }
+.pattern-index .pid {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--blue);
+  font-weight: 700;
+  width: 120px;
+}
+.pattern-index .ptype {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  text-align: right;
+}
+
+/* ━━━ 패턴 블록 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.pattern-block { margin-bottom: 64px; page-break-before: always; }
+.pattern-block:first-of-type { page-break-before: auto; }
+
+.pattern-header {
+  background: var(--blue);
+  color: #fff;
+  padding: 18px 24px;
+  border-radius: 10px 10px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.pattern-header .pid-chip {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: rgba(255,255,255,0.2);
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+.pattern-header h2 { font-size: 1.05rem; font-weight: 700; }
+.pattern-header .stype {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.65);
+  margin-left: auto;
+  font-family: var(--font-mono);
+}
+
+.pattern-body {
+  border: 1px solid var(--gray-border);
+  border-top: none;
+  border-radius: 0 0 10px 10px;
+  padding: 26px;
+}
+
+/* ━━━ 배경(컨텍스트) 박스 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.context-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+.ctx-box {
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--gray-faint);
+}
+.ctx-box .ctx-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+.ctx-box p { font-size: 0.85rem; line-height: 1.6; color: var(--text-sub); }
+
+.ctx-behavior { background: #FAFAFA; }
+.ctx-behavior .ctx-tag { color: var(--text-muted); }
+.ctx-problem  { background: var(--red-light); border-color: var(--red-mid); }
+.ctx-problem  .ctx-tag { color: var(--red); }
+.ctx-target   { background: var(--blue-light); border-color: var(--blue-mid); }
+.ctx-target   .ctx-tag { color: var(--blue); }
+
+/* ━━━ 데이터 명세 (AI 전용) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.data-spec {
+  background: var(--gray-light);
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+}
+.data-spec .spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 10px;
+}
+.data-spec table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.8rem;
+}
+.data-spec th {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--gray-border);
+  text-align: left;
+}
+.data-spec td {
+  padding: 5px 8px;
+  border-bottom: 1px solid var(--gray-faint);
+  vertical-align: top;
+}
+.data-spec tr:last-child td { border-bottom: none; }
+.data-spec .field  { font-family: var(--font-mono); font-size: 0.75rem; color: #1E3A5F; }
+.data-spec .src    { font-family: var(--font-mono); font-size: 0.72rem; color: var(--text-muted); }
+.data-spec .req-t  { color: var(--red);  font-size: 0.72rem; font-weight: 700; }
+.data-spec .req-f  { color: var(--text-muted); font-size: 0.72rem; }
+.data-spec .comp   { font-family: var(--font-mono); font-size: 0.75rem; color: var(--blue); font-weight: 700; }
+.data-spec .state  {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  background: var(--blue-light);
+  border: 1px solid var(--blue-mid);
+  border-radius: 10px;
+  padding: 1px 7px;
+  color: var(--blue);
+}
+
+/* ━━━ 규칙 블록 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.rule-block {
+  border-left: 4px solid var(--blue);
+  border: 1px solid var(--gray-border);
+  border-left-width: 4px;
+  border-left-color: var(--blue);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 16px;
+  overflow: hidden;
+  page-break-inside: avoid;
+}
+.rule-head {
+  background: var(--blue-light);
+  padding: 12px 18px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border-bottom: 1px solid var(--blue-mid);
+}
+.rule-id-tag {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--blue);
+  background: #fff;
+  border: 1px solid var(--blue-mid);
+  padding: 2px 9px;
+  border-radius: 12px;
+  white-space: nowrap;
+  margin-top: 2px;
+}
+.rule-statement { font-size: 0.92rem; font-weight: 600; line-height: 1.5; }
+
+.rule-body { padding: 16px 18px; display: flex; flex-direction: column; gap: 14px; }
+
+/* 조건 테이블 (IF/THEN 대체) */
+.cond-table-wrap {}
+.cond-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  border: 1px solid var(--gray-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.cond-table thead tr { background: var(--gray-light); }
+.cond-table th {
+  padding: 8px 14px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-align: left;
+  border-bottom: 1px solid var(--gray-border);
+}
+.cond-table td {
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--gray-faint);
+  vertical-align: top;
+}
+.cond-table tr:last-child td { border-bottom: none; }
+.cond-table tr:nth-child(even) { background: #FAFBFC; }
+.cond-table .cond-cell { color: var(--text-sub); }
+.cond-table .action-cell { color: var(--text); font-weight: 500; }
+.cond-table .action-cell small {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* DO / DON'T 행 */
+.do-dont-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.do-box, .dont-box {
+  padding: 13px 15px;
+  border-radius: 7px;
+}
+.do-box   { background: var(--green-light); border: 1px solid var(--green-mid); }
+.dont-box { background: var(--red-light);   border: 1px solid var(--red-mid); }
+
+.do-box .box-tag, .dont-box .box-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.do-box   .box-tag { color: var(--green); }
+.dont-box .box-tag { color: var(--red); }
+
+.do-box ul, .dont-box ul { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+.do-box li::before   { content: '✓ '; color: var(--green); font-weight: 800; }
+.dont-box li::before { content: '✗ '; color: var(--red);   font-weight: 800; }
+.dont-box li .fallback {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--amber);
+  margin-top: 2px;
+  padding-left: 14px;
+}
+.dont-box li .fallback::before { content: '↩ 대신: '; font-weight: 600; }
+
+/* ━━━ 카피 템플릿 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.copy-block {
+  background: var(--purple-light);
+  border: 1px solid var(--purple-mid);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.copy-block .copy-tag {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--purple);
+  margin-bottom: 12px;
+}
+.copy-item { margin-bottom: 10px; }
+.copy-item:last-child { margin-bottom: 0; }
+.copy-key {
+  font-family: var(--font-mono);
+  font-size: 0.73rem;
+  color: var(--purple);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+.copy-value {
+  font-size: 0.87rem;
+  line-height: 1.55;
+  padding: 8px 12px;
+  background: rgba(255,255,255,0.65);
+  border: 1px solid var(--purple-mid);
+  border-radius: 5px;
+}
+.var {
+  color: var(--blue);
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+/* ━━━ 시나리오 섹션 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.scenario-section {
+  margin-top: 4px;
+  border: 1px solid var(--gray-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.scenario-head {
+  background: var(--gray-light);
+  padding: 10px 18px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  border-bottom: 1px solid var(--gray-border);
+}
+.scenario-grid {
+  display: grid;
+  gap: 0;
+}
+.scen-2 { grid-template-columns: 1fr 1fr; }
+.scen-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.scenario-card {
+  padding: 18px 16px 14px;
+  border-right: 1px solid var(--gray-faint);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.scenario-card:last-child { border-right: none; }
+
+/* 시나리오 트리거 태그 */
+.scen-trigger {
+  display: inline-block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: var(--gray-light);
+  border: 1px solid var(--gray-border);
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-family: var(--font-mono);
+}
+.scen-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+/* 📱 폰 목업 영역 */
+.phone-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0;
+}
+.phone-frame {
+  width: 150px;
+  border: 2px solid #C8D0DC;
+  border-radius: 22px;
+  background: #F8F9FB;
+  padding: 28px 8px 14px;
+  position: relative;
+}
+.phone-frame::before {
+  content: '';
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: #C8D0DC;
+  border-radius: 3px;
+}
+.phone-screen {
+  background: #fff;
+  border: 1px solid #E4E8EE;
+  border-radius: 10px;
+  min-height: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 8px;
+  text-align: center;
+  gap: 6px;
+}
+.phone-screen .img-tag {
+  font-size: 0.65rem;
+  color: #9AAABB;
+  font-family: var(--font-mono);
+  word-break: break-all;
+}
+.phone-screen .img-icon { font-size: 1.4rem; opacity: 0.3; }
+
+/* 이미지가 있을 때: <img> 태그로 교체 */
+.phone-screen img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+}
+
+/* 시나리오 카피 */
+.scen-copy {
+  font-size: 0.8rem;
+  color: var(--text-sub);
+  line-height: 1.55;
+  font-style: italic;
+}
+.scen-cta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--blue);
+}
+
+/* AI 명세 캡션 (시나리오 하단) */
+.ai-caption {
+  background: var(--gray-light);
+  border: 1px solid var(--gray-faint);
+  border-radius: 5px;
+  padding: 7px 10px;
+  font-size: 0.72rem;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.ai-caption .ai-row { display: flex; gap: 4px; }
+.ai-caption .ai-key { color: var(--blue); font-weight: 700; min-width: 64px; }
+
+/* ━━━ 폴백 명세 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+.fallback-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  background: var(--amber-light);
+  border: 1px solid var(--amber-mid);
+  border-radius: 6px;
+  font-size: 0.83rem;
+}
+.fallback-bar .fb-tag {
+  font-size: 0.68rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--amber);
+  white-space: nowrap;
+}
+.fallback-bar .fb-cond { color: var(--red); font-family: var(--font-mono); font-size: 0.8rem; }
+.fallback-bar .fb-arrow { color: var(--text-muted); }
+.fallback-bar .fb-action { color: var(--amber); font-family: var(--font-mono); font-size: 0.8rem; }
+
+/* ━━━ 푸터 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+footer {
+  margin-top: 56px;
+  padding-top: 20px;
+  border-top: 1px solid var(--gray-border);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  display: flex;
+  justify-content: space-between;
+}
+
+/* ━━━ 인쇄·PDF 설정 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+@page { size: A4; margin: 16mm 15mm; }
+@media print {
+  body { max-width: 100%; padding: 0; }
+  .rule-block, .pattern-block, .scenario-card { page-break-inside: avoid; }
+  .pattern-block { page-break-before: always; }
+  .pattern-block:first-of-type { page-break-before: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- 문서 헤더                                                     -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<header class="doc-header">
+  <div class="badge-row">
+    <span class="badge badge-blue">JOURNEY · DCD</span>
+    <span class="badge badge-light">결정 (Decision)</span>
+    <span class="badge badge-outline">v1.0 · 2026-04-30</span>
+  </div>
+  <h1>UXL_DCD — 결정</h1>
+  <p class="desc" style="margin-top:8px;">
+    고객의 요금제 사용량·데이터 패턴·단말 상태를 종합 분석해 최적안을 선제적으로 제안하고,
+    고객이 즉시 판단할 수 있는 근거 기반 비교 화면을 제공합니다.<br>
+    <strong>이 문서는 AI 화면 생성의 유일한 기준(Single Source of Truth)입니다.
+    모든 규칙과 카피 문구는 기계가 해석할 수 있도록 명확하게 작성되어야 합니다.</strong>
+  </p>
+  <div class="meta-grid">
+    <div class="meta-cell"><div class="k">파일 ID</div><div class="v" style="font-family:var(--font-mono)">UXL_DCD</div></div>
+    <div class="meta-cell"><div class="k">저니 코드</div><div class="v">DCD</div></div>
+    <div class="meta-cell"><div class="k">패턴 수</div><div class="v">2패턴 · 규칙 7개</div></div>
+    <div class="meta-cell"><div class="k">주의</div><div class="v" style="color:var(--red);font-size:0.82rem">"자연스럽게" "직관적" 표현 사용 금지</div></div>
+  </div>
+</header>
+
+<!-- 패턴 목차 -->
+<div class="pattern-index">
+  <h4>패턴 목차</h4>
+  <table>
+    <tr>
+      <td class="pid">UXL_DCD_1</td>
+      <td>데이터 기반 최적안 도출</td>
+      <td class="ptype">규칙 2개 · 시나리오 2종</td>
+    </tr>
+    <tr>
+      <td class="pid">UXL_DCD_2</td>
+      <td>근거 기반 비교 제공</td>
+      <td class="ptype">규칙 3개 · 시나리오 4종</td>
+    </tr>
+  </table>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PATTERN 1: UXL_DCD_1                                         -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="pattern-block" data-pattern-id="UXL_DCD_1">
+  <div class="pattern-header">
+    <span class="pid-chip">UXL_DCD_1</span>
+    <h2>데이터 기반 최적안 도출</h2>
+    <span class="stype">decision_compare</span>
+  </div>
+
+  <div class="pattern-body">
+
+    <!-- 배경 -->
+    <div class="section-label">배경</div>
+    <div class="context-row">
+      <div class="ctx-box ctx-behavior">
+        <div class="ctx-tag">고객 행동</div>
+        <p>고객은 요금제·혜택·단말 상태를 각각 확인하며 최적안을 스스로 찾기 위해 여러 화면을 반복 탐색합니다.</p>
+      </div>
+      <div class="ctx-box ctx-problem">
+        <div class="ctx-tag">현재 문제</div>
+        <p>데이터가 존재함에도 종합 해석이 없어 개인화 제안이 부재합니다. 고객이 직접 계산해야 하는 부담이 생깁니다.</p>
+      </div>
+      <div class="ctx-box ctx-target">
+        <div class="ctx-tag">목표 상태</div>
+        <p>사용 패턴·상황·데이터를 입체 해석해 단일 최적안을 선제 제시합니다. 절감액과 근거를 함께 보여 즉시 판단 가능하게 합니다.</p>
+      </div>
+    </div>
+
+    <!-- AI 데이터 명세 (AI 렌더링 엔진이 참조하는 기술 명세입니다) -->
+    <div class="section-label mt-20">AI 데이터 명세</div>
+    <div class="data-spec">
+      <div class="spec-grid">
+        <div>
+          <table>
+            <thead><tr><th>필요 데이터 (inputs)</th><th>출처</th><th>필수</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="field">usage_pattern</span></td>
+                <td><span class="src">user_profile</span></td>
+                <td><span class="req-t">필수</span></td>
+              </tr>
+              <tr>
+                <td><span class="field">contract_status</span></td>
+                <td><span class="src">user_profile</span></td>
+                <td><span class="req-t">필수</span></td>
+              </tr>
+              <tr>
+                <td><span class="field">device_status</span></td>
+                <td><span class="src">user_profile</span></td>
+                <td><span class="req-f">선택</span></td>
+              </tr>
+              <tr>
+                <td><span class="field">family_group_usage</span></td>
+                <td><span class="src">user_profile</span></td>
+                <td><span class="req-f">선택</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table>
+            <thead><tr><th>출력 컴포넌트 (outputs)</th><th>슬롯</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="comp">OptimalPlanCard</span></td>
+                <td><span class="src">decision_primary</span></td>
+                <td><span class="state">single_recommendation</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 규칙 1 -->
+    <div class="section-label mt-20">규칙</div>
+
+    <div class="rule-block" data-rule-id="DCD_1_R1">
+      <div class="rule-head">
+        <span class="rule-id-tag">규칙 1</span>
+        <div class="rule-statement">고객 데이터를 기반으로 <u>단일 최적안만</u> 보여줍니다. 여러 옵션을 동등하게 나열하지 않습니다.</div>
+      </div>
+      <div class="rule-body">
+
+        <!-- 조건 테이블 (IF/THEN 대체 — 한국어 자연어) -->
+        <div class="cond-table-wrap">
+          <div class="section-label">이런 상황이라면 → 이렇게 처리합니다</div>
+          <table class="cond-table">
+            <thead>
+              <tr><th style="width:45%">상황</th><th>화면 처리</th></tr>
+            </thead>
+            <tbody>
+              <tr data-if="usage_pattern IS NOT NULL AND contract_status resolved" data-then="render_OptimalPlanCard_suppress_list">
+                <td class="cond-cell">고객 사용 패턴과 계약 상태 데이터가 있는 경우</td>
+                <td class="action-cell">단일 최적 요금제 카드만 표시합니다. 여러 옵션 리스트는 숨깁니다.
+                  <small>→ OptimalPlanCard / decision_primary</small>
+                </td>
+              </tr>
+              <tr data-if="plan_change_penalty == 0" data-then="append_NoPenaltyBadge">
+                <td class="cond-cell">변경해도 위약금이 발생하지 않는 경우</td>
+                <td class="action-cell">"바로 변경해도 위약금이 발생하지 않아요" 배지를 추가합니다.
+                  <small>→ NoPenaltyBadge 컴포넌트 추가</small>
+                </td>
+              </tr>
+              <tr data-if="saving_amount > 0" data-then="render_SavingLabel_with_amount">
+                <td class="cond-cell">절감 금액이 발생하는 경우</td>
+                <td class="action-cell">월간·연간 절감액을 수치로 표시합니다.
+                  <small>→ SavingLabel (월 {amount}원 절약)</small>
+                </td>
+              </tr>
+              <tr data-if="device_change == true AND bundle_complex == true" data-then="render_BundleRecommendationCard">
+                <td class="cond-cell">단말 변경과 요금 결합이 복잡하게 얽힌 경우</td>
+                <td class="action-cell">한눈에 이해 가능한 결합 추천 카드 한 장만 표시합니다.
+                  <small>→ BundleRecommendationCard (리스트 금지)</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="do-dont-row">
+          <div class="do-box">
+            <div class="box-tag">✓ 해야 합니다</div>
+            <ul>
+              <li>고객 사용 패턴과 상황을 반영한 단일 최적안을 먼저 제시합니다.</li>
+              <li>복잡한 조건(요금제 변경 등)일수록 단 하나의 추천으로 압축합니다.</li>
+              <li>절감액, 혜택 변화 등 구체적인 수치 근거를 함께 표시합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-box">
+            <div class="box-tag">✗ 하지 않습니다</div>
+            <ul>
+              <li>여러 옵션을 동등한 비중으로 나열하지 않습니다.
+                <span class="fallback">단일 OptimalPlanCard + 근거 표시로 대체합니다.</span>
+              </li>
+              <li>추천 결과에서 절감 금액이나 혜택 변화를 생략하지 않습니다.
+                <span class="fallback">saving_amount + benefit_delta 필드를 반드시 포함합니다.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- / 규칙 1 -->
+
+    <!-- 규칙 2 -->
+    <div class="rule-block" data-rule-id="DCD_1_R2">
+      <div class="rule-head">
+        <span class="rule-id-tag">규칙 2</span>
+        <div class="rule-statement">추천 결과에는 반드시 <u>데이터 기반 근거</u>를 함께 제공합니다. 고객이 스스로 계산하게 만들지 않습니다.</div>
+      </div>
+      <div class="rule-body">
+        <div class="cond-table-wrap">
+          <div class="section-label">이런 상황이라면 → 이렇게 처리합니다</div>
+          <table class="cond-table">
+            <thead>
+              <tr><th style="width:45%">상황</th><th>화면 처리</th></tr>
+            </thead>
+            <tbody>
+              <tr data-if="plan_recommendation shown" data-then="render_saving_label + usage_fit_label + benefit_delta_label">
+                <td class="cond-cell">요금제 추천 화면이 표시될 때</td>
+                <td class="action-cell">절감액·사용량 적합도·혜택 변화 3가지를 함께 표시합니다.
+                  <small>→ SavingLabel + UsageFitLabel + BenefitDeltaLabel</small>
+                </td>
+              </tr>
+              <tr data-if="benefit_value_type == abstract" data-then="convert_to_concrete_value_expression">
+                <td class="cond-cell">혜택 설명이 추상적인 경우 ("좋은 혜택", "다양한 할인")</td>
+                <td class="action-cell">실생활 용어로 변환해서 표시합니다.
+                  <small>→ "커피 1잔" / "영화 티켓 2매" / "월 {N}원 절약"</small>
+                </td>
+              </tr>
+              <tr data-if="plan_change_penalty == 0" data-then="render_NoPenaltyBadge_prominently">
+                <td class="cond-cell">변경 시 위약금이 없는 경우</td>
+                <td class="action-cell">"바로 변경해도 위약금이 발생하지 않아요"를 눈에 띄게 표시합니다.
+                  <small>→ NoPenaltyBadge (강조 위치)</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-box">
+            <div class="box-tag">✓ 해야 합니다</div>
+            <ul>
+              <li>절감 금액, 혜택 변화 등 정량 근거를 포함합니다.</li>
+              <li>가치 판단이 필요할 때는 실생활 금액이나 공감 표현으로 바꿔 표시합니다.</li>
+              <li>위약금 없는 경우 해당 사실을 명확히 표기합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-box">
+            <div class="box-tag">✗ 하지 않습니다</div>
+            <ul>
+              <li>근거 없이 추천만 표시하지 않습니다.
+                <span class="fallback">saving_amount + usage_fit 필드를 반드시 포함합니다.</span>
+              </li>
+              <li>"좋은 혜택", "다양한 혜택" 같은 추상 표현만 사용하지 않습니다.
+                <span class="fallback">구체적 금액 또는 일상 용어로 변환해서 표시합니다.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div><!-- / 규칙 2 -->
+
+    <!-- 카피 템플릿 -->
+    <div class="section-label mt-20">카피 템플릿</div>
+    <div class="copy-block">
+      <div class="copy-tag">📝 Copy Template — ${변수}는 실제 데이터로 교체됩니다</div>
+      <div class="copy-item">
+        <div class="copy-key">optimal_recommendation</div>
+        <div class="copy-value">"어머니는 매달 20일쯤 데이터가 소진되는 패턴이라, 요금제 변경 시 선물 없이도 충분히 사용할 수 있어요. <span class="var">${plan_name}</span> 요금제를 추천드리며, 결합 혜택에도 일부 변화가 있어요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">bundle_recommendation</div>
+        <div class="copy-value">"<span class="var">${user.name}</span>님의 패턴에 맞게 최적 옵션을 설정해뒀어요. 딱 맞는 옵션들로 한 번에 세팅해 드릴게요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">no_penalty_label</div>
+        <div class="copy-value">"바로 변경해도 위약금이 발생하지 않아요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">saving_label</div>
+        <div class="copy-value">"매달 <span class="var">${saving_amount}</span>원 절약"</div>
+      </div>
+    </div>
+
+    <!-- 폴백 -->
+    <div class="section-label mt-12">데이터 부재 시 폴백</div>
+    <div class="fallback-bar">
+      <span class="fb-tag">Fallback</span>
+      <span class="fb-cond">usage_pattern == null</span>
+      <span class="fb-arrow">→</span>
+      <span class="fb-action">plan_selection_list + usage_input_prompt 렌더링</span>
+    </div>
+
+    <!-- 시나리오 -->
+    <div class="section-label mt-20">시나리오 — 상황별 적용 방식</div>
+    <div class="scenario-section">
+      <div class="scenario-head">Scenario · UXL_DCD_1</div>
+      <div class="scenario-grid scen-2">
+
+        <div class="scenario-card">
+          <div>
+            <span class="scen-trigger">usage_pattern.data_exhaustion_day &lt; 25</span>
+          </div>
+          <div class="scen-title">요금제 변경 권고</div>
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <!--
+                  실제 이미지 교체 방법:
+                  <img src="DCD_1_plan_recommendation.png" alt="요금제 변경 권고 화면">
+                  위 한 줄로 아래 placeholder를 대체하세요.
+                -->
+                <span class="img-icon">📱</span>
+                <span class="img-tag">DCD_1_scenario_<br>plan_recommendation</span>
+              </div>
+            </div>
+          </div>
+          <div class="scen-copy">"어머니는 매달 20일쯤 데이터가 소진되는 패턴이라 ${plan_name} 요금제를 추천드려요."</div>
+          <div class="scen-cta">CTA → 요금제 변경하기</div>
+          <div class="ai-caption">
+            <div class="ai-row"><span class="ai-key">컴포넌트</span><span>OptimalPlanCard · SavingLabel · NoPenaltyBadge</span></div>
+            <div class="ai-row"><span class="ai-key">슬롯</span><span>decision_primary</span></div>
+            <div class="ai-row"><span class="ai-key">상태</span><span>single_recommendation</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <div>
+            <span class="scen-trigger">cart.has_device AND cart.has_plan AND bundle_complex == true</span>
+          </div>
+          <div class="scen-title">단말+요금 복합 결합 추천</div>
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <!--
+                  실제 이미지 교체 방법:
+                  <img src="DCD_1_device_bundle.png" alt="단말+요금 결합 추천 화면">
+                -->
+                <span class="img-icon">📱</span>
+                <span class="img-tag">DCD_1_scenario_<br>device_bundle</span>
+              </div>
+            </div>
+          </div>
+          <div class="scen-copy">"${user.name}님의 패턴에 맞게 최적 옵션을 설정해뒀어요. 한 번에 세팅해 드릴게요."</div>
+          <div class="scen-cta">CTA → 한 번에 세팅하기</div>
+          <div class="ai-caption">
+            <div class="ai-row"><span class="ai-key">컴포넌트</span><span>BundleRecommendationCard · BundleBreakdownTable</span></div>
+            <div class="ai-row"><span class="ai-key">슬롯</span><span>decision_primary</span></div>
+            <div class="ai-row"><span class="ai-key">상태</span><span>bundle_pre_configured</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /pattern-body -->
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- PATTERN 2: UXL_DCD_2                                         -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<section class="pattern-block" data-pattern-id="UXL_DCD_2">
+  <div class="pattern-header">
+    <span class="pid-chip">UXL_DCD_2</span>
+    <h2>근거 기반 비교 제공</h2>
+    <span class="stype">decision_compare</span>
+  </div>
+
+  <div class="pattern-body">
+
+    <div class="section-label">배경</div>
+    <div class="context-row">
+      <div class="ctx-box ctx-behavior">
+        <div class="ctx-tag">고객 행동</div>
+        <p>고객은 요금제와 상품이 나열된 상태에서 각 항목을 직접 계산하고 기억하며 판단합니다. 반복 탐색이 발생합니다.</p>
+      </div>
+      <div class="ctx-box ctx-problem">
+        <div class="ctx-tag">현재 문제</div>
+        <p>동일한 나열 구조로 고객이 비교 기준을 스스로 만들어야 합니다. 현재 대비 변화를 파악하기 어려워 결정이 지연됩니다.</p>
+      </div>
+      <div class="ctx-box ctx-target">
+        <div class="ctx-tag">목표 상태</div>
+        <p>현재 계약 기준으로 변화되는 핵심 요소만 대조합니다. 고객은 '무엇이 어떻게 달라지는지'만 보고 즉시 결정합니다.</p>
+      </div>
+    </div>
+
+    <div class="section-label mt-20">AI 데이터 명세</div>
+    <div class="data-spec">
+      <div class="spec-grid">
+        <div>
+          <table>
+            <thead><tr><th>필요 데이터 (inputs)</th><th>출처</th><th>필수</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="field">current_contract</span></td>
+                <td><span class="src">user_profile</span></td>
+                <td><span class="req-t">필수</span></td>
+              </tr>
+              <tr>
+                <td><span class="field">candidate_options</span></td>
+                <td><span class="src">real_time_api</span></td>
+                <td><span class="req-t">필수</span></td>
+              </tr>
+              <tr>
+                <td><span class="field">user_segment</span></td>
+                <td><span class="src">user_profile</span></td>
+                <td><span class="req-t">필수</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <table>
+            <thead><tr><th>출력 컴포넌트</th><th>슬롯</th><th>상태</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><span class="comp">ComparisonView</span></td>
+                <td><span class="src">decision_compare_area</span></td>
+                <td><span class="state">delta_focused</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label mt-20">규칙</div>
+
+    <!-- 규칙 1 -->
+    <div class="rule-block" data-rule-id="DCD_2_R1">
+      <div class="rule-head">
+        <span class="rule-id-tag">규칙 1</span>
+        <div class="rule-statement">비교 화면은 개별 항목 나열이 아닌 <u>변화량(delta) 중심</u>으로 표시합니다.</div>
+      </div>
+      <div class="rule-body">
+        <div class="cond-table-wrap">
+          <div class="section-label">이런 상황이라면 → 이렇게 처리합니다</div>
+          <table class="cond-table">
+            <thead>
+              <tr><th style="width:45%">상황</th><th>화면 처리</th></tr>
+            </thead>
+            <tbody>
+              <tr data-if="comparison required" data-then="render delta_view not absolute_values">
+                <td class="cond-cell">비교 화면이 필요한 모든 경우</td>
+                <td class="action-cell">절대값 대신 변화량(delta)을 중심으로 표시합니다.
+                  <small>→ delta_view (change_amount + change_direction)</small>
+                </td>
+              </tr>
+              <tr data-if="data_allowance increases" data-then="render DeltaLabel: 데이터 +{N}GB">
+                <td class="cond-cell">데이터 제공량이 늘어나는 경우</td>
+                <td class="action-cell">"데이터 +{N}GB" 형식으로 표시합니다.
+                  <small>→ DeltaLabel (data_delta)</small>
+                </td>
+              </tr>
+              <tr data-if="monthly_cost decreases" data-then="render DeltaLabel: 월 -{N}원 절약">
+                <td class="cond-cell">월 비용이 줄어드는 경우</td>
+                <td class="action-cell">"월 -{N}원 절약" 형식으로 표시합니다.
+                  <small>→ DeltaLabel (cost_delta)</small>
+                </td>
+              </tr>
+              <tr data-if="complex_conditions == true" data-then="render key_change_summary + full ComparisonView">
+                <td class="cond-cell">조건이 복잡한 비교 상황</td>
+                <td class="action-cell">핵심 변화 요약 카드를 전체 비교 화면 위에 추가합니다.
+                  <small>→ KeyChangeSummaryCard + ComparisonView</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-box">
+            <div class="box-tag">✓ 해야 합니다</div>
+            <ul>
+              <li>현재 대비 변화값(delta)을 중심으로 즉시 이해 가능하게 표현합니다.</li>
+              <li>복잡한 조건 비교 시 변경되는 핵심 정보만 요약한 구조를 병행 제공합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-box">
+            <div class="box-tag">✗ 하지 않습니다</div>
+            <ul>
+              <li>절대값만 나열해서 고객이 직접 계산하게 만들지 않습니다.
+                <span class="fallback">delta_view + change_direction 레이블을 렌더링합니다.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 규칙 2 -->
+    <div class="rule-block" data-rule-id="DCD_2_R2">
+      <div class="rule-head">
+        <span class="rule-id-tag">규칙 2</span>
+        <div class="rule-statement">비교 화면 초기에는 <u>의사결정 핵심 정보 3가지</u>만 보여줍니다. 세부 조건은 숨겼다가 요청 시 펼칩니다.</div>
+      </div>
+      <div class="rule-body">
+        <div class="cond-table-wrap">
+          <div class="section-label">이런 상황이라면 → 이렇게 처리합니다</div>
+          <table class="cond-table">
+            <thead>
+              <tr><th style="width:45%">상황</th><th>화면 처리</th></tr>
+            </thead>
+            <tbody>
+              <tr data-if="full_spec_items > threshold" data-then="surface cost_delta + data_delta + benefit_delta only">
+                <td class="cond-cell">표시할 비교 항목이 많은 경우</td>
+                <td class="action-cell">비용 변화 · 데이터 변화 · 혜택 변화 3가지만 기본 노출합니다.
+                  <small>→ 약관, 부가 조건은 '더 보기' 뒤로 숨김</small>
+                </td>
+              </tr>
+              <tr data-if="user requests detail" data-then="progressively reveal full_spec">
+                <td class="cond-cell">고객이 상세 내용을 요청하는 경우</td>
+                <td class="action-cell">고객 액션(탭/버튼) 이후에만 상세 항목을 펼칩니다.
+                  <small>→ 기본값은 접힘 상태</small>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-box">
+            <div class="box-tag">✓ 해야 합니다</div>
+            <ul>
+              <li>핵심 3가지(비용/데이터/혜택 변화)만 기본으로 표시합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-box">
+            <div class="box-tag">✗ 하지 않습니다</div>
+            <ul>
+              <li>초기 화면에서 모든 세부 조건을 한꺼번에 펼쳐 보여주지 않습니다.
+                <span class="fallback">핵심 3종만 선별 표시하고, 나머지는 '더 보기' 처리합니다.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 규칙 3 -->
+    <div class="rule-block" data-rule-id="DCD_2_R3">
+      <div class="rule-head">
+        <span class="rule-id-tag">규칙 3</span>
+        <div class="rule-statement"><u>고객 유형(세그먼트)에 따라 비교 방식과 첫 번째 메시지를 다르게</u> 구성합니다. 모든 유형에 동일한 화면을 적용하지 않습니다.</div>
+      </div>
+      <div class="rule-body">
+        <div class="cond-table-wrap">
+          <div class="section-label">고객 유형별 비교 방식</div>
+          <table class="cond-table">
+            <thead>
+              <tr><th style="width:20%">고객 유형</th><th style="width:38%">첫 번째 정보</th><th>리드 문구</th></tr>
+            </thead>
+            <tbody>
+              <tr data-if="user_segment == value_type" data-then="lead_with_benefit_upgrade_description">
+                <td class="cond-cell"><strong>가치 체감형</strong></td>
+                <td class="action-cell">혜택 업그레이드 내용 먼저 강조</td>
+                <td class="action-cell" style="font-style:italic">"지훈님이 실제로 더 잘 쓰게 될 혜택부터 보여드릴게요."</td>
+              </tr>
+              <tr data-if="user_segment == analysis_type" data-then="lead_with_data_driven_rationale">
+                <td class="cond-cell"><strong>분석형</strong></td>
+                <td class="action-cell">절감 금액과 이유 먼저 제시</td>
+                <td class="action-cell" style="font-style:italic">"왜 요금제 변경이 필요한지 알려드릴게요."</td>
+              </tr>
+              <tr data-if="user_segment == relationship_type" data-then="lead_with_group_benefit_changes">
+                <td class="cond-cell"><strong>관계 중심형</strong></td>
+                <td class="action-cell">그룹·가족 혜택 변화 먼저 제시</td>
+                <td class="action-cell" style="font-style:italic">"달라지는 그룹혜택만 정리해봤어요."</td>
+              </tr>
+              <tr data-if="user_segment == senior" data-then="use simplified_language + single_metric">
+                <td class="cond-cell"><strong>시니어</strong></td>
+                <td class="action-cell">데이터 증가량 한 가지만 단순하게</td>
+                <td class="action-cell" style="font-style:italic">"데이터가 ${N}GB 늘어 영상통화도 더 여유롭게 이용하실 수 있어요."</td>
+              </tr>
+              <tr data-if="user_segment == null" data-then="default to value_type presentation">
+                <td class="cond-cell"><strong>정보 없음</strong></td>
+                <td class="action-cell">가치 체감형 방식으로 기본 적용</td>
+                <td class="action-cell" style="color:var(--text-muted)">— 기본값 (value_type)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="do-dont-row">
+          <div class="do-box">
+            <div class="box-tag">✓ 해야 합니다</div>
+            <ul>
+              <li>user_segment별로 비교 방식과 리드 문구를 다르게 구성합니다.</li>
+            </ul>
+          </div>
+          <div class="dont-box">
+            <div class="box-tag">✗ 하지 않습니다</div>
+            <ul>
+              <li>모든 고객에게 동일한 비교 화면을 그대로 적용하지 않습니다.
+                <span class="fallback">세그먼트에 맞는 ComparisonView 변형을 적용합니다.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 카피 템플릿 -->
+    <div class="section-label mt-20">카피 템플릿</div>
+    <div class="copy-block">
+      <div class="copy-tag">📝 Copy Template — ${변수}는 실제 데이터로 교체됩니다</div>
+      <div class="copy-item">
+        <div class="copy-key">value_type_headline</div>
+        <div class="copy-value">"<span class="var">${user.name}</span>님이 실제로 더 잘 쓰게 될 혜택부터 보여드릴게요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">analysis_type_headline</div>
+        <div class="copy-value">"왜 요금제 변경이 필요한지 알려드릴게요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">relationship_type_headline</div>
+        <div class="copy-value">"달라지는 그룹혜택만 정리해봤어요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">senior_headline</div>
+        <div class="copy-value">"데이터가 <span class="var">${data_delta}</span>GB 늘어 영상통화나 인터넷도 더 여유롭게 이용하실 수 있어요."</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">delta_saving_label</div>
+        <div class="copy-value">"매달 <span class="var">${saving_amount}</span>원 절약"</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-key">change_summary</div>
+        <div class="copy-value">"달라지는 점만 정리해봤어요."</div>
+      </div>
+    </div>
+
+    <!-- 폴백 -->
+    <div class="section-label mt-12">데이터 부재 시 폴백</div>
+    <div class="fallback-bar">
+      <span class="fb-tag">Fallback</span>
+      <span class="fb-cond">current_contract == null</span>
+      <span class="fb-arrow">→</span>
+      <span class="fb-action">절대값 기반 product_specification_list 렌더링 (delta 미적용)</span>
+    </div>
+
+    <!-- 시나리오 — 4종 세그먼트 -->
+    <div class="section-label mt-20">시나리오 — 고객 유형별 비교 방식</div>
+    <div class="scenario-section">
+      <div class="scenario-head">Scenario · UXL_DCD_2 — user_segment별 ComparisonView 변형</div>
+      <div class="scenario-grid scen-4">
+
+        <div class="scenario-card">
+          <span class="scen-trigger">user_segment == "value_type"</span>
+          <div class="scen-title">가치 체감형</div>
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <!-- <img src="DCD_2_value_type.png" alt="가치 체감형 비교 화면"> -->
+                <span class="img-icon">📱</span>
+                <span class="img-tag">DCD_2_<br>value_type</span>
+              </div>
+            </div>
+          </div>
+          <div class="scen-copy">"지훈님이 실제로 더 잘 쓰게 될 혜택부터 보여드릴게요."</div>
+          <div class="scen-cta">CTA → 새 혜택으로 변경하기</div>
+          <div class="ai-caption">
+            <div class="ai-row"><span class="ai-key">컴포넌트</span><span>BenefitUpgradeCard + DeltaLabel</span></div>
+            <div class="ai-row"><span class="ai-key">리드</span><span>benefit_upgrade_description</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <span class="scen-trigger">user_segment == "analysis_type"</span>
+          <div class="scen-title">분석형</div>
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <!-- <img src="DCD_2_analysis_type.png" alt="분석형 비교 화면"> -->
+                <span class="img-icon">📱</span>
+                <span class="img-tag">DCD_2_<br>analysis_type</span>
+              </div>
+            </div>
+          </div>
+          <div class="scen-copy">"왜 요금제 변경이 필요한지 알려드릴게요. 예상 절감액 ${saving_amount}원."</div>
+          <div class="scen-cta">CTA → 변경 권장 근거 보기</div>
+          <div class="ai-caption">
+            <div class="ai-row"><span class="ai-key">컴포넌트</span><span>RationaleCard + SavingBreakdown</span></div>
+            <div class="ai-row"><span class="ai-key">리드</span><span>data_driven_rationale</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <span class="scen-trigger">user_segment == "relationship_type"</span>
+          <div class="scen-title">관계 중심형</div>
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <!-- <img src="DCD_2_relationship_type.png" alt="관계 중심형 비교 화면"> -->
+                <span class="img-icon">📱</span>
+                <span class="img-tag">DCD_2_<br>relationship</span>
+              </div>
+            </div>
+          </div>
+          <div class="scen-copy">"달라지는 그룹혜택만 정리해봤어요. 변경해도 온가족 결합 유지."</div>
+          <div class="scen-cta">CTA → 그룹 혜택 확인</div>
+          <div class="ai-caption">
+            <div class="ai-row"><span class="ai-key">컴포넌트</span><span>GroupBenefitDeltaCard</span></div>
+            <div class="ai-row"><span class="ai-key">리드</span><span>group_benefit_changes</span></div>
+          </div>
+        </div>
+
+        <div class="scenario-card">
+          <span class="scen-trigger">user_segment == "senior"</span>
+          <div class="scen-title">시니어</div>
+          <div class="phone-wrap">
+            <div class="phone-frame">
+              <div class="phone-screen">
+                <!-- <img src="DCD_2_senior.png" alt="시니어 비교 화면"> -->
+                <span class="img-icon">📱</span>
+                <span class="img-tag">DCD_2_<br>senior</span>
+              </div>
+            </div>
+          </div>
+          <div class="scen-copy">"데이터가 ${data_delta}GB 늘어 영상통화나 인터넷도 더 여유롭게 이용하실 수 있어요."</div>
+          <div class="scen-cta">발화 CTA → "변경"</div>
+          <div class="ai-caption">
+            <div class="ai-row"><span class="ai-key">컴포넌트</span><span>SimplifiedDeltaCard (지표 1개만)</span></div>
+            <div class="ai-row"><span class="ai-key">리드</span><span>simplified_language_template</span></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /pattern-body -->
+</section>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- 문서 푸터                                                     -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<footer>
+  <div>
+    <strong style="color:var(--blue)">UXL_DCD</strong> · AI Governance Guide v2.0 · journey_code: DCD · patterns: 2 · rules: 7
+  </div>
+  <div style="font-family:var(--font-mono)">2026-04-30</div>
+</footer>
+<p style="margin-top:12px; font-size:0.75rem; color:var(--text-muted); line-height:1.7;">
+  ⚠ 이미지 교체 방법: 각 <code>phone-screen</code> 내부의 주석을 <code>&lt;img src="파일명.png" alt="..."&gt;</code> 한 줄로 대체하세요.<br>
+  ⚠ <span style="font-family:var(--font-mono);">${변수}</span>는 런타임 데이터로 교체되어야 합니다. 문구에 추상 형용사(자연스럽게, 직관적, 최적화) 사용 금지.
+</p>
+
+</body>
+</html>

@@ -1,0 +1,6 @@
+WRMCB=function(e){var c=console;if(c&&c.log&&c.error){c.log('Error running batched script.');c.error(e);}}
+;
+try {
+/* module-key = 'com.atlassian.auiplugin:split_aui.splitchunk.1d1867466a', location = 'aui.chunk.7bb636d152c01dd44e2a--68a3b53884f4c3e331ac.js' */
+(globalThis.webpackChunk_auiRuntime=globalThis.webpackChunk_auiRuntime||[]).push([[2823],{208:(e,t,n)=>{"use strict";n.r(t),n.d(t,{default:()=>i});const i={light:()=>n.e(7995).then(n.bind(n,7665)),"light-future":()=>n.e(6567).then(n.bind(n,3621)),dark:()=>n.e(2735).then(n.bind(n,1)),"dark-future":()=>n.e(6917).then(n.bind(n,2261)),"legacy-light":()=>n.e(5177).then(n.bind(n,6423)),"legacy-dark":()=>n.e(915).then(n.bind(n,207)),spacing:()=>n.e(7498).then(n.bind(n,1108)),shape:()=>n.e(1138).then(n.bind(n,3180)),"typography-adg3":()=>n.e(592).then(n.bind(n,418)),"typography-modernized":()=>n.e(2186).then(n.bind(n,5968)),original:()=>Promise.resolve("")}},8077:(e,t,n)=>{"use strict";n.r(t);var i=n(8389);document.documentElement.hasAttribute("data-color-mode-auto")&&(0,i.default)({colorMode:"auto"})},6039:()=>{}}]);
+}catch(e){WRMCB(e)};

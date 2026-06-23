@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_EXP — 탐색 | UX Principle Guide</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer:  #E8E8E8;
+  --gray-card:   #F5F5F5;
+  --white:       #FFFFFF;
+  --border:      rgba(0,0,0,0.07);
+
+  --badge-do:    #2E7D32;
+  --badge-dont:  #C62828;
+  --badge-rule:  #1A1A1A;
+  --badge-beh:   #3C3C3C;
+  --badge-asis:  #C62828;
+  --badge-tobe:  #5135C8;
+  --badge-pat:   #E0E0E0;
+
+  --human-bg:    #3C3C3C;
+  --ai-bg:       #5135C8;
+
+  --ai-bg-block: #F0EDFF;
+  --ai-border:   #7C57FF;
+  --ai-key-col:  #5135C8;
+
+  --var-color:   #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0; padding: 0;
+}
+
+/* ── 문서 헤더 (CSS) ── */
+.doc-header-css {
+  background: #111111;
+  padding: 48px 60px 44px;
+  color: white;
+}
+.doc-eyebrow {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+}
+.doc-eyebrow-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: #AAAAAA; background: rgba(255,255,255,0.08);
+  padding: 3px 10px; border-radius: 6px;
+}
+.doc-eyebrow-sep { color: #444; font-size: 12px; }
+.doc-eyebrow-cat { font-size: 11px; color: #777; font-weight: 500; }
+.doc-header-css h1 {
+  font-size: 32px; font-weight: 800; letter-spacing: -0.035em;
+  line-height: 1.25; margin-bottom: 14px;
+}
+.doc-header-css p {
+  font-size: 14px; color: #AAAAAA; line-height: 1.75;
+  max-width: 620px; margin-bottom: 28px;
+}
+.doc-pattern-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.doc-pattern-chip {
+  font-size: 12px; font-weight: 600; color: #CCCCCC;
+  background: rgba(255,255,255,0.07);
+  padding: 6px 16px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.doc-pattern-chip.active {
+  color: #C4B8FF; background: rgba(81,53,200,0.28);
+  border-color: rgba(81,53,200,0.5);
+}
+
+/* ── 패턴 섹션 래퍼 ── */
+.pattern-wrap { padding: 20px 36px; }
+.pattern-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ── 패턴 메타 ── */
+.section-label { font-size: 13px; color: var(--text-dim); padding: 24px 36px 0; }
+.meta-block { padding: 16px 36px 0; }
+.pattern-badge {
+  display: inline-block; background: var(--badge-pat); color: #333;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 12px; border-radius: 8px; margin-bottom: 12px;
+}
+.pattern-heading {
+  font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px;
+}
+.pattern-desc {
+  font-size: 13.5px; color: var(--text-sub); line-height: 1.7;
+  margin-bottom: 20px; max-width: 96%;
+}
+
+/* BEHAVIOR / AS-IS / TO-BE */
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row p strong { color: var(--text); font-weight: 700; }
+.obadge {
+  display: inline-block; color: white; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.04em; border-radius: 5px; padding: 3px 7px;
+  white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.obadge.beh  { background: var(--badge-beh); }
+.obadge.asis { background: var(--badge-asis); }
+.obadge.tobe { background: var(--badge-tobe); }
+
+/* ── 패턴 레벨 AI 메타 ── */
+.pattern-ai-meta {
+  margin: 0 36px 24px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.pattern-ai-meta .ai-ln { font-size: 11.5px; }
+.pattern-ai-meta .ai-k  { min-width: 130px; }
+
+/* ── Human / AI 배지 ── */
+.lbadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 9px; font-weight: 800; letter-spacing: 0.05em;
+  color: white; padding: 2px 7px; border-radius: 4px; margin-top: 2px; min-width: 34px;
+}
+.lbadge.h { background: var(--human-bg); }
+.lbadge.a { background: var(--ai-bg); }
+
+/* ── 레이어 블록 ── */
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+.v { color: var(--var-color); font-weight: 600; }
+
+/* AI 인라인 블록 */
+.ai-blk {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px; flex: 1;
+}
+.ai-ln { display: flex; gap: 8px; font-size: 11px; line-height: 1.65; font-family: var(--mono); }
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+
+/* 와이어프레임 어노테이션 */
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; }
+.wire-ann .ai-ln  { font-size: 10.5px; }
+.wire-ann .ai-k   { min-width: 90px; }
+
+/* ── RULE 섹션 ── */
+.rule-section { background: var(--gray-card); border-top: 1px solid var(--border); }
+.rule-header { padding: 22px 36px 0; }
+.rule-badge {
+  display: inline-flex; align-items: center; background: var(--badge-rule);
+  color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 6px; margin-bottom: 10px;
+}
+
+/* DO / DON'T */
+.do-dont {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border); margin-top: 18px;
+}
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col   { background: #FAFFFE; }
+.dont-col { background: #FFFAFA; }
+.do-badge, .dont-badge {
+  display: inline-flex; color: white; font-size: 12px; font-weight: 700;
+  padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+.clip { overflow: hidden; }
+.clip img { display: block; width: 100%; }
+
+/* ── Scenario 섹션 ── */
+.scen-section { background: var(--white); border-top: 1px solid var(--border); }
+.scen-heading {
+  font-size: 13.5px; font-weight: 700;
+  padding: 20px 36px 0; margin-bottom: 0;
+}
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+.scen-anns {
+  display: grid; gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-anns.col2 { grid-template-columns: 1fr 1fr; }
+.scen-anns.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.scen-anns.col5 { grid-template-columns: 1fr 1fr 1fr 1fr 1fr; }
+.scen-ann { background: var(--white); padding: 18px 22px; }
+.scen-label {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  color: #555; background: #EBEBEB; border-radius: 20px;
+  padding: 3px 12px; margin-bottom: 12px;
+}
+
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════
+  문서 헤더
+══════════════════════════════════════════════ -->
+<div class="doc-header-css">
+  <div class="doc-eyebrow">
+    <span class="doc-eyebrow-tag">UXL</span>
+    <span class="doc-eyebrow-sep">·</span>
+    <span class="doc-eyebrow-cat">2. 탐색 — 탐색 화면의 고객 경험 원칙 정의</span>
+  </div>
+  <h1>UXL_EXP — 탐색</h1>
+  <p>이용 맥락과 행동 데이터에 따라 콘텐츠를 동적으로 노출해 탐색 수고를 덜고, 맞춤형 카피를 적용해 오퍼링이 거부감 없이 자연스러운 혜택으로 와닿게 해야 합니다.</p>
+  <div class="doc-pattern-chips">
+    <span class="doc-pattern-chip active">맥락 기반 유동적 전시</span>
+    <span class="doc-pattern-chip active">혜택 통합 제공 및 가치 체감</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_EXP_1 — 맥락 기반 유동적 전시
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_EXP_1</div>
+    <h2 class="pattern-heading">2-1. 맥락 기반 유동적 전시</h2>
+    <p class="pattern-desc">이용 맥락과 행동 데이터에 따라 콘텐츠를 동적으로 노출해 탐색 수고를 덜고, 맞춤형 카피를 적용해 오퍼링이 거부감 없이 자연스러운 혜택으로 와닿게 해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 동일한 리스트 구조에서 다양한 콘텐츠를 탐색하며 <strong>자신에게 필요한 상품과 혜택을 직접 선별</strong>합니다. 현재 상황과 무관한 정보 속에서 필요한 정보를 찾기 위해 반복적인 스크롤과 탐색을 수행합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>요금제, 이용 패턴, 직전 행동 등 실시간 맥락이 반영되지 않아 <strong>모든 고객에게 동일한 콘텐츠 구조가 제공</strong>됩니다. 이로 인해 현재 필요하지 않은 정보까지 소비하게 되며 탐색 피로가 증가합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객의 현재 상황과 행동 데이터를 기반으로 <strong>콘텐츠 노출 순서를 동적으로 재구성</strong>해야 합니다. 동시에 고객 맥락에 맞는 카피를 함께 제공해 <strong>오퍼링이 자연스럽게 인지</strong>되도록 설계해야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_EXP_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">explore_list</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">user.context_type IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">ContentList → slot: explore_primary, state: personalized_ordered</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">usage_context, behavior_history, realtime_location, time_of_day</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>         <span class="ai-v">usage_context AND behavior_history 모두 unavailable → default_popular_content_list (platform_ranking 순)</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객의 이용 맥락에 따라 콘텐츠 노출 순서를 <strong>동적으로 재구성</strong>해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>    <span class="ai-v">UXL_EXP_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span>  <span class="ai-v">ContentList</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">user.context_type IS NOT NULL</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>     <span class="ai-v">slot: explore_primary, state: personalized_ordered (context_type 기준 우선순위)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객의 상황 맥락을 반영해 <strong>선호도 기준으로 콘텐츠를 우선 노출</strong>합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">order_logic</span>   <span class="ai-v">context_type → first_block 결정</span></div>
+              <div class="ai-ln"><span class="ai-k">device_priority</span><span class="ai-v">인기 단말기 리스트 → 첫 ContentBlock</span></div>
+              <div class="ai-ln"><span class="ai-k">sub_priority</span>   <span class="ai-v">구독 상품 리스트 → 첫 ContentBlock</span></div>
+              <div class="ai-ln"><span class="ai-k">bundle_priority</span><span class="ai-v">결합 상품 리스트 → 첫 ContentBlock</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_1_rule1_do_phone.png" alt="DO — personalized_ordered: 맥락 기반 콘텐츠 순서 재구성">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 퍼플 블록</span><span class="ai-v">ContentList — context_type 기준 1순위 콘텐츠 (인기 단말기)</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 dimmed</span>   <span class="ai-v">secondary_order — 2·3순위 콘텐츠, 낮은 가중치 노출</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p><strong>모든 고객에게 동일한 콘텐츠 순서를 고정 제공</strong>하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">static_content_order — 모든 사용자 동일 순서</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">context_type 무시, platform_ranking만 반영</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>   <span class="ai-v">context_type unavailable → default_popular_content_list</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_1_rule1_dont_phone.png" alt="DON'T — static_content_order: 맥락 무관 고정 순서">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">static_content_order — 모든 사용자 동일 콘텐츠 순서</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">context_type 미반영 → 탐색 피로 증가, 이탈률 상승</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario 1: 콘텐츠 우선순위 재구성 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 콘텐츠 우선순위 재구성</p>
+    <div class="scen-strip">
+      <img src="assets/EXP_1_rule1_scen_strip.png" alt="EXP_1 Rule1 시나리오: 단말기 우선 / 구독 상품 우선 / 결합 상품 우선">
+    </div>
+    <div class="scen-anns col3">
+      <div class="scen-ann">
+        <span class="scen-label">단말기 우선</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"이번주 가장 많이 팔린 단말기예요."<br>CTA: "단말기 더보기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">user.context_type == 'device_priority'</span></div>
+              <div class="ai-ln"><span class="ai-k">first_block</span> <span class="ai-v">device_list (인기 단말기)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"이번주 가장 많이 팔린 단말기예요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">구독 상품 우선</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"T에서만 누릴 수 있는 구독혜택을 확인해보세요."<br>CTA: "구독 상품 더보기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">user.context_type == 'subscription_priority'</span></div>
+              <div class="ai-ln"><span class="ai-k">first_block</span> <span class="ai-v">subscription_list (구독 상품)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"T에서만 누릴 수 있는 구독혜택을 확인해보세요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">결합 상품 우선</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"결합하면 매달 나가는 통신비를 줄여요."<br>CTA: "결합 상품 보기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>    <span class="ai-v">user.context_type == 'bundle_priority'</span></div>
+              <div class="ai-ln"><span class="ai-k">first_block</span> <span class="ai-v">bundle_list (결합 상품)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"결합하면 매달 나가는 통신비를 줄여요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── RULE 2 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 2</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객 맥락을 반영해 콘텐츠 내용을 <strong>맞춤형 카피로 제공</strong>합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_EXP_1_RULE_2</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">ContentList (contextual copy layer)</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">time_of_day OR realtime_location OR user.segment IS NOT NULL</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">copy: 고객 맥락 기반 개인화 문구 + segment별 카피 차별화</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>시간, 위치, 관심사 등 고객 상황 데이터가 학습된 경우, 그에 해당하는 <strong>개인화 콘텐츠와 카피를 생성해 노출</strong>해야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">time_copy</span>     <span class="ai-v">time_of_day == 'evening' AND user.dining_benefit_available → "야식 먹을 시간, {offer.merchant} 무료로 드실 수 있어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">location_copy</span>  <span class="ai-v">nearby_coupon_count > 0 → "근처 주울 수 있는 쿠폰이 {N}개 있어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">segment_copy</span>   <span class="ai-v">user.segment 기준 차별 카피 — 마케팅 배너 포함</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_1_rule2_do_phone.png" alt="DO — contextual_copy: 시간·위치·세그먼트 기반 개인화 카피">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 배너</span><span class="ai-v">time_of_day 맥락 기반 개인화 copy — 동일 화면이라도 저녁 시간 고객에게 다른 카피 노출</span></div>
+            <div class="ai-ln"><span class="ai-k">중단 콘텐츠</span><span class="ai-v">context_type 기반 순서 유지 (RULE 1 적용 상태)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p><strong>맥락과 무관한 메시지와 콘텐츠만 반복 노출</strong>하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">uniform_copy — 모든 고객·세그먼트에 동일 배너 카피</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">context 무시, segment_id 미적용</span></div>
+              <div class="ai-ln"><span class="ai-k">금지 이유</span>  <span class="ai-v">고객이 자신과 무관한 광고로 인식 → 배너 맹목 현상 발생</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_1_rule2_dont_phone.png" alt="DON'T — uniform_copy: 맥락 무관 동일 카피">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">uniform_copy — 세그먼트·맥락 무관 동일 문구 일괄 적용</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">개인화 부재 → 고객이 자신과 무관한 광고로 인식 → 배너 맹목</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 2 -->
+
+
+  <!-- Scenario 2: 상황 맥락 기반 카피 변경 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황 맥락 기반 카피 변경</p>
+    <div class="scen-strip">
+      <img src="assets/EXP_1_rule2_scen_strip.png" alt="EXP_1 Rule2 시나리오: 시간 기반 / 위치 기반 / 관심사 기반 / 최근 본 단말기">
+    </div>
+    <div class="scen-anns col5">
+      <div class="scen-ann">
+        <span class="scen-label">시간 기반</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"야식 먹을 시간, <span class="v">도미노 피자</span>를 무료로 드실 수 있어요."</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span> <span class="ai-v">time_of_day == 'evening' AND user.dining_benefit_available == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"야식 먹을 시간, {offer.merchant} {offer.discount_desc} 드실 수 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">위치 기반</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"근처 주울 수 있는 쿠폰이 <span class="v">5</span>개 있어요. 놓치기 전에 주워보세요!"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span> <span class="ai-v">nearby_coupon_count > 0</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"근처 주울 수 있는 쿠폰이 {nearby_coupon_count}개 있어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>     <span class="ai-v">"혜택 주우러 가기 >" → nearby_coupon_flow</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">관심사 기반</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"갤럭시 S29 울트라 확인하셨네요. 비슷한 모델과 더 저렴한 요금제를 추천드려요."</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">user.recently_viewed_device IS NOT NULL</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">similar_device_recommendation_card</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"{recently_viewed_device} 확인하셨네요. 비슷한 모델과 더 저렴한 요금제를 추천드려요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">40대 주부</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>가족 혜택·생활 편의 중심 카피로 결합 상품 우선 노출</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>      <span class="ai-v">user.segment == '40대주부'</span></div>
+              <div class="ai-ln"><span class="ai-k">copy_theme</span>   <span class="ai-v">가족 혜택, 생활 편의, 주변 오프라인 쿠폰 강조</span></div>
+              <div class="ai-ln"><span class="ai-k">content_order</span><span class="ai-v">결합상품 → 생활혜택 → 단말기</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">20대 대학생</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>데이터·엔터테인먼트 중심 카피로 구독 상품 우선 노출</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>      <span class="ai-v">user.segment == '20대대학생'</span></div>
+              <div class="ai-ln"><span class="ai-k">copy_theme</span>   <span class="ai-v">데이터 무제한, OTT·AI 구독, 가성비 요금제 강조</span></div>
+              <div class="ai-ln"><span class="ai-k">content_order</span><span class="ai-v">구독상품 → 인기요금제 → 단말기</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card EXP_1 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_EXP_2 — 혜택 통합 제공 및 가치 체감
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_EXP_2</div>
+    <h2 class="pattern-heading">2-2. 혜택 통합 제공 및 가치 체감</h2>
+    <p class="pattern-desc">이벤트, 멤버십과 혜택을 묶어 통합된 구조로 제공하고, 맞춤형 참여 독려와 가치 체감으로 이어지는 완결된 혜택 경험을 제공해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 이벤트, 멤버십, 할인 혜택을 <strong>각각 개별적으로 확인</strong>하며 적용 가능한 혜택을 직접 조합합니다. 혜택 활용 과정에서 누락과 중복 확인이 발생합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>혜택이 분산되어 제공되어 <strong>전체 가치가 직관적으로 전달되지 않습니다.</strong> 고객은 자신이 받을 수 있는 총 혜택을 체감하기 어렵습니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>분산된 혜택을 <strong>통합된 구조로 묶어 고객에게 제공</strong>해야 합니다. 고객이 혜택 전체를 이해하고 참여까지 이어질 수 있는 <strong>완결된 경험</strong>을 가져야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_EXP_2</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">explore_list (benefit_hub)</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">user.benefit_portfolio IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">BenefitDashboard → slot: benefit_hub, state: integrated_view</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">membership_points, available_coupons, subscription_status, usage_pattern</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>         <span class="ai-v">benefit_portfolio unavailable → generic_benefit_discovery_card</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>분산된 혜택을 <strong>통합된 구조로 제공</strong>해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_EXP_2_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">BenefitDashboard</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">user.has_multiple_benefit_types == true</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">slot: benefit_hub — 포인트 + 쿠폰 + 구독 통합 대시보드</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>혜택을 하나의 화면에서 전체 가치가 보이도록 <strong>통합 제공</strong>합니다. 현 상황에 가장 적합한 혜택을 상위로 제안합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">structure</span>    <span class="ai-v">BenefitDashboard — 바코드 + 포인트 + 쿠폰 + 구독 통합</span></div>
+              <div class="ai-ln"><span class="ai-k">priority</span>     <span class="ai-v">benefit_applicable_now == true → 최우선 상단 노출</span></div>
+              <div class="ai-ln"><span class="ai-k">max_count</span>    <span class="ai-v">미제한 — 보유 혜택 전체 통합 표시</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_2_rule1_do_phone.png" alt="DO — BenefitDashboard: 포인트+쿠폰+구독 통합">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 카드</span><span class="ai-v">BenefitDashboard — 포인트·쿠폰·구독 유형별 통합, 현재 사용 가능 혜택 상단</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 블록</span><span class="ai-v">내 주변 혜택 — 위치 기반 실시간 제공</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>혜택을 <strong>개별 기능으로 분산해 고객이 직접 찾아 사용</strong>하도록 하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">scattered_benefit_tiles — 각 혜택 유형 개별 기능 분산</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">포인트 탭 / 쿠폰 탭 / 구독 탭 각각 이동 필요</span></div>
+              <div class="ai-ln"><span class="ai-k">금지 이유</span>  <span class="ai-v">총 혜택 가치 인지 불가 → 누락·중복 확인 부담</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_2_rule1_dont_phone.png" alt="DON'T — scattered_benefit_tiles: 혜택 분산 나열">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">scattered_benefit_tiles — 혜택 유형별 개별 아이콘·기능 분산</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">고객이 혜택 합산 불가 → 총 가치 인지 실패 → 미사용률 증가</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1: 혜택 통합 구조 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 혜택 통합 구조 적용 방식</p>
+    <div class="scen-strip">
+      <img src="assets/EXP_2_rule1_scen_strip.png" alt="EXP_2 Rule1 시나리오: 혜택 통합 대시보드 / 미사용 포인트 자동납부">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">혜택 통합 대시보드</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">지훈</span>님, 아래 혜택 <span class="v">2</span>개만 확인해서 등급 올리면 <span class="v">32,000원</span> 더 아낄 수 있어요."</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">user.has_multiple_benefit_types == true</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">BenefitDashboard: 포인트 + 쿠폰 + 구독 통합</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"{user.name}님, 혜택 {missing_benefit_count}개만 확인해서 등급 올리면 {additional_saving_amount}원 더 아낄 수 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">최적 혜택 우선 노출</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객이 여러 유형의 혜택을 보유한 경우에도, 현 상황에 <strong>가장 적합한 혜택을 상위로 제안</strong>해 빠른 혜택 사용을 도와야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>       <span class="ai-v">benefit_applicable_now == true</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>     <span class="ai-v">BenefitDashboard — highest_priority_benefit 상단 고정</span></div>
+              <div class="ai-ln"><span class="ai-k">sort_key</span>      <span class="ai-v">benefit.applicability_score DESC → top slot</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>          <span class="ai-v">"지금 바로 쓸 수 있는 혜택이에요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── RULE 2 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 2</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>혜택은 <strong>체감 가능한 형태</strong>로 제공해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>          <span class="ai-v">UXL_EXP_2_RULE_2</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span>        <span class="ai-v">BenefitDashboard (value expression layer)</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">benefit.value_type == 'abstract' OR plan_upgrade_eligible == true</span></div>
+            <div class="ai-ln"><span class="ai-k">value_transform</span>  <span class="ai-v">abstract_amount → concrete_daily_expression (커피 1잔, 영화 티켓 2매)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>금액, 절감 효과 등 <strong>실생활에서 바로 이해할 수 있는 가치</strong>로 혜택을 변환해 제공합니다. '커피 1잔', '매달 O원 절약' 등으로 강조합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">convert</span>   <span class="ai-v">benefit.amount → daily_life_equivalent (커피 1잔 / 영화 티켓 2매)</span></div>
+              <div class="ai-ln"><span class="ai-k">saving_exp</span><span class="ai-v">"매달 {monthly_saving}원 절약, 돌려받을 가치"</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"혜택이 커피 1잔에서 영화 티켓 2매만큼 커져요."</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_2_rule2_do_phone.png" alt="DO — concrete_value_expression: 커피 1잔 → 영화 티켓 2매">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 카드</span><span class="ai-v">benefit.amount → daily_life_equivalent 변환 (커피→영화티켓)</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 블록</span><span class="ai-v">요금제 상세 비교 — 고객이 맥락을 이해한 상태로 진입</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p><strong>추상적인 혜택 설명이나 조건 중심 정보</strong>만으로 고객이 직접 해석하도록 하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">raw_numeric_display — 조건·수치 나열, 일상 환산 없음</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">benefit.value_type == 'abstract' AND daily_expression 미적용</span></div>
+              <div class="ai-ln"><span class="ai-k">금지 이유</span>  <span class="ai-v">고객이 직접 해석해야 함 → 가치 인지 실패 → 참여율 저하</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_2_rule2_dont_phone.png" alt="DON'T — raw_numeric_display: 금액 수치만 노출">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">raw_numeric_display — 금액 수치만 노출, 일상 용어 환산 없음</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">고객이 직접 해석 필요 → 가치 인지 실패 → 참여율 저하</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 2 -->
+
+
+  <!-- Scenario RULE 2: 가치 체감형 혜택 제안 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 가치 체감형 혜택 제안</p>
+    <div class="scen-strip">
+      <img src="assets/EXP_2_rule2_scen_strip.png" alt="EXP_2 Rule2 시나리오: 가치 체감형 혜택 제안">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">신규·상향 가입 제안</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객에게 상품 신규·상향 가입을 제안하는 경우, '<span class="v">커피 1잔</span>', '<span class="v">영화 티켓 2매</span>' 등 일상 용어로 가치를 쉽게 체감시켜야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>     <span class="ai-v">benefit.value_type == 'abstract' AND plan_upgrade_eligible == true</span></div>
+              <div class="ai-ln"><span class="ai-k">transform</span>   <span class="ai-v">abstract_amount → concrete_daily_expression ("커피 1잔 → 영화 티켓 2매")</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"혜택이 커피 1잔에서 영화 티켓 2매만큼 커져요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>         <span class="ai-v">"구독 시작하기" → subscription_setup_flow</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">요금제·결합 변경 가치 체감</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>요금제·결합 상품 변경을 통해 금전적 이득이 있는 경우, '<span class="v">매달 O원 절약</span>', '<span class="v">돌려받을 가치</span>'로 표현을 강조해 체감시켜야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>     <span class="ai-v">plan_change_saving_available == true</span></div>
+              <div class="ai-ln"><span class="ai-k">transform</span>   <span class="ai-v">saving_amount → "매달 {monthly_saving}원 절약 / 돌려받을 가치"</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"매달 {monthly_saving}원 아낄 수 있어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>         <span class="ai-v">"요금제 변경하기" → plan_change_flow</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── RULE 3 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 3</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>혜택 적용과 참여를 <strong>하나의 끊김 없는 흐름</strong>으로 연결해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_EXP_2_RULE_3</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">NextStepProposal (혜택 적용 후속 연결)</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">benefit_applied == true</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">후속 행동 CTA 즉시 노출 — 단절 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>혜택 확인부터 적용, 후속 참여까지 <strong>끊김 없이 연속된 행동 흐름</strong>으로 이어줍니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">flow</span>          <span class="ai-v">혜택 확인 → 적용 → 후속 참여 CTA (단절 없음)</span></div>
+              <div class="ai-ln"><span class="ai-k">post_apply</span>    <span class="ai-v">benefit_applied → NextStepProposal 즉시 노출</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>          <span class="ai-v">"이제 매달 {total_benefit_value}원의 가치를 더 돌려받을 수 있어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">next_action</span>   <span class="ai-v">관련 혜택 탐색 or 자동납부 설정 CTA</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_2_rule3_do_phone.png" alt="DO — NextStepProposal: 혜택 적용 후 후속 행동 즉시 연결">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">초록 블록</span><span class="ai-v">요금제 변경 완료 확인 — 적용 성공 상태 명시</span></div>
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">NextStepProposal — 가치 체감 메시지 + 후속 참여 CTA 즉시 연결</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>혜택 적용 이후 <strong>다음 행동이 단절되도록 구성</strong>하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span>  <span class="ai-v">dead_end_completion — 완료 후 후속 행동 없음</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>   <span class="ai-v">benefit_applied == true이지만 NextStepProposal 미노출</span></div>
+              <div class="ai-ln"><span class="ai-k">금지 이유</span>   <span class="ai-v">참여 완료 이후 행동 단절 → 고객 다음 행동 없이 이탈</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/EXP_2_rule3_dont_phone.png" alt="DON'T — dead_end_completion: 완료 후 후속 행동 없음">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span> <span class="ai-v">dead_end_completion — 완료 메시지만 표시, 후속 행동 CTA 없음</span></div>
+            <div class="ai-ln"><span class="ai-k">결과</span>    <span class="ai-v">고객이 다음 행동 없이 이탈 → 추가 혜택 참여 기회 손실</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 3 -->
+
+
+  <!-- Scenario RULE 3: 혜택 적용 후속 연결 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 혜택 적용 후속 연결</p>
+    <div class="scen-strip">
+      <img src="assets/EXP_2_rule3_scen_strip.png" alt="EXP_2 Rule3 시나리오: 혜택 적용 후속 연결">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">바코드·포인트 혜택 연결</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객이 바코드 할인·적립 혜택 사용을 완료한 경우, 이어서 포인트 적립을 안내해 <strong>내역 확인부터 포인트 적립까지 연결된 구조</strong>로 제공해야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">barcode_benefit_used == true</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">NextStepProposal → 포인트 적립 내역 확인 CTA</span></div>
+              <div class="ai-ln"><span class="ai-k">flow</span>      <span class="ai-v">바코드 사용 완료 → 적립 안내 → 포인트 내역 화면</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"이제 매달 {total_benefit_value}원의 가치를 더 돌려받을 수 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">쿠폰 발급 후속 연결</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객이 쿠폰 발급을 완료한 경우, 이어서 앱 발동·승인부터 <strong>외부 채널 연결까지 끊김 없는 구조</strong>로 제공해야 합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">coupon_issued == true</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">NextStepProposal → 외부 채널 앱 승인 CTA</span></div>
+              <div class="ai-ln"><span class="ai-k">flow</span>      <span class="ai-v">쿠폰 발급 완료 → 앱 발동 안내 → 외부 채널 승인</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>       <span class="ai-v">"쿠폰 사용하러 가기" → external_channel_link</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card EXP_2 -->
+</div><!-- /pattern-wrap -->
+
+
+</body>
+</html>

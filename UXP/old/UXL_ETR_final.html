@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_ETR — 진입 | UX Principle Guide</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer:  #E8E8E8;
+  --gray-card:   #F5F5F5;
+  --white:       #FFFFFF;
+  --border:      rgba(0,0,0,0.07);
+
+  --badge-do:    #2E7D32;
+  --badge-dont:  #C62828;
+  --badge-rule:  #1A1A1A;
+  --badge-beh:   #3C3C3C;
+  --badge-asis:  #C62828;
+  --badge-tobe:  #5135C8;
+  --badge-pat:   #E0E0E0;
+
+  --human-bg:    #3C3C3C;
+  --ai-bg:       #5135C8;
+
+  --ai-bg-block: #F0EDFF;
+  --ai-border:   #7C57FF;
+  --ai-key-col:  #5135C8;
+
+  --var-color:   #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0;
+  padding: 0;
+}
+
+/* ────────────────────────────────
+   문서 헤더
+──────────────────────────────── */
+.doc-header img { display: block; width: 100%; }
+
+/* ────────────────────────────────
+   패턴 섹션 래퍼
+──────────────────────────────── */
+.pattern-wrap { padding: 20px 36px; }
+
+.pattern-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ────────────────────────────────
+   패턴 메타
+──────────────────────────────── */
+.section-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  padding: 24px 36px 0;
+}
+
+.meta-block { padding: 16px 36px 0; }
+
+.pattern-badge {
+  display: inline-block;
+  background: var(--badge-pat);
+  color: #333;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 4px 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.pattern-heading {
+  font-size: 24px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 10px;
+}
+
+.pattern-desc {
+  font-size: 13.5px;
+  color: var(--text-sub);
+  line-height: 1.7;
+  margin-bottom: 20px;
+  max-width: 96%;
+}
+
+/* BEHAVIOR / AS-IS / TO-BE */
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row strong { color: var(--text); font-weight: 700; }
+
+.obadge {
+  display: inline-block;
+  color: white;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border-radius: 5px;
+  padding: 3px 7px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.obadge.beh  { background: var(--badge-beh); }
+.obadge.asis { background: var(--badge-asis); }
+.obadge.tobe { background: var(--badge-tobe); }
+
+/* ────────────────────────────────
+   패턴 레벨 AI 메타
+──────────────────────────────── */
+.pattern-ai-meta {
+  margin: 0 36px 24px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.pattern-ai-meta .ai-ln { font-size: 11.5px; }
+.pattern-ai-meta .ai-k  { min-width: 130px; }
+
+/* ────────────────────────────────
+   Human / AI 레이어 배지
+──────────────────────────────── */
+.lbadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  color: white;
+  padding: 2px 7px;
+  border-radius: 4px;
+  margin-top: 2px;
+  min-width: 34px;
+}
+.lbadge.h { background: var(--human-bg); }
+.lbadge.a { background: var(--ai-bg); }
+
+/* ────────────────────────────────
+   레이어 블록
+──────────────────────────────── */
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+
+.v { color: var(--var-color); font-weight: 600; }
+
+/* AI 인라인 블록 */
+.ai-blk {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px;
+  flex: 1;
+}
+.ai-ln {
+  display: flex;
+  gap: 8px;
+  font-size: 11px;
+  line-height: 1.65;
+  font-family: var(--mono);
+}
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+
+/* 와이어프레임 어노테이션 */
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; }
+.wire-ann .ai-ln  { font-size: 10.5px; }
+.wire-ann .ai-k   { min-width: 90px; }
+
+/* ────────────────────────────────
+   RULE 섹션
+──────────────────────────────── */
+.rule-section {
+  background: var(--gray-card);
+  border-top: 1px solid var(--border);
+}
+
+.rule-header { padding: 22px 36px 0; }
+
+.rule-badge {
+  display: inline-flex;
+  align-items: center;
+  background: var(--badge-rule);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+}
+
+/* DO / DON'T */
+.do-dont {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+  margin-top: 18px;
+}
+
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col   { background: #FAFFFE; }
+.dont-col { background: #FFFAFA; }
+
+.do-badge, .dont-badge {
+  display: inline-flex;
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+
+.clip { overflow: hidden; }
+.clip img { display: block; width: 100%; }
+.clip-t80  img { margin-top: -80px; }
+
+/* ────────────────────────────────
+   Scenario 섹션
+──────────────────────────────── */
+.scen-section {
+  background: var(--white);
+  border-top: 1px solid var(--border);
+}
+
+.scen-heading {
+  font-size: 13.5px;
+  font-weight: 700;
+  padding: 20px 36px 0;
+  margin-bottom: 0;
+}
+
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+
+.scen-anns {
+  display: grid;
+  gap: 1px;
+  background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-anns.col2 { grid-template-columns: 3fr 1fr; }
+
+.scen-ann {
+  background: var(--white);
+  padding: 18px 22px;
+}
+
+.scen-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #555;
+  background: #EBEBEB;
+  border-radius: 20px;
+  padding: 3px 12px;
+  margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ═══════════════════════════════════════════
+  문서 헤더
+═══════════════════════════════════════════ -->
+<div class="doc-header">
+  <img src="assets/ETR_header.png"
+       alt="UXL_ETR — 진입의 고객 경험 원칙 정의 | 상태 기반 선제적 대응 / 끊김 없는 여정 재개 / 구조적 명확성">
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+  UXL_ETR_1 — 상태 기반 선제적 대응
+═══════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_1</div>
+    <h2 class="pattern-heading">1-1. 상태 기반 선제적 대응</h2>
+    <p class="pattern-desc">진입 시점의 고객 데이터를 기반으로 상태를 진단해, 당장 확인이 필요한 알림이나 개인화된 맞춤 태스크를 최우선으로 노출해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 앱 진입 시 전체 메뉴를 탐색하기보다 <strong>당장 필요한 기능이나 상태 확인</strong>부터 시도합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>진입 시 일반화된 홈 구조로 인해 <strong>고객은 자신의 상황과 무관한 정보</strong> 속에서 필요한 행동을 다시 찾아야 합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>C360 및 행동/의도 데이터 기반으로 현재 상황(이벤트, 사용 상태, 행동 트리거)을 즉시 해석하고, <strong>고객별로 다른 우선순위의 마이크로 태스크를 선제적으로 노출</strong>해야 합니다. 이는 '<strong>고객의 의도를 기반으로 UX를 동적으로 재구성</strong>'하는 구조로 이어져야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_ETR_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">home_entry</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">session.start == true AND customer_data.available == true</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">ProactiveMicroTaskCard → slot: home_primary, max_count: 1</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">customer_status, pending_event, recent_action_trigger</span></div>
+    <div class="ai-ln"><span class="ai-k">suppressed_when</span>  <span class="ai-v">customer_data.available == false → fallback: static_home_layout</span></div>
+  </div>
+
+  <!-- RULE 1 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객의 현재 상태를 해석해 실행 가능한 태스크를 <strong>선제적으로 제안</strong>합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_ETR_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">ProactiveMicroTaskCard</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">session.start == true AND customer_data.available == true</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">slot: home_primary, max_count: 1</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객 데이터 기반으로 상태를 파악하고, <strong>실행 가능한 태스크 카드 1개</strong>로 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">component</span>     <span class="ai-v">ProactiveMicroTaskCard</span></div>
+              <div class="ai-ln"><span class="ai-k">slot</span>          <span class="ai-v">home_primary</span></div>
+              <div class="ai-ln"><span class="ai-k">max_count</span>     <span class="ai-v">1 — 동시에 복수 카드 렌더링 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">data_required</span> <span class="ai-v">[customer_status, pending_action, recent_event]</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ETR_rule1_do_phone.png"
+             alt="DO — ProactiveMicroTaskCard 1개: 체크 아이콘 + 메시지 + 단일 CTA">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">상단 퍼플 블록</span><span class="ai-v">ProactiveMicroTaskCard — 체크 아이콘 + 메시지 + CTA 버튼 1개</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 회색 블록</span><span class="ai-v">secondary_content (dimmed) — 인터랙션 비활성, 배경 처리</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객 상황과 무관한 콘텐츠를 <strong>개인화 없이 동등하게 나열하지 않습니다.</strong></p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">static_home_layout — 고정 타일·범용 배너 동등 가중치 나열</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">customer_data.available == false OR pending_action == null</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>   <span class="ai-v">ProactiveMicroTaskCard 미표시 → static_home_layout 렌더링</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ETR_rule1_dont_phone.png"
+             alt="DON'T — static_tile_list: 동등 가중치 회색 블록 나열, 개인화 없음">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span>   <span class="ai-v">static_tile_list — 개인화 없는 동등 가중치 카드 구조</span></div>
+            <div class="ai-ln"><span class="ai-k">금지 이유</span><span class="ai-v">고객 데이터 미반영 → 우선순위 없음 → 탐색 부담 증가</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 1 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+    <div class="scen-strip">
+      <img src="assets/ETR_rule1_scen_strip.png"
+           alt="시나리오 3종: 요청받은 데이터 선물 / 약정 만료 임박 / 혜택 사용">
+    </div>
+    <div class="scen-anns col3">
+
+      <!-- ① 요청받은 데이터 선물 -->
+      <div class="scen-ann">
+        <span class="scen-label">요청받은 데이터 선물</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">자녀</span>가 데이터 요청을 보냈어요."<br>CTA: "지금 바로 선물하기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span> <span class="ai-v">family_data_request.pending == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"{family.name}이(가) 데이터 요청을 보냈어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>     <span class="ai-v">"지금 바로 선물하기" → action: data_gift_flow</span></div>
+              <div class="ai-ln"><span class="ai-k">target</span>  <span class="ai-v">{family.member_id}</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 약정 만료 임박 -->
+      <div class="scen-ann">
+        <span class="scen-label">약정 만료 임박</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"약정 만료 <span class="v">7일</span> 전, VIP <span class="v">민선님</span>은 지금 기기 변경하면 최대 <span class="v">55만 원</span> 할인받아요."<br>CTA: "기기변경비교하기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span> <span class="ai-v">contract.days_until_expiry ≤ 7</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"약정 만료 {contract.days_until_expiry}일 전, {user.grade} {user.name}님은 지금 기기 변경하면 최대 {benefit.max_discount}원 할인받아요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>     <span class="ai-v">"기기변경비교하기" → action: device_change_comparison</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ③ 혜택 사용 -->
+      <div class="scen-ann">
+        <span class="scen-label">혜택 사용</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"지금 <span class="v">파리바게뜨</span> 결제 대기 중이신가요? 적립혜택 놓치지 마세요."<br>CTA: "바코드 열기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span> <span class="ai-v">payment.status == pending AND nearby_benefit.applicable == true</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>    <span class="ai-v">"지금 {nearby_benefit.partner_name} 결제 대기 중이신가요? 적립혜택 놓치지 마세요."</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>     <span class="ai-v">"바코드 열기" → action: benefit_barcode_open</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /pattern-card ETR_1 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ═══════════════════════════════════════════
+  UXL_ETR_2 — 끊김 없는 여정 재개
+═══════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_2</div>
+    <h2 class="pattern-heading">1-2. 끊김 없는 여정 재개</h2>
+    <p class="pattern-desc">이전에 완료하지 못했던 여정(구매, 개통, 혜택 활성화 등)이 있다면, 진입 첫 화면에서 해당 지점으로 바로 이어갈 수 있도록 단일 재개 CTA를 제공해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 구매, 개통, 혜택 활성화 등 <strong>중단된 작업을 다시 찾기 위해 여러 화면을 반복 탐색</strong>합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>이전 행동 맥락이 유지되지 않아 고객이 어디까지 진행했는지 기억에 의존해야 하며, <strong>이탈 가능성이 높아집니다.</strong></p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>직전 행동 데이터와 <strong>태스크 단계(탐색-비교-결정-실행)</strong>를 기반으로 중단 지점을 정확히 복원하고, 진입 즉시 이어서 실행할 수 있는 <strong>단일 경로</strong>를 제공해야 합니다. 이는 고객의 흐름을 끊지 않는 <strong>Intent 기반 Action</strong> 설계로 연결되어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_ETR_2</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">home_entry</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">session.start == true AND incomplete_task.exists == true</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">ResumeBanner → slot: home_top (홈 진입 첫 화면 상단 고정)</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>       <span class="ai-v">incomplete_task.type, incomplete_task.last_step, saved_form_data</span></div>
+    <div class="ai-ln"><span class="ai-k">behavior_rule</span>    <span class="ai-v">입력·선택 정보 유지 상태로 중단 단계에서 즉시 재개 — 초기화 금지</span></div>
+    <div class="ai-ln"><span class="ai-k">suppressed_when</span>  <span class="ai-v">incomplete_task.exists == false → ResumeBanner 미표시</span></div>
+  </div>
+
+  <!-- RULE 2 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 2</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>중단된 태스크는 이전 입력과 선택을 유지한 채로 홈 상단에서 <strong>바로 재개</strong>할 수 있도록 복원합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>   <span class="ai-v">UXL_ETR_2_RULE_2</span></div>
+            <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">ResumeBanner</span></div>
+            <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">incomplete_task.exists == true AND session.start == true</span></div>
+            <div class="ai-ln"><span class="ai-k">output</span>    <span class="ai-v">slot: home_top, content: task.last_step + saved_form_data</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>중단 지점부터 재개할 수 있는 진입점을 <strong>하나만</strong> 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">component</span>      <span class="ai-v">ResumeBanner (홈 상단) + CTA 1개</span></div>
+              <div class="ai-ln"><span class="ai-k">entry_point</span>    <span class="ai-v">단일 — 복수 진입점 생성 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">data_preserved</span> <span class="ai-v">[task.last_step, selection.product_id, form_data]</span></div>
+              <div class="ai-ln"><span class="ai-k">resume_action</span>  <span class="ai-v">task.last_step에서 즉시 재개</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="clip">
+          <img class="phone-img" src="assets/ETR_rule2_do_phone.png"
+               alt="DO — ResumeBanner: 홈 진입 시 중단 지점 단일 CTA 노출 → 재개 화면 즉시 진입">
+        </div>
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">좌측 폰</span>  <span class="ai-v">홈 ResumeBanner — 태스크 카드 + CTA "이어하기"</span></div>
+            <div class="ai-ln"><span class="ai-k">화살표 →</span> <span class="ai-v">단일 진입 → 중단 시점 step 복원 (스텝 인디케이터 + 이전 선택 유지)</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>이탈 시 고객의 이전 입력·선택 데이터를 <strong>삭제하거나 초기화하지 않습니다.</strong></p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span> <span class="ai-v">clear_session_on_exit — 이탈 시 task.step + form_data 초기화</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>  <span class="ai-v">incomplete_task.exists == true (언제든 보존 필수)</span></div>
+              <div class="ai-ln"><span class="ai-k">fallback</span>   <span class="ai-v">데이터 보존 불가 시 → ResumeBanner 미표시 (홈 기본 레이아웃)</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="clip">
+          <img class="phone-img" src="assets/ETR_rule2_dont_phone.png"
+               alt="DON'T — 세션 초기화: 이전 행동 맥락 소실, 홈 기본 레이아웃 노출">
+        </div>
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span> <span class="ai-v">clear_session — task.step, form_data 소실</span></div>
+            <div class="ai-ln"><span class="ai-k">결과</span>    <span class="ai-v">고객이 처음부터 재탐색해야 함 → 이탈률 증가</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 2 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+    <div class="scen-strip clip clip-t80">
+      <img src="assets/ETR_rule2_scen_strip.png"
+           alt="시나리오 2종: 이어하기 플로우 / 후속 행동 선제 제안">
+    </div>
+    <div class="scen-anns col2">
+
+      <!-- ① 이어하기 -->
+      <div class="scen-ann">
+        <span class="scen-label">이어하기</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"지금까지 입력하신 정보를 자동으로 저장했어요. 언제든지 이어갈 수 있도록 홈화면에서 빠른 경로를 제공해 드릴게요."<br>CTA: "지금 하기" / "다음에 하기"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>        <span class="ai-v">incomplete_task.exists == true AND task.type == device_purchase</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>           <span class="ai-v">"지금까지 입력하신 정보를 자동으로 저장했어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span>      <span class="ai-v">ResumeBanner → slot: home_top</span></div>
+              <div class="ai-ln"><span class="ai-k">cta_primary</span>    <span class="ai-v">"지금 하기" → action: resume_from_step({task.last_step})</span></div>
+              <div class="ai-ln"><span class="ai-k">cta_secondary</span>  <span class="ai-v">"다음에 하기" → dismiss, preserve data</span></div>
+              <div class="ai-ln"><span class="ai-k">data_preserved</span> <span class="ai-v">[task.last_step, selection.product_id, selection.options, form_data]</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ② 후속 행동 선제 제안 -->
+      <div class="scen-ann">
+        <span class="scen-label">후속 행동 선제 제안</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">갤럭시 S29</span> 배송 완료됐어요. 1분 개통 신청 >"</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">order.status == delivered AND activation.completed == false</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"{product.name} 배송 완료됐어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">component</span> <span class="ai-v">NextStepProposal → slot: home_primary</span></div>
+              <div class="ai-ln"><span class="ai-k">cta</span>       <span class="ai-v">"1분 개통 신청 >" → action: device_activation_flow</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- /pattern-card ETR_2 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ═══════════════════════════════════════════
+  UXL_ETR_3 — 구조적 명확성
+═══════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_ETR_3</div>
+    <h2 class="pattern-heading">1-3. 구조적 명확성</h2>
+    <p class="pattern-desc">진입 후 어느 탭으로 전환하더라도 현재 위치와 맥락을 명확히 인지할 수 있도록, GNB 구조와 화면 위계를 모든 탭에서 일관되게 유지해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 탭 이동이나 기능 전환 시 <strong>현재 위치와 맥락을 다시 해석하려고 시도</strong>합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>구조와 네비게이션이 일관되지 않으면 고객은 매 화면마다 새롭게 이해해야 하며, <strong>인지 부담이 누적</strong>됩니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>자산 유형이나 기능이 달라도 <strong>동일한 구조 원리를 유지</strong>하고, <strong>현재 위치·상태·맥락을 항상 명확하게 드러내야</strong> 합니다. 이는 '고객이 상황을 해석하지 않아도 되는 환경'을 만드는 <strong>Frictionless Navigation</strong>으로 이어져야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_ETR_3</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">any_tab (GNB_홈 / GNB_혜택 / GNB_쇼핑 / GNB_나의T)</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>          <span class="ai-v">tab_navigation OR feature_transition</span></div>
+    <div class="ai-ln"><span class="ai-k">output_component</span> <span class="ai-v">GNBLayout — 고정 위계: 타이틀 / 콘텐츠 / 퀵메뉴</span></div>
+    <div class="ai-ln"><span class="ai-k">layout_rule</span>     <span class="ai-v">모든 탭 동일 위계 유지 — 탭별 커스텀 구조 금지</span></div>
+    <div class="ai-ln"><span class="ai-k">state_visible</span>   <span class="ai-v">활성 탭 GNB 하이라이트 필수 / 이전 컨텍스트 소실 금지</span></div>
+  </div>
+
+  <!-- RULE 3 -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 3</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>어느 탭으로 이동해도 <strong>레이아웃 구조는 동일</strong>하게 유지해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>          <span class="ai-v">UXL_ETR_3_RULE_3</span></div>
+            <div class="ai-ln"><span class="ai-k">layout_component</span> <span class="ai-v">GNBLayout</span></div>
+            <div class="ai-ln"><span class="ai-k">zones</span>            <span class="ai-v">타이틀(top) / 콘텐츠(middle) / 퀵메뉴(bottom) — 탭 무관 고정</span></div>
+            <div class="ai-ln"><span class="ai-k">applies_to</span>       <span class="ai-v">all_tabs — 예외 없음</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>탭에 관계없이 타이틀·콘텐츠·퀵메뉴 구조를 동일하게 유지하고, <strong>현재 탭을 항상 명시</strong>합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">layout</span>       <span class="ai-v">GNBLayout: 타이틀 → 콘텐츠 → 퀵메뉴 (순서 고정)</span></div>
+              <div class="ai-ln"><span class="ai-k">consistency</span>  <span class="ai-v">탭 전환 시 동일 레이아웃 원리 유지</span></div>
+              <div class="ai-ln"><span class="ai-k">active_state</span> <span class="ai-v">현재 탭 GNB 하이라이트 항상 표시</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ETR_rule3_do_phone.png"
+             alt="DO — GNBLayout: 3개 탭 모두 타이틀/콘텐츠/퀵메뉴 동일 위계">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록 구성</span><span class="ai-v">탭별 레이아웃 구조는 동일, 콘텐츠만 다름 (개인화)</span></div>
+            <div class="ai-ln"><span class="ai-k">하단 도트</span>    <span class="ai-v">GNB 퀵메뉴 — 활성 탭 항상 명시</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>탭마다 <strong>각각 다른 UI 구조</strong>를 사용하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">prohibited</span>  <span class="ai-v">per_tab_custom_layout — 탭마다 위계·레이아웃 다르게 구성</span></div>
+              <div class="ai-ln"><span class="ai-k">condition</span>   <span class="ai-v">tab_navigation 시 구조 원리 변경</span></div>
+              <div class="ai-ln"><span class="ai-k">금지 이유</span>   <span class="ai-v">탭 전환 시 인지 부담 증가 → 현재 위치 재해석 필요</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/ETR_rule3_dont_phone.png"
+             alt="DON'T — per_tab_custom_layout: 탭마다 다른 UI 구조, 일관성 없음">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">패턴명</span> <span class="ai-v">per_tab_custom_layout — 탭별 독립 레이아웃</span></div>
+            <div class="ai-ln"><span class="ai-k">결과</span>    <span class="ai-v">고객이 탭마다 UI 구조를 새로 학습해야 함</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scenario 3 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 적용 방식</p>
+    <div class="scen-strip clip clip-t80">
+      <img src="assets/ETR_rule3_scen_strip.png"
+           alt="시나리오 3종: GNB_홈 / GNB_혜택 / GNB_쇼핑 — 타이틀·콘텐츠·퀵메뉴 위계 유지">
+    </div>
+    <div class="scen-anns col3">
+
+      <!-- GNB_홈 -->
+      <div class="scen-ann">
+        <span class="scen-label">GNB_홈</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">민선님</span>, 찾아보실 필요 없게 필요한 것들만 모아봤어요"<br>영역: 타이틀 / 콘텐츠 / 퀵메뉴</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">tab</span>     <span class="ai-v">GNB_홈</span></div>
+              <div class="ai-ln"><span class="ai-k">layout</span>  <span class="ai-v">GNBLayout (타이틀 / 콘텐츠 / 퀵메뉴)</span></div>
+              <div class="ai-ln"><span class="ai-k">title</span>   <span class="ai-v">"{user.name}님, 찾아보실 필요 없게 필요한 것들만 모아봤어요"</span></div>
+              <div class="ai-ln"><span class="ai-k">content</span> <span class="ai-v">ProactiveMicroTaskCard (pending_action 기반)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GNB_혜택 -->
+      <div class="scen-ann">
+        <span class="scen-label">GNB_혜택</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">민선</span>님, T 혜택으로 <span class="v">12,800원</span> 절약했어요!"<br>영역: 타이틀 / 콘텐츠 / 퀵메뉴</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">tab</span>     <span class="ai-v">GNB_혜택</span></div>
+              <div class="ai-ln"><span class="ai-k">layout</span>  <span class="ai-v">GNBLayout (동일 위계 유지)</span></div>
+              <div class="ai-ln"><span class="ai-k">title</span>   <span class="ai-v">"{user.name}님, T 혜택으로 {benefit.total_saved}원 절약했어요!"</span></div>
+              <div class="ai-ln"><span class="ai-k">content</span> <span class="ai-v">benefit_summary_card + 혜택 사용 CTA</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GNB_쇼핑 -->
+      <div class="scen-ann">
+        <span class="scen-label">GNB_쇼핑</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>"<span class="v">민선님</span>에게 필요할 것 같은 상품들을 준비해봤어요."<br>영역: 타이틀 / 콘텐츠 / 퀵메뉴</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">tab</span>     <span class="ai-v">GNB_쇼핑</span></div>
+              <div class="ai-ln"><span class="ai-k">layout</span>  <span class="ai-v">GNBLayout (동일 위계 유지)</span></div>
+              <div class="ai-ln"><span class="ai-k">title</span>   <span class="ai-v">"{user.name}님에게 필요할 것 같은 상품들을 준비해봤어요."</span></div>
+              <div class="ai-ln"><span class="ai-k">content</span> <span class="ai-v">personalized_product_cards (user_profile 기반 추천)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 공통 캡션 -->
+    <div style="padding: 16px 36px 22px; border-top: 1px solid var(--border);">
+      <div class="layer-block" style="margin:0">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>탭 이동, 기능 확장 등 상태 변화가 발생하는 경우, 고객이 현재 위치와 관계를 즉시 이해할 수 있도록 일관된 구조와 명확한 위계를 유지해야 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">consistency_rule</span>    <span class="ai-v">GNBLayout 위계 (타이틀→콘텐츠→퀵메뉴) 모든 탭·기능 전환 시 동일 적용</span></div>
+            <div class="ai-ln"><span class="ai-k">active_tab_indicator</span><span class="ai-v">현재 활성 GNB 탭 항상 시각적으로 명시 (하이라이트)</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card ETR_3 -->
+</div><!-- /pattern-wrap -->
+
+
+</body>
+</html>

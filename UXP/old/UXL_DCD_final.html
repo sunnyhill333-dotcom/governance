@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UXL_DCD — 결정 | UX Principle Guide</title>
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --font:  'Pretendard', -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  --mono:  'Menlo', 'Consolas', 'D2Coding', monospace;
+
+  --gray-outer:  #E8E8E8;
+  --gray-card:   #F5F5F5;
+  --white:       #FFFFFF;
+  --border:      rgba(0,0,0,0.07);
+
+  --badge-do:    #2E7D32;
+  --badge-dont:  #C62828;
+  --badge-rule:  #1A1A1A;
+  --badge-beh:   #3C3C3C;
+  --badge-asis:  #C62828;
+  --badge-tobe:  #5135C8;
+  --badge-pat:   #E0E0E0;
+
+  --human-bg:    #3C3C3C;
+  --ai-bg:       #5135C8;
+
+  --ai-bg-block: #F0EDFF;
+  --ai-border:   #7C57FF;
+  --ai-key-col:  #5135C8;
+
+  --var-color:   #7C57FF;
+
+  --text:     #1A1A1A;
+  --text-sub: #5A5A5A;
+  --text-dim: #888888;
+}
+
+html { font-size: 14px; }
+body {
+  font-family: var(--font);
+  background: var(--gray-outer);
+  color: var(--text);
+  line-height: 1.65;
+  margin: 0; padding: 0;
+}
+
+/* ── 문서 헤더 ── */
+.doc-header-css {
+  background: #111111;
+  padding: 48px 60px 44px;
+  color: white;
+}
+.doc-eyebrow { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.doc-eyebrow-tag {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em;
+  color: #AAAAAA; background: rgba(255,255,255,0.08);
+  padding: 3px 10px; border-radius: 6px;
+}
+.doc-eyebrow-sep { color: #444; font-size: 12px; }
+.doc-eyebrow-cat { font-size: 11px; color: #777; font-weight: 500; }
+.doc-header-css h1 {
+  font-size: 32px; font-weight: 800; letter-spacing: -0.035em;
+  line-height: 1.25; margin-bottom: 14px;
+}
+.doc-header-css p {
+  font-size: 14px; color: #AAAAAA; line-height: 1.75;
+  max-width: 620px; margin-bottom: 28px;
+}
+.doc-pattern-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+.doc-pattern-chip {
+  font-size: 12px; font-weight: 600; color: #CCCCCC;
+  background: rgba(255,255,255,0.07);
+  padding: 6px 16px; border-radius: 20px;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+.doc-pattern-chip.active {
+  color: #C4B8FF; background: rgba(81,53,200,0.28);
+  border-color: rgba(81,53,200,0.5);
+}
+
+/* ── 패턴 섹션 래퍼 ── */
+.pattern-wrap { padding: 20px 36px; }
+.pattern-card {
+  background: var(--white);
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+/* ── 패턴 메타 ── */
+.section-label { font-size: 13px; color: var(--text-dim); padding: 24px 36px 0; }
+.meta-block { padding: 16px 36px 0; }
+.pattern-badge {
+  display: inline-block; background: var(--badge-pat); color: #333;
+  font-size: 11.5px; font-weight: 700; letter-spacing: 0.04em;
+  padding: 4px 12px; border-radius: 8px; margin-bottom: 12px;
+}
+.pattern-heading {
+  font-size: 24px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 10px;
+}
+.pattern-desc {
+  font-size: 13.5px; color: var(--text-sub); line-height: 1.7;
+  margin-bottom: 20px; max-width: 96%;
+}
+
+/* BEHAVIOR / AS-IS / TO-BE */
+.badge-rows { display: flex; flex-direction: column; gap: 7px; margin-bottom: 20px; }
+.badge-row { display: flex; align-items: flex-start; gap: 9px; font-size: 13px; line-height: 1.7; }
+.badge-row p { color: var(--text-sub); }
+.badge-row p strong { color: var(--text); font-weight: 700; }
+.obadge {
+  display: inline-block; color: white; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.04em; border-radius: 5px; padding: 3px 7px;
+  white-space: nowrap; flex-shrink: 0; margin-top: 2px;
+}
+.obadge.beh  { background: var(--badge-beh); }
+.obadge.asis { background: var(--badge-asis); }
+.obadge.tobe { background: var(--badge-tobe); }
+
+/* ── 패턴 레벨 AI 메타 ── */
+.pattern-ai-meta {
+  margin: 0 36px 24px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 8px 8px 0;
+  padding: 10px 14px;
+}
+.pattern-ai-meta .ai-ln { font-size: 11.5px; }
+.pattern-ai-meta .ai-k  { min-width: 130px; }
+
+/* ── Human / AI 배지 ── */
+.lbadge {
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 9px; font-weight: 800; letter-spacing: 0.05em;
+  color: white; padding: 2px 7px; border-radius: 4px; margin-top: 2px; min-width: 34px;
+}
+.lbadge.h { background: var(--human-bg); }
+.lbadge.a { background: var(--ai-bg); }
+
+/* ── 레이어 블록 ── */
+.layer-block { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.layer-row { display: flex; align-items: flex-start; gap: 9px; }
+.layer-row p { font-size: 13px; color: var(--text-sub); line-height: 1.7; }
+.layer-row p strong { color: var(--text); font-weight: 700; }
+.v { color: var(--var-color); font-weight: 600; }
+
+/* AI 인라인 블록 */
+.ai-blk {
+  display: flex; flex-direction: column; gap: 3px;
+  background: var(--ai-bg-block);
+  border-left: 3px solid var(--ai-border);
+  border-radius: 0 6px 6px 0;
+  padding: 8px 12px; flex: 1;
+}
+.ai-ln { display: flex; gap: 8px; font-size: 11px; line-height: 1.65; font-family: var(--mono); }
+.ai-k { color: var(--ai-key-col); font-weight: 700; min-width: 110px; flex-shrink: 0; }
+.ai-v { color: #2A2040; }
+
+/* 와이어프레임 어노테이션 */
+.wire-ann { display: flex; align-items: flex-start; gap: 8px; margin-top: 10px; }
+.wire-ann .ai-blk { padding: 6px 12px; }
+.wire-ann .ai-ln  { font-size: 10.5px; }
+.wire-ann .ai-k   { min-width: 90px; }
+
+/* ── RULE 섹션 ── */
+.rule-section { background: var(--gray-card); border-top: 1px solid var(--border); }
+.rule-header { padding: 22px 36px 0; }
+.rule-badge {
+  display: inline-flex; align-items: center; background: var(--badge-rule);
+  color: white; font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 4px 10px; border-radius: 6px; margin-bottom: 10px;
+}
+
+/* DO / DON'T */
+.do-dont {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border); margin-top: 18px;
+}
+.do-col, .dont-col { padding: 22px 28px; }
+.do-col   { background: #FAFFFE; }
+.dont-col { background: #FFFAFA; }
+.do-badge, .dont-badge {
+  display: inline-flex; color: white; font-size: 12px; font-weight: 700;
+  padding: 4px 14px; border-radius: 20px; margin-bottom: 12px;
+}
+.do-badge   { background: var(--badge-do); }
+.dont-badge { background: var(--badge-dont); }
+
+.phone-img { display: block; width: 100%; border-radius: 10px; margin: 14px 0 0; }
+.clip { overflow: hidden; }
+.clip img { display: block; width: 100%; }
+
+/* ── Scenario 섹션 ── */
+.scen-section { background: var(--white); border-top: 1px solid var(--border); }
+.scen-heading {
+  font-size: 13.5px; font-weight: 700;
+  padding: 20px 36px 0; margin-bottom: 0;
+}
+.scen-strip { overflow: hidden; }
+.scen-strip img { display: block; width: 100%; }
+.scen-anns {
+  display: grid; gap: 1px; background: var(--border);
+  border-top: 1px solid var(--border);
+}
+.scen-anns.col2 { grid-template-columns: 1fr 1fr; }
+.scen-anns.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.scen-anns.col4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.scen-ann { background: var(--white); padding: 18px 22px; }
+.scen-label {
+  display: inline-block; font-size: 11px; font-weight: 600;
+  color: #555; background: #EBEBEB; border-radius: 20px;
+  padding: 3px 12px; margin-bottom: 12px;
+}
+</style>
+</head>
+<body>
+
+
+<!-- ══════════════════════════════════════════════
+  문서 헤더
+══════════════════════════════════════════════ -->
+<div class="doc-header-css">
+  <div class="doc-eyebrow">
+    <span class="doc-eyebrow-tag">UXL</span>
+    <span class="doc-eyebrow-sep">·</span>
+    <span class="doc-eyebrow-cat">4. 결정 — 비교·추천 화면의 고객 경험 원칙 정의</span>
+  </div>
+  <h1>UXL_DCD — 결정</h1>
+  <p>개인별 이용 데이터를 기반으로 최적안을 선제적으로 제안하고, 현재 계약 대비 핵심 변화만을 직관적으로 대조해 탐색 부담 없이 빠른 판단이 가능한 구조를 제공합니다.</p>
+  <div class="doc-pattern-chips">
+    <span class="doc-pattern-chip active">데이터 기반 최적안 도출</span>
+    <span class="doc-pattern-chip active">근거 기반 비교 제공</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_DCD_1 — 데이터 기반 최적안 도출
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_DCD_1</div>
+    <h2 class="pattern-heading">4-1. 데이터 기반 최적안 도출</h2>
+    <p class="pattern-desc">요금제 사용량, 데이터 패턴, 단말 상태 등 개인별 이용 데이터를 종합적으로 분석하여 가장 유리한 최적안을 선제적으로 제안해야 합니다. 제안 시에는 사용량 적합도 등 핵심 근거를 반드시 함께 노출해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 요금제, 혜택, 단말 상태 등을 각각 확인하며 <strong>스스로 최적안을 찾기 위해 여러 화면을 반복 탐색</strong>합니다. 개인의 사용량이나 상황을 기준으로 판단하지 못하고 단편적인 정보에 의존하는 경향이 있습니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>데이터가 존재함에도 불구하고 이를 종합적으로 해석하지 않아 <strong>개인화된 제안이 이루어지지 않습니다.</strong> 고객은 자신에게 적합한 선택을 스스로 계산해야 하는 부담을 가지게 됩니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>고객의 사용 패턴, 상황, 데이터를 입체적으로 해석하여 <strong>최적의 단일안을 선제적으로 제시</strong>해야 합니다. 절감액, 체감 혜택 등 실질 가치 근거를 함께 제공하여 즉시 판단 가능한 상태를 만들어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_DCD_1</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">decision_compare</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>         <span class="ai-v">user.usage_pattern IS NOT NULL</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>          <span class="ai-v">OptimalPlanCard → slot: decision_primary, state: single_recommendation</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>      <span class="ai-v">usage_pattern (profile), contract_status (profile), device_status (profile, optional), family_group_usage (profile, optional)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>        <span class="ai-v">usage_pattern unavailable → render plan_selection_list with usage_input_prompt</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객 데이터를 기반으로 <strong>단일 최적 안을 선별해 제안</strong>해야 합니다. 복수 옵션을 동등하게 나열하거나 고객이 직접 선택하도록 유도하지 않습니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>        <span class="ai-v">UXL_DCD_1_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if usage+contract</span><span class="ai-v">render single OptimalPlanCard (not equal-list) with rationale</span></div>
+            <div class="ai-ln"><span class="ai-k">if no_penalty</span>   <span class="ai-v">append no_penalty_label to OptimalPlanCard</span></div>
+            <div class="ai-ln"><span class="ai-k">if device+bundle</span><span class="ai-v">render single pre-configured bundle recommendation</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>          <span class="ai-v">multiple equal options rendered as list for user selection 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객의 사용 패턴, 상황, 상황을 반영하여 <strong>결과를 우선 제시하고 고객 판단을 유도</strong>합니다. 요금제·단말 결합이 복잡한 경우에도 단일 최적 옵션을 먼저 제시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">render</span>       <span class="ai-v">OptimalPlanCard (single) — usage_pattern + contract_status 기반</span></div>
+              <div class="ai-ln"><span class="ai-k">include</span>      <span class="ai-v">saving_amount label + no_penalty_label (조건 충족 시)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>         <span class="ai-v">"어머니는 매달 20일쯤 데이터가 소진되는 패턴이라, {plan_name} 요금제를 추천드려요."</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_1_rule1_do_phone.png" alt="DO — single_optimal: 단일 최적안 + 근거 제시">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">OptimalPlanCard — usage_pattern 기반 단일 최적 요금제 추천</span></div>
+            <div class="ai-ln"><span class="ai-k">체크 아이콘</span><span class="ai-v">no_penalty_label + saving_amount 근거 레이블</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>복수 옵션을 동등하게 나열하거나 고객이 직접 선택하도록 유도하지 않습니다. 고객이 자신에게 맞는 옵션을 스스로 계산·비교하게 만들지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">all_options_list 동등 나열 — 고객 직접 선택 유도 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">saving_amount / benefit_change 생략 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_1_rule1_dont_phone.png" alt="DON'T — equal_list: 복수 옵션 동등 나열">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">동일 가중치 옵션 리스트 — 고객이 직접 비교·계산해야 함</span></div>
+            <div class="ai-ln"><span class="ai-k">근거 부재</span><span class="ai-v">추천 이유·절감 금액 미표시 → 판단 지연</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- Scenario RULE 1 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 상황별 최적안 도출 방식</p>
+    <div class="scen-strip">
+      <img src="assets/DCD_1_rule1_scen_strip.png" alt="DCD_1 Rule1 시나리오: 요금제 변경 권고 / 복잡한 단말+요금 결합">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">요금제 변경 권고</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>데이터 소진 패턴이 감지된 경우 단일 최적 요금제를 제안합니다. 위약금 없음 레이블과 월 절감액을 함께 표시해 즉시 결정을 유도합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>     <span class="ai-v">usage_pattern.data_exhaustion_day &lt; 25</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>      <span class="ai-v">OptimalPlanCard (single) + no_penalty_label + saving_label</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"어머니는 매달 20일쯤 데이터가 소진되는 패턴이라, 요금제 변경 시 선물 없이도 충분히 사용할 수 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">단말+요금 복잡 결합</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>단말 변경과 요금제·부가서비스가 동시에 얽힌 경우, 결합 구성 전체를 한눈에 파악할 수 있는 최적 결합 단일안을 제시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>     <span class="ai-v">cart.has_device == true AND cart.has_plan == true</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>      <span class="ai-v">pre-configured bundle recommendation (단일 최적 결합 구성)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>        <span class="ai-v">"님의 패턴에 맞게 최적 옵션을 설정해뒀어요. 민수님께 딱 맞는 옵션들로 제가 한 번에 세팅해 드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── RULE 2 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 2</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>판단 결과를 이해할 수 있는 <strong>데이터 기반 근거가 함께 제공</strong>되어야 합니다. 근거 없이 결과만 제시하거나 고객의 추가 계산·비교를 유도하지 않습니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>        <span class="ai-v">UXL_DCD_1_RULE_2</span></div>
+            <div class="ai-ln"><span class="ai-k">always_include</span> <span class="ai-v">saving_amount OR benefit_delta — 정량 근거 필수</span></div>
+            <div class="ai-ln"><span class="ai-k">if value_judgment</span><span class="ai-v">convert benefit to real-life equivalent (e.g. '커피 1잔', '영화 티켓')</span></div>
+            <div class="ai-ln"><span class="ai-k">copy_template</span>  <span class="ai-v">"바로 변경해도 위약금이 발생하지 않아요." / "추가 비용이 없는 이유를 알려드릴게요."</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>         <span class="ai-v">근거 생략 후 결과만 제시 / 고객 직접 계산 유도 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>절감 금액, 혜택 변화 등 <strong>정량 근거를 포함</strong>해야 합니다. 가치 판단이 필요한 경우 혜택을 실질적인 금액이나 공감할 수 있는 표현으로 변환해 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">quantify</span>     <span class="ai-v">saving_amount + benefit_delta 명시 (절감액, 혜택 변화량)</span></div>
+              <div class="ai-ln"><span class="ai-k">convert</span>      <span class="ai-v">abstract_benefit → real-life equivalent ("커피 1잔", "영화 티켓 2매")</span></div>
+              <div class="ai-ln"><span class="ai-k">no_penalty</span>   <span class="ai-v">"바로 변경해도 위약금이 발생하지 않아요." 레이블 표시</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_1_rule2_do_phone.png" alt="DO — evidence_present: 절감 근거 + 혜택 가치 명시">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">saving_label + benefit_value — 고객이 즉시 체감 가능한 근거</span></div>
+            <div class="ai-ln"><span class="ai-k">체크 아이콘</span><span class="ai-v">no_penalty_label — 변경 장벽 사전 해소</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>근거 없이 결과만 제시하거나 고객이 추가 계산·비교를 해야 하는 구조로 만들지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">saving_amount / benefit_delta 생략 — 결과만 노출 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">고객이 직접 계산·비교해야 하는 구조 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_1_rule2_dont_phone.png" alt="DON'T — no_evidence: 근거 없는 결과 나열">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">결과만 나열 — 절감 근거·혜택 가치 미표시</span></div>
+            <div class="ai-ln"><span class="ai-k">단절 상태</span><span class="ai-v">고객이 직접 계산해야 판단 가능 → 결정 지연</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 2 -->
+
+
+  <!-- Scenario RULE 2 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 혜택 가치 표현 방식</p>
+    <div class="scen-strip">
+      <img src="assets/DCD_1_rule2_scen_strip.png" alt="DCD_1 Rule2 시나리오: 실질적 금액 / 공감 표현 / 고객 근거 기반 / 기준 이름 배제">
+    </div>
+    <div class="scen-anns col4">
+      <div class="scen-ann">
+        <span class="scen-label">실질적인 금액 표현</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>절감 금액과 혜택 가치를 실제 납부 금액 기준으로 명시합니다. "매달 O원 절약"처럼 바로 체감 가능한 수치를 제시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">saving_amount > 0</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>   <span class="ai-v">saving_label: "매달 {saving_amount}원 절약"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">공감할 수 있는 표현</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>추상적 혜택을 일상 용어로 변환합니다. "커피 1잔", "영화 티켓 2매" 등 친숙한 단위로 가치를 체감시킵니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>  <span class="ai-v">benefit_value.type == 'abstract'</span></div>
+              <div class="ai-ln"><span class="ai-k">convert</span>  <span class="ai-v">→ daily_life_equivalent ("커피 1잔", "영화 티켓 2매")</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">고객 맞춤 근거 안내</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객이 충분히 이해하고 선택을 증명할 수 있도록, 맞춤 데이터 기반의 근거 안내를 명확히 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">render</span>   <span class="ai-v">rationale_snippet — user.usage_history 기반 맥락 설명</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"추가 비용이 없는 이유를 알려드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">기준 근거 명시</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>근거를 충분히 제공하고 고객이 납득할 수 있는 명확한 기준과 함께 정보를 제시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">render</span>   <span class="ai-v">reasoning_label — 추천 근거 구체적 명시 (이용 패턴, 계약 기간 등)</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">근거 없이 "추천" 레이블만 표시 금지</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card DCD_1 -->
+</div><!-- /pattern-wrap -->
+
+
+<!-- ══════════════════════════════════════════════
+  UXL_DCD_2 — 근거 기반 비교 제공
+══════════════════════════════════════════════ -->
+<div class="pattern-wrap">
+<div class="pattern-card">
+
+  <p class="section-label">UX Principle Details</p>
+
+  <div class="meta-block">
+    <div class="pattern-badge">UXL_DCD_2</div>
+    <h2 class="pattern-heading">4-2. 근거 기반 비교 단축</h2>
+    <p class="pattern-desc">수많은 옵션 나열 대신 추천 근거를 바탕으로 현재 계약과의 차이를 직관적으로 대조해, 탐색 부담 없이 빠른 판단이 가능한 구조를 제공해야 합니다.</p>
+
+    <div class="badge-rows">
+      <div class="badge-row">
+        <span class="obadge beh">BEHAVIOR</span>
+        <p>고객은 다양한 요금제와 상품이 나열된 상태에서 <strong>각 항목을 직접 계산하거나 기억해가며 판단</strong>합니다. 비교 과정에서 반복 탐색과 재확인을 수행합니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge asis">AS-IS</span>
+        <p>동일한 나열 구조로 인해 고객이 스스로 비교 기준을 만들어야 하며, <strong>현재 상태 대비 변화를 직관적으로 파악하기 어렵습니다.</strong> 이는 결정 지연과 이탈로 이어집니다.</p>
+      </div>
+      <div class="badge-row">
+        <span class="obadge tobe">TO-BE</span>
+        <p>현재 계약 상태를 기준으로 <strong>변화되는 핵심 요소만을 자동으로 대조</strong>하여 보여주고, 비교의 범위를 시스템이 축소해야 합니다. 고객은 '무엇이 어떻게 달라지는지'만 확인하고 즉시 결정할 수 있어야 합니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="pattern-ai-meta">
+    <div class="ai-ln"><span class="ai-k">pattern_id</span>      <span class="ai-v">UXL_DCD_2</span></div>
+    <div class="ai-ln"><span class="ai-k">screen_type</span>     <span class="ai-v">decision_compare</span></div>
+    <div class="ai-ln"><span class="ai-k">trigger</span>         <span class="ai-v">comparison.items > 1</span></div>
+    <div class="ai-ln"><span class="ai-k">output</span>          <span class="ai-v">ComparisonView → slot: decision_compare_area, state: delta_focused</span></div>
+    <div class="ai-ln"><span class="ai-k">input_data</span>      <span class="ai-v">current_contract (profile), candidate_options (real_time_api), user_segment (profile)</span></div>
+    <div class="ai-ln"><span class="ai-k">fallback</span>        <span class="ai-v">current_contract unavailable → render full product_specification_list without delta</span></div>
+  </div>
+
+
+  <!-- ── RULE 1 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 1</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>비교 결과는 <strong>직관적인 대조 형태로 제공</strong>해야 합니다. 현재 대비 변화값을 중심으로 결과를 즉시 이해 가능하게 합니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>        <span class="ai-v">UXL_DCD_2_RULE_1</span></div>
+            <div class="ai-ln"><span class="ai-k">if comparison</span>  <span class="ai-v">render delta_view (change_amount + change_direction) — raw 값 나열 금지</span></div>
+            <div class="ai-ln"><span class="ai-k">data_delta</span>    <span class="ai-v">'데이터 +{N}GB' delta label</span></div>
+            <div class="ai-ln"><span class="ai-k">cost_delta</span>    <span class="ai-v">'매달 -{N}원 절약' delta label</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>         <span class="ai-v">raw individual values without delta 나열 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>현재 대비 변화값을 중심으로 결과를 즉시 이해 가능하게 합니다. 요금제 변경이 복잡한 조건을 포함한 경우, <strong>변경되는 핵심 정보만 요약된 구조를 함께 제공</strong>합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">render</span>    <span class="ai-v">ComparisonView — delta_focused (변화 방향 + 변화량 강조)</span></div>
+              <div class="ai-ln"><span class="ai-k">label</span>     <span class="ai-v">"매달 {saving_amount}원 절약" + "데이터 {data_delta}GB 늘어요"</span></div>
+              <div class="ai-ln"><span class="ai-k">summary</span>   <span class="ai-v">"달라지는 점만 정리해봤어요." — 핵심 변화 요약</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_2_rule1_do_phone.png" alt="DO — delta_view: 현재 대비 핵심 변화 직관적 대조">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">delta_label — 변화량·방향 강조 표시</span></div>
+            <div class="ai-ln"><span class="ai-k">요약 카드</span><span class="ai-v">핵심 변화 요약 — 현재 계약 기준 달라지는 정보만 선별</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>개별 항목만을 나열해 고객이 직접 해석하도록 유도하지 않습니다. 비교 근거 없이 고객이 스스로 계산해야 하는 구조를 만들지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">raw individual values 나열 — delta 없이 고객 직접 해석 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">system-selected rationale 생략 — 고객 직접 계산 유도 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_2_rule1_dont_phone.png" alt="DON'T — raw_list: 개별 항목 나열, 고객 직접 비교">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">raw 값 나열 — 변화 방향·delta 미표시</span></div>
+            <div class="ai-ln"><span class="ai-k">단절 상태</span><span class="ai-v">고객이 직접 계산해야 판단 가능 → 결정 지연</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 1 -->
+
+
+  <!-- ── RULE 2 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 2</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>변화되는 <strong>핵심 정보만 선별해 확인이 가능</strong>해야 합니다. 불필요한 세부 정보와 조건들로 고객의 판단을 방해하지 않습니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>       <span class="ai-v">UXL_DCD_2_RULE_2</span></div>
+            <div class="ai-ln"><span class="ai-k">filter</span>        <span class="ai-v">decision_critical_fields only — 비변경 항목 숨김</span></div>
+            <div class="ai-ln"><span class="ai-k">summary_copy</span>  <span class="ai-v">"달라지는 점만 정리해봤어요." / "달라지는 그룹혜택만 정리해봤어요."</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>        <span class="ai-v">전체 스펙 나열 — 불필요 세부 조건 노출 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>의사결정에 필요한 <strong>핵심 정보만 선별해 제공</strong>합니다. 변경되는 항목만 보여주고 동일한 항목은 생략해 인지 부담을 줄입니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">show_only</span>  <span class="ai-v">changed_fields — 변경되는 핵심 요소만 표시</span></div>
+              <div class="ai-ln"><span class="ai-k">hide</span>       <span class="ai-v">unchanged_fields — 동일 항목 생략</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>       <span class="ai-v">"달라지는 점만 정리해봤어요."</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_2_rule2_do_phone.png" alt="DO — key_delta_only: 핵심 변화 항목만 선별 표시">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">체크 아이콘</span><span class="ai-v">변경 핵심 항목 — 불필요 스펙 제거 후 변화 요소만</span></div>
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">delta_summary — "달라지는 점만 정리해봤어요." 요약 카드</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>불필요한 세부 정보와 조건들로 고객의 판단을 방해하지 않습니다. 전체 스펙을 일괄 나열해 고객이 직접 중요 항목을 찾아야 하는 구조를 만들지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">full_specification_list 나열 — 변화 항목 강조 없음 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">불필요 세부 조건 노출 — 고객 직접 탐색 유도 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_2_rule2_dont_phone.png" alt="DON'T — full_spec: 전체 스펙 나열, 핵심 변화 미강조">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">전체 스펙 나열 — 변경 항목 강조 없이 동등 나열</span></div>
+            <div class="ai-ln"><span class="ai-k">인지 과부하</span><span class="ai-v">고객이 직접 중요 항목 탐색 → 결정 지연</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 2 -->
+
+
+  <!-- Scenario RULE 2 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 핵심 변화 정보 제공 방식</p>
+    <div class="scen-strip">
+      <img src="assets/DCD_2_rule2_scen_strip.png" alt="DCD_2 Rule2 시나리오: 요금제 핵심 변화 요약 / 결합 그룹혜택 변화 요약">
+    </div>
+    <div class="scen-anns col2">
+      <div class="scen-ann">
+        <span class="scen-label">요금제 변경 핵심 정보</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>요금제와 같이 복잡한 조건을 포함한 비교 상황의 경우, 변경되는 핵심 정보만 요약된 구조를 함께 제공합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">plan_change_eligible == true AND conditions_complex == true</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>    <span class="ai-v">delta_summary_card — 변경 핵심 항목 only (요금, 데이터, 부가서비스)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"달라지는 점만 정리해봤어요." + "매달 {saving}원 절약"</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">결합 그룹혜택 변화</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>가족 결합 상품 변경 시 그룹 혜택의 변화만 분리해 제시합니다. 전체 결합 구조 대신 변경되는 혜택 항목만 명확히 표시합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">trigger</span>   <span class="ai-v">family_bundle_change == true</span></div>
+              <div class="ai-ln"><span class="ai-k">render</span>    <span class="ai-v">group_benefit_delta_card — 변경 그룹혜택 항목만 선별</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>      <span class="ai-v">"달라지는 그룹혜택만 정리해봤어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ── RULE 3 ── -->
+  <div class="rule-section">
+    <div class="rule-header">
+      <div class="rule-badge">RULE 3</div>
+
+      <div class="layer-block">
+        <div class="layer-row">
+          <span class="lbadge h">사람</span>
+          <p>고객 성향에 따라 <strong>비교 방식을 달리 구성</strong>해야 합니다. 모든 고객에게 동일한 비교 구조를 일괄 적용하지 않습니다.</p>
+        </div>
+        <div class="layer-row">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">rule_id</span>             <span class="ai-v">UXL_DCD_2_RULE_3</span></div>
+            <div class="ai-ln"><span class="ai-k">if value_type</span>       <span class="ai-v">lead with concrete benefit upgrade — "실제로 더 잘 쓰게 될 혜택부터"</span></div>
+            <div class="ai-ln"><span class="ai-k">if analysis_type</span>    <span class="ai-v">lead with data-driven saving rationale — "왜 변경이 필요한지"</span></div>
+            <div class="ai-ln"><span class="ai-k">if relationship_type</span><span class="ai-v">lead with group/family benefit changes</span></div>
+            <div class="ai-ln"><span class="ai-k">if senior</span>           <span class="ai-v">simplified language + larger change summary</span></div>
+            <div class="ai-ln"><span class="ai-k">reject</span>              <span class="ai-v">identical comparison layout for all segments 금지</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="do-dont">
+      <!-- DO -->
+      <div class="do-col">
+        <div class="do-badge">Do</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>고객 성향에 따라 <strong>비교 방식을 달리 구성</strong>해야 합니다. 가치 체감형은 혜택 중심, 분석형은 데이터 절감 근거 중심, 관계 중심형은 그룹 혜택 변화 중심으로 구성합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">segment_route</span> <span class="ai-v">user.segment_id → segment-specific comparison layout 적용</span></div>
+              <div class="ai-ln"><span class="ai-k">lead_copy</span>     <span class="ai-v">segment별 상이한 헤드라인 + 비교 구조 사용</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_2_rule3_do_phone.png" alt="DO — segment_tailored: 고객 성향별 비교 구조 차별화">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">퍼플 블록</span><span class="ai-v">성향별 리드 카피 + 비교 레이아웃 — segment_id 기반 동적 구성</span></div>
+            <div class="ai-ln"><span class="ai-k">체크 블록</span><span class="ai-v">가치체감형 / 분석형 / 관계중심형 성향 각각 다른 강조 포인트</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DON'T -->
+      <div class="dont-col">
+        <div class="dont-badge">Don't</div>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>모든 고객에게 동일한 비교 구조를 일괄 적용하지 않습니다. 성향과 무관한 획일적 레이아웃으로 개인화 가치를 훼손하지 않습니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">identical_comparison_layout for all segments 금지</span></div>
+              <div class="ai-ln"><span class="ai-k">reject</span>   <span class="ai-v">성향 무관 동일 리드 카피·구조 적용 금지</span></div>
+            </div>
+          </div>
+        </div>
+        <img class="phone-img" src="assets/DCD_2_rule3_dont_phone.png" alt="DON'T — uniform_layout: 성향 무관 동일 비교 구조">
+        <div class="wire-ann">
+          <span class="lbadge a">AI</span>
+          <div class="ai-blk">
+            <div class="ai-ln"><span class="ai-k">회색 블록</span><span class="ai-v">모든 고객 동일 구조 — segment 차별화 미적용</span></div>
+            <div class="ai-ln"><span class="ai-k">단절 상태</span><span class="ai-v">성향과 무관한 획일적 비교 → 개인화 가치 훼손</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /rule-section RULE 3 -->
+
+
+  <!-- Scenario RULE 3 -->
+  <div class="scen-section">
+    <p class="scen-heading">Scenario. 고객 성향별 비교 방식</p>
+    <div class="scen-strip">
+      <img src="assets/DCD_2_rule3_scen_strip.png" alt="DCD_2 Rule3 시나리오: 가치체감형 / 분석형 / 관계중심형 / 시니어">
+    </div>
+    <div class="scen-anns col4">
+      <div class="scen-ann">
+        <span class="scen-label">가치 체감형</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>혜택 업그레이드 내용을 앞세워 실제로 더 잘 쓰게 될 혜택 중심으로 비교를 구성합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">segment</span>  <span class="ai-v">value_type</span></div>
+              <div class="ai-ln"><span class="ai-k">lead</span>     <span class="ai-v">concrete benefit upgrade description</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"{user.name}님이 실제로 더 잘 쓰게 될 혜택부터 보여드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">분석형</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>데이터 기반 절감 근거를 중심으로 왜 요금제 변경이 필요한지 논리적으로 설명합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">segment</span>  <span class="ai-v">analysis_type</span></div>
+              <div class="ai-ln"><span class="ai-k">lead</span>     <span class="ai-v">data-driven saving rationale</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"왜 요금제 변경이 필요한지 알려드릴게요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">관계 중심형</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>그룹 혜택 변화 중심으로 구성해 가족·결합 혜택의 달라지는 점만 명확히 전달합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">segment</span>  <span class="ai-v">relationship_type</span></div>
+              <div class="ai-ln"><span class="ai-k">lead</span>     <span class="ai-v">group/family benefit changes</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"달라지는 그룹혜택만 정리해봤어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="scen-ann">
+        <span class="scen-label">시니어</span>
+        <div class="layer-block">
+          <div class="layer-row">
+            <span class="lbadge h">사람</span>
+            <p>간소화된 언어로 핵심 변화 하나를 크게 요약합니다. 복잡한 수치 대신 생활 친화적 표현을 사용합니다.</p>
+          </div>
+          <div class="layer-row">
+            <span class="lbadge a">AI</span>
+            <div class="ai-blk">
+              <div class="ai-ln"><span class="ai-k">segment</span>  <span class="ai-v">senior</span></div>
+              <div class="ai-ln"><span class="ai-k">lead</span>     <span class="ai-v">simplified single change summary (large text)</span></div>
+              <div class="ai-ln"><span class="ai-k">copy</span>     <span class="ai-v">"데이터가 {N}GB 늘어 영상통화나 인터넷도 더 여유롭게 이용하실 수 있어요."</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /pattern-card DCD_2 -->
+</div><!-- /pattern-wrap -->
+
+
+</body>
+</html>

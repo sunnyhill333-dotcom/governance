@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDG — 계층 관계도</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #0F172A; color: #F8FAFC; }
+  .page { max-width: 860px; margin: 0 auto; padding: 64px 32px; }
+
+  .header { text-align: center; margin-bottom: 56px; }
+  .header-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.14em; color: #475569; text-transform: uppercase; margin-bottom: 12px; }
+  h1 { font-size: 32px; font-weight: 800; color: #F1F5F9; letter-spacing: -0.02em; margin-bottom: 10px; }
+  .header-sub { font-size: 14px; color: #64748B; line-height: 1.6; }
+
+  /* ── MAIN CONTAINMENT DIAGRAM ── */
+  .diagram-card { background: #1E293B; border: 1px solid #334155; border-radius: 20px; padding: 40px; margin-bottom: 48px; }
+  .diagram-label { font-size: 11px; font-weight: 700; color: #475569; letter-spacing: 0.1em; margin-bottom: 28px; }
+
+  /* PAGE */
+  .d-page {
+    border: 2px solid #10B981;
+    border-radius: 16px;
+    padding: 24px;
+    background: rgba(16,185,129,0.04);
+    position: relative;
+  }
+  .d-page-lbl {
+    position: absolute; top: -12px; left: 20px;
+    background: #1E293B; padding: 0 10px;
+    font-size: 12px; font-weight: 800; letter-spacing: 0.1em; color: #10B981;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .d-page-name {
+    font-size: 11px; font-weight: 500; color: #64748B; font-family: monospace;
+    margin-left: 4px;
+  }
+
+  /* OGN row */
+  .d-ogn-row { display: flex; gap: 12px; margin-bottom: 14px; }
+
+  /* ORGANISM */
+  .d-ogn {
+    flex: 1;
+    border: 2px solid #8B5CF6;
+    border-radius: 10px;
+    padding: 14px;
+    background: rgba(139,92,246,0.06);
+    position: relative;
+  }
+  .d-ogn-lbl {
+    position: absolute; top: -10px; left: 12px;
+    background: #1E293B; padding: 0 8px;
+    font-size: 11px; font-weight: 800; letter-spacing: 0.08em; color: #8B5CF6;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .d-ogn-name {
+    font-size: 10px; font-weight: 500; color: #6D28D9; font-family: monospace;
+  }
+
+  /* CMP row inside OGN */
+  .d-cmp-row { display: flex; gap: 8px; flex-wrap: wrap; padding-top: 4px; }
+
+  /* COMPONENT */
+  .d-cmp {
+    background: rgba(59,130,246,0.12);
+    border: 1.5px solid #3B82F6;
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 600;
+    font-family: 'SF Mono', 'Fira Code', monospace;
+    color: #60A5FA;
+  }
+
+  /* direct CMPs in page */
+  .d-direct { display: flex; gap: 8px; flex-wrap: wrap; }
+  .d-direct-label { font-size: 10px; color: #475569; margin-bottom: 6px; letter-spacing: 0.04em; }
+
+  /* Foundation strip */
+  .d-fnd-strip {
+    display: flex; gap: 8px; flex-wrap: wrap;
+    border: 1px dashed #334155;
+    border-radius: 10px;
+    padding: 12px 16px;
+    margin-top: 16px;
+    position: relative;
+    background: rgba(15,23,42,0.4);
+  }
+  .d-fnd-lbl {
+    position: absolute; top: -10px; left: 14px;
+    background: #1E293B; padding: 0 8px;
+    font-size: 11px; font-weight: 700; letter-spacing: 0.08em; color: #475569;
+  }
+  .d-fnd {
+    background: rgba(100,116,139,0.1);
+    border: 1px solid #334155;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-size: 10px;
+    font-family: monospace;
+    color: #64748B;
+  }
+
+  /* ── LEGEND / LAYERS ── */
+  .layers { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 40px; }
+  .layer-card {
+    border-radius: 12px; padding: 18px 16px; text-decoration: none;
+    transition: transform 0.15s;
+    display: block;
+  }
+  .layer-card:hover { transform: translateY(-2px); }
+  .layer-card.pag { background: rgba(16,185,129,0.08); border: 1px solid #059669; }
+  .layer-card.ogn { background: rgba(139,92,246,0.08); border: 1px solid #6D28D9; }
+  .layer-card.cmp { background: rgba(59,130,246,0.08); border: 1px solid #1D4ED8; }
+  .layer-card.fnd { background: rgba(100,116,139,0.06); border: 1px solid #334155; }
+
+  .lc-id { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; margin-bottom: 5px; }
+  .pag .lc-id { color: #34D399; }
+  .ogn .lc-id { color: #A78BFA; }
+  .cmp .lc-id { color: #60A5FA; }
+  .fnd .lc-id { color: #64748B; }
+
+  .lc-name { font-size: 15px; font-weight: 700; color: #F1F5F9; margin-bottom: 6px; }
+  .lc-desc { font-size: 11px; color: #64748B; line-height: 1.5; margin-bottom: 10px; }
+  .lc-link { font-size: 11px; font-weight: 600; }
+  .pag .lc-link { color: #34D399; }
+  .ogn .lc-link { color: #A78BFA; }
+  .cmp .lc-link { color: #60A5FA; }
+
+  /* ── RULES SUMMARY ── */
+  .rules-section { margin-bottom: 40px; }
+  .section-title { font-size: 11px; font-weight: 700; color: #475569; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .rule-row { display: flex; align-items: baseline; gap: 12px; padding: 10px 0; border-bottom: 1px solid #1E293B; }
+  .rule-row:last-child { border-bottom: none; }
+  .r-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 3px; white-space: nowrap; flex-shrink: 0; }
+  .r-badge.pag { background: #059669; color: #fff; }
+  .r-badge.ogn { background: #6D28D9; color: #fff; }
+  .r-badge.cmp { background: #1D4ED8; color: #fff; }
+  .r-text { font-size: 13px; color: #94A3B8; line-height: 1.5; }
+  .r-text strong { color: #CBD5E1; }
+
+  /* ── LOCAL_ ── */
+  .local-row { display: flex; gap: 10px; }
+  .local-chip { flex: 1; background: rgba(180,83,9,0.1); border: 1px solid #B45309; border-radius: 8px; padding: 12px 14px; }
+  .local-type { font-size: 12px; font-weight: 700; font-family: monospace; color: #FBBF24; margin-bottom: 4px; }
+  .local-when { font-size: 11px; color: #92400E; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-eyebrow">SDG Governance</div>
+    <h1>계층 관계도</h1>
+    <p class="header-sub">Component, Organism, Page — 세 레이어가 어떻게 서로를 포함하고 조합하는지 보여줍니다.</p>
+  </div>
+
+  <!-- MAIN CONTAINMENT DIAGRAM -->
+  <div class="diagram-card">
+    <div class="diagram-label">CONTAINMENT DIAGRAM — 포함 관계</div>
+
+    <div class="d-page">
+      <div class="d-page-lbl">
+        PAGE
+        <span class="d-page-name">ProfDetailPage</span>
+      </div>
+
+      <div class="d-ogn-row">
+        <div class="d-ogn">
+          <div class="d-ogn-lbl">
+            ORGANISM
+            <span class="d-ogn-name">ProfCard</span>
+          </div>
+          <div class="d-cmp-row">
+            <div class="d-cmp">ProfImage</div>
+            <div class="d-cmp">ProfName</div>
+            <div class="d-cmp">Badge</div>
+            <div class="d-cmp">Button</div>
+          </div>
+        </div>
+
+        <div class="d-ogn">
+          <div class="d-ogn-lbl">
+            ORGANISM
+            <span class="d-ogn-name">ReviewList</span>
+          </div>
+          <div class="d-cmp-row">
+            <div class="d-cmp">ReviewCard</div>
+            <div class="d-cmp">StarRating</div>
+            <div class="d-cmp">DateLabel</div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="d-direct-label">PAGE DIRECT — Page에 직접 포함된 Component</div>
+        <div class="d-direct">
+          <div class="d-cmp">Divider</div>
+          <div class="d-cmp">FooterBadge</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="d-fnd-strip">
+      <div class="d-fnd-lbl">FOUNDATION — Component가 사용하는 원자 요소</div>
+      <div class="d-fnd">Icon</div>
+      <div class="d-fnd">Typography</div>
+      <div class="d-fnd">Color Token</div>
+      <div class="d-fnd">Spacing</div>
+      <div class="d-fnd">Border Radius</div>
+    </div>
+  </div>
+
+  <!-- LAYER CARDS -->
+  <div class="layers">
+    <a href="SDG_PAG_unit.html" class="layer-card pag">
+      <div class="lc-id">SDG_PAG · LAYER 4</div>
+      <div class="lc-name">Page</div>
+      <div class="lc-desc">1 화면 = 1 파일. Organism을 조합해 서비스 제공.</div>
+      <div class="lc-link">단위 기준 →</div>
+    </a>
+    <a href="SDG_OGN_unit.html" class="layer-card ogn">
+      <div class="lc-id">SDG_OGN · LAYER 3</div>
+      <div class="lc-name">Organism</div>
+      <div class="lc-desc">다중 Component 조합. 서비스 기능 단위.</div>
+      <div class="lc-link">단위 기준 →</div>
+    </a>
+    <a href="SDG_CMP_unit.html" class="layer-card cmp">
+      <div class="lc-id">SDG_CMP · LAYER 2</div>
+      <div class="lc-name">Component</div>
+      <div class="lc-desc">단일 책임, 최소 재사용 UI 단위.</div>
+      <div class="lc-link">단위 기준 →</div>
+    </a>
+    <div class="layer-card fnd">
+      <div class="lc-id">FOUNDATION · LAYER 1</div>
+      <div class="lc-name">Foundation</div>
+      <div class="lc-desc">디자인 시스템 원자 요소. 토큰 기반.</div>
+    </div>
+  </div>
+
+  <!-- RULES SUMMARY -->
+  <div class="rules-section">
+    <div class="section-title">핵심 단위 규칙 요약</div>
+    <div class="rule-row">
+      <div class="r-badge cmp">CMP</div>
+      <div class="r-text"><strong>단일 책임.</strong> 하나의 역할, 하나의 관심만. 두 가지 이상의 역할은 분리하거나 Organism으로 통합.</div>
+    </div>
+    <div class="rule-row">
+      <div class="r-badge ogn">OGN</div>
+      <div class="r-text"><strong>다중 Component 조합.</strong> 단일 요소는 Organism 불가. 2개 이상이 결합되어야 성립.</div>
+    </div>
+    <div class="rule-row">
+      <div class="r-badge pag">PAG</div>
+      <div class="r-text"><strong>1 화면 = 1 Page.</strong> 최소 1개의 Organism 필수. Page 접미사 필수.</div>
+    </div>
+  </div>
+
+  <!-- LOCAL_ -->
+  <div class="section-title">Local_ — Organism 확장 레이어</div>
+  <div class="local-row">
+    <div class="local-chip">
+      <div class="local-type">Local_None</div>
+      <div class="local-when">SDG 연결 없는 자체 구현</div>
+    </div>
+    <div class="local-chip">
+      <div class="local-type">Local_Link</div>
+      <div class="local-when">SDG Component 완전 연결</div>
+    </div>
+    <div class="local-chip">
+      <div class="local-type">Local_Extends</div>
+      <div class="local-when">SDG Component 부분 확장</div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
